@@ -159,8 +159,8 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
   R.no <- format(R*1e6, scientific = FALSE)
 
   # ===== Print number of bootstrap samples
-  cat("\n", "   Number of requested simulated sample = ", R.no)
-  cat("\n", "   Number of completed simulated sample = ", b.no, rep("\n",2))
+  cat("\n", "   Number of requested simulated samples = ", R.no)
+  cat("\n", "   Number of completed simulated samples = ", b.no, rep("\n",2))
 
   # ==================================================================== #
 
@@ -1265,8 +1265,8 @@ mccimm_modsem_fun <- function(object = est_lms, Z="NA", W="NA",
   R.no <- format(R*1e6, scientific = FALSE)
 
   # ===== Print number of bootstrap samples
-  cat("\n", "   Number of requested simulated sample = ", R.no)
-  cat("\n", "   Number of completed simulated sample = ", b.no, rep("\n",2))
+  cat("\n", "   Number of requested simulated samples = ", R.no)
+  cat("\n", "   Number of completed simulated samples = ", b.no, rep("\n",2))
 
 
   cat("Simulated Defined Function Values", rep("\n", 2))
