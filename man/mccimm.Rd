@@ -16,12 +16,10 @@ mccimm_modsem(object = est_lms, Z="NA", W="NA",
                    A3="NA", Z3="NA", W3="NA", ZW3="NA",
                    A4="NA", Z4="NA", W4="NA", ZW4="NA",
                    R=5)
-\usage{
 JN_plot(mccimmObject, ci="bc",
                      min_z = -3, max_z = 3, detail = 300,
                      lower.quantile = 0.025, upper.quantile = 0.975,
                      alpha = 0.2, sd.line = 2)
-\usage{
 mccimm_modsem_fun(object = est_lms, Z="NA", W="NA",
                    A1="NA", Z1="NA", W1="NA", ZW1="NA",
                    A2="NA", Z2="NA", W2="NA", ZW2="NA",
