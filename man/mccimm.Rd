@@ -169,7 +169,7 @@ JNN <- JN_plot(mcObject, ci="bc") +
   ggplot2::ggtitle("Johnson-Neyman Figure of Moderated Mediating Effects") +
   ggplot2::labs(x = "Moderator", y = paste("Mediating Effect"))
 
-ggplot2::ggsave("Johnson-Neyman Figure.png", plot=JNN, width = 22.86, height = 16.51, units = "cm")
+ggplot2::ggsave("Johnson-Neyman Figure.png", plot=JNN, width = 22, height = 12, units = "cm")
 
 
 }

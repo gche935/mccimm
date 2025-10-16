@@ -1191,11 +1191,11 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
     Z <- "NA"
   }
 
-  return(list(a1=a1, a2=a2, a3=a3, a4=a4, z1=z1, z2=z2, z3=z3, z4=z4, 
+  return(list(a1=a1, a2=a2, a3=a3, a4=a4, z1=z1, z2=z2, z3=z3, z4=z4,
               w1=w1, w2=w2, w3=w3, w4=w4, sd_z=sd_z,
-              Sa1=Sa1, Sa2=Sa2, Sa3=Sa3, Sa4=Sa4, Sz1=Sz1, Sz2=Sz2, Sz3=Sz3, Sz4=Sz4, 
-              Sw1=Sw1, Sw2=Sw2, Sw3=Sw3, Sw4=Sw4, 
-              b.no = b.no, NoModz = NoModz, NoModw = NoModw, Z=Z)) 
+              Sa1=Sa1, Sa2=Sa2, Sa3=Sa3, Sa4=Sa4, Sz1=Sz1, Sz2=Sz2, Sz3=Sz3, Sz4=Sz4,
+              Sw1=Sw1, Sw2=Sw2, Sw3=Sw3, Sw4=Sw4,
+              b.no = b.no, NoModz = NoModz, NoModw = NoModw, Z=Z))
 }
 
 
@@ -1528,7 +1528,8 @@ JN_plot <- function (mccimmObject, ci="bc",
                     "fill"), name = "", values = values, breaks = breaks, drop = FALSE) +
        ggplot2::scale_y_continuous(limits = y_range) +
        ggplot2::labs(x = Z, y = paste("Indirect Effect")) +
-       ggplot2::theme_minimal()
+       ggplot2::theme_minimal() +
+       ggplot2::theme(plot.title = element_text(hjust = 0.5))
        if (length(approx_jn) > 0) {
          top_y <- suppressWarnings(max(df_plot$slope[is.finite(df_plot$slope)], na.rm = TRUE))
          if (!is.finite(top_y)) top_y <- y_range[2]
@@ -1541,8 +1542,8 @@ JN_plot <- function (mccimmObject, ci="bc",
          }
        }
 
-  ## -- Print the Figure -- ##      
+  ## -- Print the Figure -- ##
   print(jnp)
   return(jnp)
 
-} # End plot Johnson-Neyman Figure 
+} # End plot Johnson-Neyman Figure
