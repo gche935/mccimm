@@ -1295,22 +1295,22 @@ mccimm_modsem_fun <- function(object = est_lms, Z="NA", W="NA",
   estM  <- eval(parse(text=Sfunction))
 
   # Capture simulated parameters for calculating function values
-  if (any(names(estcoeff) %in% A1)) Sa1 <- mcmc[, A1]
-  if (any(names(estcoeff) %in% A2)) Sa2 <- mcmc[, A2]
-  if (any(names(estcoeff) %in% A3)) Sa3 <- mcmc[, A3]
-  if (any(names(estcoeff) %in% A4)) Sa4 <- mcmc[, A4]
-  if (any(names(estcoeff) %in% Z1)) Sz1 <- mcmc[, Z1]
-  if (any(names(estcoeff) %in% Z2)) Sz2 <- mcmc[, Z2]
-  if (any(names(estcoeff) %in% Z3)) Sz3 <- mcmc[, Z3]
-  if (any(names(estcoeff) %in% Z4)) Sz4 <- mcmc[, Z4]
-  if (any(names(estcoeff) %in% W1)) Sw1 <- mcmc[, W1]
-  if (any(names(estcoeff) %in% W2)) Sw2 <- mcmc[, W2]
-  if (any(names(estcoeff) %in% W3)) Sw3 <- mcmc[, W3]
-  if (any(names(estcoeff) %in% W4)) Sw4 <- mcmc[, W4]
-  if (any(names(estcoeff) %in% ZW1)) Szw1 <- mcmc[, ZW1]
-  if (any(names(estcoeff) %in% ZW2)) Szw2 <- mcmc[, ZW2]
-  if (any(names(estcoeff) %in% ZW3)) Szw3 <- mcmc[, ZW3]
-  if (any(names(estcoeff) %in% ZW4)) Szw4 <- mcmc[, ZW4]
+  if (any(names(estcoeff) %in% A1)) a1 <- mcmc[, A1]
+  if (any(names(estcoeff) %in% A2)) a2 <- mcmc[, A2]
+  if (any(names(estcoeff) %in% A3)) a3 <- mcmc[, A3]
+  if (any(names(estcoeff) %in% A4)) a4 <- mcmc[, A4]
+  if (any(names(estcoeff) %in% Z1)) z1 <- mcmc[, Z1]
+  if (any(names(estcoeff) %in% Z2)) z2 <- mcmc[, Z2]
+  if (any(names(estcoeff) %in% Z3)) z3 <- mcmc[, Z3]
+  if (any(names(estcoeff) %in% Z4)) z4 <- mcmc[, Z4]
+  if (any(names(estcoeff) %in% W1)) w1 <- mcmc[, W1]
+  if (any(names(estcoeff) %in% W2)) w2 <- mcmc[, W2]
+  if (any(names(estcoeff) %in% W3)) w3 <- mcmc[, W3]
+  if (any(names(estcoeff) %in% W4)) w4 <- mcmc[, W4]
+  if (any(names(estcoeff) %in% ZW1)) zw1 <- mcmc[, ZW1]
+  if (any(names(estcoeff) %in% ZW2)) zw2 <- mcmc[, ZW2]
+  if (any(names(estcoeff) %in% ZW3)) zw3 <- mcmc[, ZW3]
+  if (any(names(estcoeff) %in% ZW4)) zw4 <- mcmc[, ZW4]
 
   # Calculate Simulated parameter from Dfunction
   abM <- eval(parse(text=Sfunction))
