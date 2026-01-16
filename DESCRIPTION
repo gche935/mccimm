@@ -1,18 +1,20 @@
 Package: mccimm
 Type: Package
-Title: Monte Carlo simulation of Confidence Intervals for Moderated Mediation - modsem version 
+Title: Monte Carlo simulation of Confidence Intervals for Moderated Mediation (modsem & Mplus) 
 Version: 0.0.1
-Author: Gordon W. Cheung 
+Author: Anonymous 
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: Generate confidence intervals for (moderated mediation with Monte Carlo simulated samples)
+Description: Generate confidence intervals for moderated mediation with Monte Carlo simulated samples from modsem or Mplus results  
 License: GPL-3
 Encoding: UTF-8
 Depends: R (>= 3.5.1),
          MASS,
-         ggplot2
+         ggplot2,
+         MplusAutomation
 Imports:
     MASS,
-    ggplot2
+    ggplot2,
+    MplusAutomation
 RoxygenNote: 7.3.3
 URL: https://github.com/gche935/mccimm
 BugReports: https://github.com/gche935/mccimm/issues

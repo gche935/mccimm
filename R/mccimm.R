@@ -1,30 +1,71 @@
-#######################################################################################
-# Author: Prof. Gordon Cheung (University of Auckland)                                #
-# email: gordon.cheung@auckland.ac.nz                                                 #
-# Purpose: Monte Carlo simulation of conditional indirect effects from modsem outputs #
-# Model: Allows 3-way interaction                                                     #
-# Allows simulated function (Sfunction = "    "                                       #
-# Version: Beta 1.3.1                                                                 #
-# WARNING: This is beta version. Please report all bugs to the author                 #
-#######################################################################################
+###############################################################################################
+# Author: Prof. Gordon Cheung (University of Auckland)                                        #
+# email: gordon.cheung@auckland.ac.nz                                                         #
+# Purpose: Monte Carlo simulation of conditional indirect effects from modsem & Mplus outputs #
+# Model: Allows 3-way interaction                                                             #
+# Allows simulated function (Sfunction = "    "                                               #
+# Version: Beta 1.3.1                                                                         #
+# WARNING: This is a beta version. Please report all bugs to the author                       #
+###############################################################################################
 
-## == Required packages (load when loading mccimm_modsem) == ##
+## == Required packages (load when loading mccimm) == ##
 library(MASS)
 library(ggplot2)
-# library (openxlsx)
+library(MplusAutomation)
 
 
-# ==================== Creating Function "mccimm_modsem" Monte Carlo Confidence Intervals for Moderated Mediation (modsem) ==================== #
-mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
-                   A1="NA", Z1="NA", W1="NA", ZW1="NA",
-                   A2="NA", Z2="NA", W2="NA", ZW2="NA",
-                   A3="NA", Z3="NA", W3="NA", ZW3="NA",
-                   A4="NA", Z4="NA", W4="NA", ZW4="NA",
+## ====== Function "mccimm_modsem" Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem) ====== ##
+#' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem)
+#'
+#' Generate confidence intervals of moderated-mediating effects from modsem results using Monte Carlo simulation.
+#'
+#' \if{html}{
+#' \figure{Figure.png}{options: width="75\%" alt="Description of my figure"}
+#' }
+#' \if{latex}{
+#' \figure{Figure.pdf}{options: width=15cm}
+#' }
+#'
+#' @param object modsem object (output from modsem).
+#' @param Z name of moderate Z. 
+#' @param W name of moderator W.
+#' @param a1 parameter name of a1 path (main effect).
+#' @param a2 parameter name of a2 path (main effect). 
+#' @param a3 parameter name of a3 path (main effect). 
+#' @param a4 parameter name of a4 path (main effect). 
+#' @param z1 parameter name of z1 path (interaction effect).
+#' @param z2 parameter name of z2 path (interaction effect). 
+#' @param z3 parameter name of z3 path (interaction effect). 
+#' @param z4 parameter name of z4 path (interaction effect). 
+#' @param w1 parameter name of w1 path (interaction effect).
+#' @param w2 parameter name of w2 path (interaction effect). 
+#' @param w3 parameter name of w3 path (interaction effect). 
+#' @param w4 parameter name of w4 path (interaction effect).
+#' @param zw1 parameter name of zw1 path (3-way interaction effect).
+#' @param zw2 parameter name of zw2 path (3-way interaction effect). 
+#' @param zw3 parameter name of zw3 path (3-way interaction effect). 
+#' @param zw4 parameter name of zw4 path (3-way interaction effect). 
+#' @param R number of Monte Carlo simulation samples (in millions). For example, R=5 (default) generates 5,000,000 simulated samples.
+#'
+#' @return mccimm output for plotting Johnson-Neyman Figure.
+#' @export
+#' @examples
+#'
+#' ## -- Example A -- ##
+#'
+#' # modsem object is "est_lms" & output mccimm object is mcObject
+#'
+#' mcObject <- mccimm_modsem(est_lms, A1="a1", A2="a2", A3="a3a", Z1="z1", Z="Autonomy")
+#'
+
+  mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
+                   a1="NA", z1="NA", w1="NA", zw1="NA",
+                   a2="NA", z2="NA", w2="NA", zw2="NA",
+                   a3="NA", z3="NA", w3="NA", zw3="NA",
+                   a4="NA", z4="NA", w4="NA", zw4="NA",
                    R=5) {
 
   ## --- Initial Inputs for programming --- ##
-
-  # setwd("C:/Research/mccimm/mccimm_modsem")  ## set working directory
 
 #  object <- est_lms
 #  Z <- "Autonomy"          ## Specify moderator Z
@@ -50,12 +91,12 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
   ## ------------------------------- ##
 
 
-  ## Extract defined parameters and vcov ##
+  ## -- Extract defined parameters and vcov -- ##
   varZ <- "NA"
   varW <- "NA"
   if (Z != "NA") varZ <- paste0(Z, "~~", Z)
   if (W != "NA") varW <- paste0(W, "~~", W)
-  dp <- c(A1, A2, A3, A4, Z1, Z2, Z3, Z4, W1, W2, W3, W4, ZW1, ZW2, ZW3, ZW4, varZ, varW)
+  dp <- c(a1, a2, a3, a4, z1, z2, z3, z4, w1, w2, w3, w4, zw1, zw2, zw3, zw4, varZ, varW)
   dp <- dp[dp != "NA"]
 
 
@@ -65,85 +106,240 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
   Tech3 <- Temp3[dp, dp]
 
 
+  return_mccimm <- mccimm(estcoeff, Tech3,
+                        Z, W,
+                        varZ, varW,
+                        a1, z1, w1, zw1,
+                        a2, z2, w2, zw2,
+                        a3, z3, w3, zw3,
+                        a4, z4, w4, zw4,
+                        R=5)
+
+  return(return_mccimm)
+
+}  ## end (Function "mccimm_modsem") ##
+
+
+
+
+
+## ====== Function "mccimm_mplus" Monte Carlo Confidence Intervals for Moderated Mediation (mplus) ====== ##
+#' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem)
+#'
+#' Generate confidence intervals of moderated-mediating effects from modsem results using Monte Carlo simulation.
+#' Location of estimated parameters can be found in modsem::TECH1().
+#'
+#' \if{html}{
+#' \figure{Figure.png}{options: width="75\%" alt="Description of my figure"}
+#' }
+#' \if{latex}{
+#' \figure{Figure.pdf}{options: width=15cm}
+#' }
+#'
+#' @param mplus_output_file Mplus output (.out) file (output from Mplus).
+#' @param results_file Mplus a text file (.txt) that saves the Mplus results (RESULTS IS "filename.txt" in Mplus SAVEDATA:).
+#' @param Z name of moderate Z. 
+#' @param W name of moderator W.
+#' @param varZ location of parameter varZ in Mplus Tech1 outputs.
+#' @param varW location of parameter varW in Mplus Tech1 outputs.
+#' @param a1 location of parameter a1 in Mplus Tech1 outputs.
+#' @param a2 location of parameter a2 in Mplus Tech1 outputs.
+#' @param a3 location of parameter a3 in Mplus Tech1 outputs.
+#' @param a4 location of parameter a4 in Mplus Tech1 outputs.
+#' @param z1 location of parameter z1 in Mplus Tech1 outputs.
+#' @param z2 location of parameter z2 in Mplus Tech1 outputs.
+#' @param z3 location of parameter z3 in Mplus Tech1 outputs.
+#' @param z4 location of parameter z4 in Mplus Tech1 outputs.
+#' @param w1 location of parameter w1 in Mplus Tech1 outputs.
+#' @param w2 location of parameter w2 in Mplus Tech1 outputs.
+#' @param w3 location of parameter w3 in Mplus Tech1 outputs.
+#' @param w4 location of parameter w4 in Mplus Tech1 outputs.
+#' @param zw1 location of parameter zw1 in Mplus Tech1 outputs.
+#' @param zw2 location of parameter zw2 in Mplus Tech1 outputs.
+#' @param zw3 location of parameter zw3 in Mplus Tech1 outputs.
+#' @param zw4 location of parameter zw4 in Mplus Tech1 outputs.
+#' @param R number of Monte Carlo simulation samples (in millions). For example, R=5 (default) generates 5,000,000 simulated samples.
+#'
+#' @return mccimm output for plotting Johnson-Neyman Figure.
+#' @export
+#' @examples
+#'
+#' ## -- Example B -- ##
+#'
+#' # mplus_output_file is "model cc4.out", results_file is "Model_CC4.txt" & moderator Z is "AUTO"
+#'
+#' mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", Z = "AUTO", varZ = "72",
+#'             a1 = "60", a2 = "65", z1 = "62")#'
+#'
+
+mccimm_mplus <- function(mplus_output_file = "mplus_output.out",
+                   results_file = "results.txt",
+                   Z="NA", W="NA",
+                   varZ="NA", varW="NA",
+                   a1="NA", a2="NA", a3="NA", a4="NA",
+                   z1="NA", z2="NA", z3="NA", z4="NA",
+                   w1="NA", w2="NA", w3="NA", w4="NA",
+                   zw1="NA", zw2="NA", zw3="NA", zw4="NA",
+                   R=5) {
+
+  mplus_output <- readModels(mplus_output_file)
+  results <- mplus_output$parameters
+  temp <- scan(results_file, sep="")
+
+  Temp3 <- mplus_output$tech3$paramCov
+  Temp3[upper.tri(Temp3, diag = FALSE)] <- 0
+
+  Tech3 <- Temp3 + t(Temp3)
+  Tech3 <- Tech3 - diag(diag(Temp3))
+
+  ## -- Extract defined parameters and vcov -- ##
+  dp <- c(varZ, varW, a1, a2, a3, a4, z1, z2, z3, z4, w1, w2, w3, w4, zw1, zw2, zw3, zw4)
+
+  dp_no <- suppressWarnings(as.numeric(dp))
+  dp_list <- c("varZ", "varW", "a1", "a2", "a3", "a4", "z1", "z2", "z3", "z4", "w1", "w2", "w3", "w4", "zw1", "zw2", "zw3", "zw4")
+  non_na_list <- dp_list[which(!is.na(dp_no))]
+  dp <- dp[dp != "NA"]
+  dp <- as.numeric(dp)
+
+  estcoeff <- temp[dp]
+  names(estcoeff) <- non_na_list
+
+  Tech3 <- Tech3[dp, dp]
+  rownames(Tech3) <- non_na_list
+  colnames(Tech3) <- non_na_list
+
+  # -- Reassigning variable names -- #
+  if (varZ != "NA") varZ <- "varZ"
+  if (varW != "NA") varW <- "varW"
+  if (a1 != "NA") a1 <- "a1"
+  if (a2 != "NA") a2 <- "a2"
+  if (a3 != "NA") a3 <- "a3"
+  if (a4 != "NA") a4 <- "a4"
+  if (z1 != "NA") z1 <- "z1"
+  if (z2 != "NA") z2 <- "z2"
+  if (z3 != "NA") z3 <- "z3"
+  if (z4 != "NA") z4 <- "z4"
+  if (w1 != "NA") w1 <- "w1"
+  if (w2 != "NA") w2 <- "w2"
+  if (w3 != "NA") w3 <- "w3"
+  if (w4 != "NA") w4 <- "w4"
+  if (zw1 != "NA") zw1 <- "zw1"
+  if (zw2 != "NA") zw2 <- "zw2"
+  if (zw3 != "NA") zw3 <- "zw3"
+  if (zw4 != "NA") zw4 <- "zw4"
+
+  return_mccimm <- mccimm(estcoeff, Tech3,
+                        Z, W,
+                        varZ, varW,
+                        a1, z1, w1, zw1,
+                        a2, z2, w2, zw2,
+                        a3, z3, w3, zw3,
+                        a4, z4, w4, zw4,
+                        R=5)
+
+  return(return_mccimm)
+
+
+  ## ------------------------------- ##
+
+}  ## end (Function "mccimm_mplus") ##
+
+
+
+## ====== Sub-Function "mccimm" Monte Carlo Confidence Intervals for Moderated Mediation ====== ##
+
+mccimm <- function(estcoeff, Tech3,
+                   Z="NA", W="NA",
+                   varZ="NA", varW="NA",
+                   a1="NA", z1="NA", w1="NA", zw1="NA",
+                   a2="NA", z2="NA", w2="NA", zw2="NA",
+                   a3="NA", z3="NA", w3="NA", zw3="NA",
+                   a4="NA", z4="NA", w4="NA", zw4="NA",
+                   R=5) {
+
   ## -- Number of Moderating Effects -- ##
   NoModz <- 0
   NoModw <- 0
-  if (Z1 != "NA") NoModz <- NoModz + 1
-  if (Z2 != "NA") NoModz <- NoModz + 1
-  if (Z3 != "NA") NoModz <- NoModz + 1
-  if (Z4 != "NA") NoModz <- NoModz + 1
-  if (W1 != "NA") NoModw <- NoModw + 1
-  if (W2 != "NA") NoModw <- NoModw + 1
-  if (W3 != "NA") NoModw <- NoModw + 1
-  if (W4 != "NA") NoModw <- NoModw + 1
-
+  if (z1 != "NA") NoModz <- NoModz + 1
+  if (z2 != "NA") NoModz <- NoModz + 1
+  if (z3 != "NA") NoModz <- NoModz + 1
+  if (z4 != "NA") NoModz <- NoModz + 1
+  if (w1 != "NA") NoModw <- NoModw + 1
+  if (w2 != "NA") NoModw <- NoModw + 1
+  if (w3 != "NA") NoModw <- NoModw + 1
+  if (w4 != "NA") NoModw <- NoModw + 1
   NoMod <- NoModz + NoModw
   ## ----- ##
 
+
   ## -- Location of Moderator for calculation of Index MM -- ##
   if (NoMod == 1) {
-    if (Z1 != "NA") PoMod <- 1
-    if (Z2 != "NA") PoMod <- 2
-    if (Z3 != "NA") PoMod <- 3
-    if (Z4 != "NA") PoMod <- 4
-    if (W1 != "NA") PoMod <- 1
-    if (W2 != "NA") PoMod <- 2
-    if (W3 != "NA") PoMod <- 3
-    if (W4 != "NA") PoMod <- 4
-  }
-
-  ## -- Initialize a-paths to 1 -- ##
-  a1 <- 1
-  a2 <- 1
-  a3 <- 1
-  a4 <- 1
-  Sa1 <- matrix(1, R*1e6)
-  Sa2 <- matrix(1, R*1e6)
-  Sa3 <- matrix(1, R*1e6)
-  Sa4 <- matrix(1, R*1e6)
+    if (z1 != "NA") PoMod <- 1
+    if (z2 != "NA") PoMod <- 2
+    if (z3 != "NA") PoMod <- 3
+    if (z4 != "NA") PoMod <- 4
+    if (w1 != "NA") PoMod <- 1
+    if (w2 != "NA") PoMod <- 2
+    if (w3 != "NA") PoMod <- 3
+    if (w4 != "NA") PoMod <- 4
+  } # end (if (NoMod == 1))
   ## ------------------------------ ##
 
+
+  ## -- Initialize a-paths to 1 -- ##
+  U7Xa1 <- 1
+  U7Xa2 <- 1
+  U7Xa3 <- 1
+  U7Xa4 <- 1
+  U7XSa1 <- matrix(1, R*1e6)
+  U7XSa2 <- matrix(1, R*1e6)
+  U7XSa3 <- matrix(1, R*1e6)
+  U7XSa4 <- matrix(1, R*1e6)
+  ## ------------------------------ ##
+
+
   ## -- Initialize interaction paths to 0 -- ##
-  z1 <- 0
-  z2 <- 0
-  z3 <- 0
-  z4 <- 0
-  Sz1 <- matrix(0, R*1e6)
-  Sz2 <- matrix(0, R*1e6)
-  Sz3 <- matrix(0, R*1e6)
-  Sz4 <- matrix(0, R*1e6)
+  U7Xz1 <- 0
+  U7Xz2 <- 0
+  U7Xz3 <- 0
+  U7Xz4 <- 0
+  U7XSz1 <- matrix(0, R*1e6)
+  U7XSz2 <- matrix(0, R*1e6)
+  U7XSz3 <- matrix(0, R*1e6)
+  U7XSz4 <- matrix(0, R*1e6)
 
-  w1 <- 0
-  w2 <- 0
-  w3 <- 0
-  w4 <- 0
-  Sw1 <- matrix(0, R*1e6)
-  Sw2 <- matrix(0, R*1e6)
-  Sw3 <- matrix(0, R*1e6)
-  Sw4 <- matrix(0, R*1e6)
+  U7Xw1 <- 0
+  U7Xw2 <- 0
+  U7Xw3 <- 0
+  U7Xw4 <- 0
+  U7XSw1 <- matrix(0, R*1e6)
+  U7XSw2 <- matrix(0, R*1e6)
+  U7XSw3 <- matrix(0, R*1e6)
+  U7XSw4 <- matrix(0, R*1e6)
 
-  zw1 <- 0
-  zw2 <- 0
-  zw3 <- 0
-  zw4 <- 0
-  Szw1 <- matrix(0, R*1e6)
-  Szw2 <- matrix(0, R*1e6)
-  Szw3 <- matrix(0, R*1e6)
-  Szw4 <- matrix(0, R*1e6)
+  U7Xzw1 <- 0
+  U7Xzw2 <- 0
+  U7Xzw3 <- 0
+  U7Xzw4 <- 0
+  U7XSzw1 <- matrix(0, R*1e6)
+  U7XSzw2 <- matrix(0, R*1e6)
+  U7XSzw3 <- matrix(0, R*1e6)
+  U7XSzw4 <- matrix(0, R*1e6)
+  ## ------------------------------ ##
+
 
   ## -- Initialize stdZ and stdW -- ##
   stdZ <- 1
   stdW <- 1
   SstdZ <- matrix(1, R*1e6)
   SstdW <- matrix(1, R*1e6)
-
   ## ------------------------------ ##
+
 
   ## -- Monte Carlo Simulation of R*1e6 samples, default: R = 5 -- ##
   mcmc <- MASS::mvrnorm(n=R*1e6, mu=estcoeff, Sigma=Tech3, tol = 1e-6)
 
-
-  # ===== Retain simulated samples with variance larger than or equal to 0
+  # -- Retain simulated samples with variance larger than or equal to 0 -- #
   if (NoMod == 1) {
     if (NoModz != 0){
       mcmc <- mcmc[which(mcmc[, varZ] >= 0),]
@@ -153,44 +349,42 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
   } else if (NoMod == 2) {
     mcmc <- mcmc[which(mcmc[, varZ] >= 0),]
     mcmc <- mcmc[which(mcmc[, varW] >= 0),]
-  }
+  } # end (if NoMod)
 
   b.no <- nrow(mcmc)
   R.no <- format(R*1e6, scientific = FALSE)
 
-  # ===== Print number of bootstrap samples
+  # -- Print number of bootstrap samples -- #
   cat("\n", "   Number of requested simulated samples = ", R.no)
   cat("\n", "   Number of completed simulated samples = ", b.no, rep("\n",2))
 
-  # ==================================================================== #
+  ## ------------------------------ ##
 
 
   ### --- No Moderating Effect --- ###
   if (NoMod == 0) {
 
-    # Define estimated parameters for calculating indirect effects
-    if (any(names(estcoeff) %in% A1)) a1 <- estcoeff[A1]
-    if (any(names(estcoeff) %in% A2)) a2 <- estcoeff[A2]
-    if (any(names(estcoeff) %in% A3)) a3 <- estcoeff[A3]
-    if (any(names(estcoeff) %in% A4)) a4 <- estcoeff[A4]
+    # -- Define estimated parameters for calculating indirect effects -- #
+    if (any(names(estcoeff) %in% a1)) U7Xa1 <- estcoeff[a1]
+    if (any(names(estcoeff) %in% a2)) U7Xa2 <- estcoeff[a2]
+    if (any(names(estcoeff) %in% a3)) U7Xa3 <- estcoeff[a3]
+    if (any(names(estcoeff) %in% a4)) U7Xa4 <- estcoeff[a4]
 
-    # Calculate Estimated Indirect Effect
-    estM  <- a1*a2*a3*a4
+    # -- Calculate Estimated Indirect Effect -- #
+    estM  <- U7Xa1*U7Xa2*U7Xa3*U7Xa4
 
-    # Capture simulated parameters for calculating indirect effects
-    if (any(names(estcoeff) %in% A1)) Sa1 <- mcmc[, A1]
-    if (any(names(estcoeff) %in% A2)) Sa2 <- mcmc[, A2]
-    if (any(names(estcoeff) %in% A3)) Sa3 <- mcmc[, A3]
-    if (any(names(estcoeff) %in% A4)) Sa4 <- mcmc[, A4]
+    # -- Capture simulated parameters for calculating indirect effects -- #
+    if (any(names(estcoeff) %in% a1)) U7XSa1 <- mcmc[, a1]
+    if (any(names(estcoeff) %in% a2)) U7XSa2 <- mcmc[, a2]
+    if (any(names(estcoeff) %in% a3)) U7XSa3 <- mcmc[, a3]
+    if (any(names(estcoeff) %in% a4)) U7XSa4 <- mcmc[, a4]
 
-    # Calculate Simulated Indirect Effect
-    abM <- Sa1*Sa2*Sa3*Sa4
-    ##################################
+    # -- Calculate Simulated Indirect Effect -- #
+    abM <- U7XSa1*U7XSa2*U7XSa3*U7XSa4
 
+    # == Confidence Intervals and p-value == #
 
-    #### Confidence Intervals and p-value ####
-
-    # Calculate Percentile Probability
+    # -- Calculate Percentile Probability -- #
     if (quantile(abM,probs=0.5)>0) {
       pM = 2*(sum(abM<0)/b.no)
     } else {
@@ -250,7 +444,7 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
     print(BCCI, quote=FALSE, right=TRUE)
     cat("\n")
 
-  }
+  } # end (if (NoMod == 0))
   ### --- End No Moderating Effect --- ###
 
 
@@ -258,38 +452,38 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
   if ((NoMod == 1) & (NoModz == 1)) {
 
     # Define estimated parameters for calculating indirect effects
-    if (any(names(estcoeff) %in% A1)) a1 <- estcoeff[A1]
-    if (any(names(estcoeff) %in% A2)) a2 <- estcoeff[A2]
-    if (any(names(estcoeff) %in% A3)) a3 <- estcoeff[A3]
-    if (any(names(estcoeff) %in% A4)) a4 <- estcoeff[A4]
-    if (any(names(estcoeff) %in% Z1)) z1 <- estcoeff[Z1]
-    if (any(names(estcoeff) %in% Z2)) z2 <- estcoeff[Z2]
-    if (any(names(estcoeff) %in% Z3)) z3 <- estcoeff[Z3]
-    if (any(names(estcoeff) %in% Z4)) z4 <- estcoeff[Z4]
+    if (any(names(estcoeff) %in% a1)) U7Xa1 <- estcoeff[a1]
+    if (any(names(estcoeff) %in% a2)) U7Xa2 <- estcoeff[a2]
+    if (any(names(estcoeff) %in% a3)) U7Xa3 <- estcoeff[a3]
+    if (any(names(estcoeff) %in% a4)) U7Xa4 <- estcoeff[a4]
+    if (any(names(estcoeff) %in% z1)) U7Xz1 <- estcoeff[z1]
+    if (any(names(estcoeff) %in% z2)) U7Xz2 <- estcoeff[z2]
+    if (any(names(estcoeff) %in% z3)) U7Xz3 <- estcoeff[z3]
+    if (any(names(estcoeff) %in% z4)) U7Xz4 <- estcoeff[z4]
     stdZ <- sqrt(estcoeff[varZ])
 
     # Calculate Estimated Index MM #
-    if (PoMod == 1) estIMM <- z1*a2*a3*a4
-    if (PoMod == 2) estIMM <- a1*z2*a3*a4
-    if (PoMod == 3) estIMM <- a1*a2*z3*a4
-    if (PoMod == 4) estIMM <- a1*a2*a3*z4
+    if (PoMod == 1) estIMM <- U7Xz1*U7Xa2*U7Xa3*U7Xa4
+    if (PoMod == 2) estIMM <- U7Xa1*U7Xz2*U7Xa3*U7Xa4
+    if (PoMod == 3) estIMM <- U7Xa1*U7Xa2*U7Xz3*U7Xa4
+    if (PoMod == 4) estIMM <- U7Xa1*U7Xa2*U7Xa3*U7Xz4
 
     # Capture simulated parameters for calculating indirect effects #
-    if (any(names(estcoeff) %in% A1)) Sa1 <- mcmc[, A1]
-    if (any(names(estcoeff) %in% A2)) Sa2 <- mcmc[, A2]
-    if (any(names(estcoeff) %in% A3)) Sa3 <- mcmc[, A3]
-    if (any(names(estcoeff) %in% A4)) Sa4 <- mcmc[, A4]
-    if (any(names(estcoeff) %in% Z1)) Sz1 <- mcmc[, Z1]
-    if (any(names(estcoeff) %in% Z2)) Sz2 <- mcmc[, Z2]
-    if (any(names(estcoeff) %in% Z3)) Sz3 <- mcmc[, Z3]
-    if (any(names(estcoeff) %in% Z4)) Sz4 <- mcmc[, Z4]
+    if (any(names(estcoeff) %in% a1)) U7XSa1 <- mcmc[, a1]
+    if (any(names(estcoeff) %in% a2)) U7XSa2 <- mcmc[, a2]
+    if (any(names(estcoeff) %in% a3)) U7XSa3 <- mcmc[, a3]
+    if (any(names(estcoeff) %in% a4)) U7XSa4 <- mcmc[, a4]
+    if (any(names(estcoeff) %in% z1)) U7XSz1 <- mcmc[, z1]
+    if (any(names(estcoeff) %in% z2)) U7XSz2 <- mcmc[, z2]
+    if (any(names(estcoeff) %in% z3)) U7XSz3 <- mcmc[, z3]
+    if (any(names(estcoeff) %in% z4)) U7XSz4 <- mcmc[, z4]
     SstdZ <- sqrt(mcmc[,varZ])
 
     # Calculate Simulated Index MM
-    if (any(names(estcoeff) %in% Z1)) IndexMM <- Sz1*Sa2*Sa3*Sa4
-    if (any(names(estcoeff) %in% Z2)) IndexMM <- Sa1*Sz2*Sa3*Sa4
-    if (any(names(estcoeff) %in% Z3)) IndexMM <- Sa1*Sa2*Sz3*Sa4
-    if (any(names(estcoeff) %in% Z4)) IndexMM <- Sa1*Sa2*Sa3*Sz4
+    if (any(names(estcoeff) %in% z1)) IndexMM <- U7XSz1*U7XSa2*U7XSa3*U7XSa4
+    if (any(names(estcoeff) %in% z2)) IndexMM <- U7XSa1*U7XSz2*U7XSa3*U7XSa4
+    if (any(names(estcoeff) %in% z3)) IndexMM <- U7XSa1*U7XSa2*U7XSz3*U7XSa4
+    if (any(names(estcoeff) %in% z4)) IndexMM <- U7XSa1*U7XSa2*U7XSa3*U7XSz4
 
     #### Percentile and Bias-Corrected Confidence Intervals of Conditional Indirect Effects ####
 
@@ -300,8 +494,8 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
 
     for (X in 1:5) {
       level <- X - 3
-      estX <- (a1+z1*level*stdZ)*(a2+z2*level*stdZ)*(a3+z3*level*stdZ)*(a4+z4*level*stdZ)
-      abX <- (Sa1+Sz1*level*SstdZ)*(Sa2+Sz2*level*SstdZ)*(Sa3+Sz3*level*SstdZ)*(Sa4+Sz4*level*SstdZ)
+      estX <- (U7Xa1+U7Xz1*level*stdZ)*(U7Xa2+U7Xz2*level*stdZ)*(U7Xa3+U7Xz3*level*stdZ)*(U7Xa4+U7Xz4*level*stdZ)
+      abX <- (U7XSa1+U7XSz1*level*SstdZ)*(U7XSa2+U7XSz2*level*SstdZ)*(U7XSa3+U7XSz3*level*SstdZ)*(U7XSa4+U7XSz4*level*SstdZ)
       zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
       ## Percentile Confidence Intervals ##
@@ -391,39 +585,39 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
   if ((NoMod == 1) & (NoModw == 1)) {
 
     # Define estimated parameters for calculating indirect effects
-    if (any(names(estcoeff) %in% A1)) a1 <- estcoeff[A1]
-    if (any(names(estcoeff) %in% A2)) a2 <- estcoeff[A2]
-    if (any(names(estcoeff) %in% A3)) a3 <- estcoeff[A3]
-    if (any(names(estcoeff) %in% A4)) a4 <- estcoeff[A4]
-    if (any(names(estcoeff) %in% W1)) w1 <- estcoeff[W1]
-    if (any(names(estcoeff) %in% W2)) w2 <- estcoeff[W2]
-    if (any(names(estcoeff) %in% W3)) w3 <- estcoeff[W3]
-    if (any(names(estcoeff) %in% W4)) w4 <- estcoeff[W4]
+    if (any(names(estcoeff) %in% a1)) U7Xa1 <- estcoeff[a1]
+    if (any(names(estcoeff) %in% a2)) U7Xa2 <- estcoeff[a2]
+    if (any(names(estcoeff) %in% a3)) U7Xa3 <- estcoeff[a3]
+    if (any(names(estcoeff) %in% a4)) U7Xa4 <- estcoeff[a4]
+    if (any(names(estcoeff) %in% w1)) U7Xw1 <- estcoeff[w1]
+    if (any(names(estcoeff) %in% w2)) U7Xw2 <- estcoeff[w2]
+    if (any(names(estcoeff) %in% w3)) U7Xw3 <- estcoeff[w3]
+    if (any(names(estcoeff) %in% w4)) U7Xw4 <- estcoeff[w4]
     stdW <- sqrt(estcoeff[varW])
 
 
     # Calculate Estimated Index MM #
-    if (PoMod == 1) estIMM <- w1*a2*a3*a4
-    if (PoMod == 2) estIMM <- a1*w2*a3*a4
-    if (PoMod == 3) estIMM <- a1*a2*w3*a4
-    if (PoMod == 4) estIMM <- a1*a2*a3*w4
+    if (PoMod == 1) estIMM <- U7Xw1*U7Xa2*U7Xa3*U7Xa4
+    if (PoMod == 2) estIMM <- U7Xa1*U7Xw2*U7Xa3*U7Xa4
+    if (PoMod == 3) estIMM <- U7Xa1*U7Xa2*U7Xw3*U7Xa4
+    if (PoMod == 4) estIMM <- U7Xa1*U7Xa2*U7Xa3*U7Xw4
 
     # Capture simulated parameters for calculating indirect effects #
-    if (any(names(estcoeff) %in% A1)) Sa1 <- mcmc[, A1]
-    if (any(names(estcoeff) %in% A2)) Sa2 <- mcmc[, A2]
-    if (any(names(estcoeff) %in% A3)) Sa3 <- mcmc[, A3]
-    if (any(names(estcoeff) %in% A4)) Sa4 <- mcmc[, A4]
-    if (any(names(estcoeff) %in% W1)) Sw1 <- mcmc[, W1]
-    if (any(names(estcoeff) %in% W2)) Sw2 <- mcmc[, W2]
-    if (any(names(estcoeff) %in% W3)) Sw3 <- mcmc[, W3]
-    if (any(names(estcoeff) %in% W4)) Sw4 <- mcmc[, W4]
+    if (any(names(estcoeff) %in% a1)) U7XSa1 <- mcmc[, a1]
+    if (any(names(estcoeff) %in% a2)) U7XSa2 <- mcmc[, a2]
+    if (any(names(estcoeff) %in% a3)) U7XSa3 <- mcmc[, a3]
+    if (any(names(estcoeff) %in% a4)) U7XSa4 <- mcmc[, a4]
+    if (any(names(estcoeff) %in% w1)) U7XSw1 <- mcmc[, w1]
+    if (any(names(estcoeff) %in% w2)) U7XSw2 <- mcmc[, w2]
+    if (any(names(estcoeff) %in% w3)) U7XSw3 <- mcmc[, w3]
+    if (any(names(estcoeff) %in% w4)) U7XSw4 <- mcmc[, w4]
     SstdW <- sqrt(mcmc[,varW])
 
     # Calculate Simulated Index MM
-    if (any(names(estcoeff) %in% W1)) IndexMM <- Sw1*Sa2*Sa3*Sa4
-    if (any(names(estcoeff) %in% W2)) IndexMM <- Sa1*Sw2*Sa3*Sa4
-    if (any(names(estcoeff) %in% W3)) IndexMM <- Sa1*Sa2*Sw3*Sa4
-    if (any(names(estcoeff) %in% W4)) IndexMM <- Sa1*Sa2*Sa3*Sw4
+    if (any(names(estcoeff) %in% w1)) IndexMM <- U7XSw1*U7XSa2*U7XSa3*U7XSa4
+    if (any(names(estcoeff) %in% w2)) IndexMM <- U7XSa1*U7XSw2*U7XSa3*U7XSa4
+    if (any(names(estcoeff) %in% w3)) IndexMM <- U7XSa1*U7XSa2*U7XSw3*U7XSa4
+    if (any(names(estcoeff) %in% w4)) IndexMM <- U7XSa1*U7XSa2*U7XSa3*U7XSw4
 
 
     #### Percentile and Bias-Corrected Confidence Intervals of Conditional Indirect Effects ####
@@ -435,8 +629,8 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
 
     for (X in 1:5) {
       level <- X - 3
-      estX <- (a1+w1*level*stdW)*(a2+w2*level*stdW)*(a3+w3*level*stdW)*(a4+w4*level*stdW)
-      abX <- (Sa1+Sw1*level*SstdW)*(Sa2+Sw2*level*SstdW)*(Sa3+Sw3*level*SstdW)*(Sa4+Sw4*level*SstdW)
+      estX <- (U7Xa1+U7Xw1*level*stdW)*(U7Xa2+U7Xw2*level*stdW)*(U7Xa3+U7Xw3*level*stdW)*(U7Xa4+U7Xw4*level*stdW)
+      abX <- (U7XSa1+U7XSw1*level*SstdW)*(U7XSa2+U7XSw2*level*SstdW)*(U7XSa3+U7XSw3*level*SstdW)*(U7XSa4+U7XSw4*level*SstdW)
       zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
       ## Percentile Confidence Intervals ##
@@ -528,25 +722,25 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
   if ((NoMod > 1) & (NoModw == 0)) {
 
     # Define estimated parameters for calculating indirect effects
-    if (any(names(estcoeff) %in% A1)) a1 <- estcoeff[A1]
-    if (any(names(estcoeff) %in% A2)) a2 <- estcoeff[A2]
-    if (any(names(estcoeff) %in% A3)) a3 <- estcoeff[A3]
-    if (any(names(estcoeff) %in% A4)) a4 <- estcoeff[A4]
-    if (any(names(estcoeff) %in% Z1)) z1 <- estcoeff[Z1]
-    if (any(names(estcoeff) %in% Z2)) z2 <- estcoeff[Z2]
-    if (any(names(estcoeff) %in% Z3)) z3 <- estcoeff[Z3]
-    if (any(names(estcoeff) %in% Z4)) z4 <- estcoeff[Z4]
+    if (any(names(estcoeff) %in% a1)) U7Xa1 <- estcoeff[a1]
+    if (any(names(estcoeff) %in% a2)) U7Xa2 <- estcoeff[a2]
+    if (any(names(estcoeff) %in% a3)) U7Xa3 <- estcoeff[a3]
+    if (any(names(estcoeff) %in% a4)) U7Xa4 <- estcoeff[a4]
+    if (any(names(estcoeff) %in% z1)) U7Xz1 <- estcoeff[z1]
+    if (any(names(estcoeff) %in% z2)) U7Xz2 <- estcoeff[z2]
+    if (any(names(estcoeff) %in% z3)) U7Xz3 <- estcoeff[z3]
+    if (any(names(estcoeff) %in% z4)) U7Xz4 <- estcoeff[z4]
     stdZ <- sqrt(estcoeff[varZ])
 
     # Capture simulated parameters for calculating indirect effects #
-    if (any(names(estcoeff) %in% A1)) Sa1 <- mcmc[, A1]
-    if (any(names(estcoeff) %in% A2)) Sa2 <- mcmc[, A2]
-    if (any(names(estcoeff) %in% A3)) Sa3 <- mcmc[, A3]
-    if (any(names(estcoeff) %in% A4)) Sa4 <- mcmc[, A4]
-    if (any(names(estcoeff) %in% Z1)) Sz1 <- mcmc[, Z1]
-    if (any(names(estcoeff) %in% Z2)) Sz2 <- mcmc[, Z2]
-    if (any(names(estcoeff) %in% Z3)) Sz3 <- mcmc[, Z3]
-    if (any(names(estcoeff) %in% Z4)) Sz4 <- mcmc[, Z4]
+    if (any(names(estcoeff) %in% a1)) U7XSa1 <- mcmc[, a1]
+    if (any(names(estcoeff) %in% a2)) U7XSa2 <- mcmc[, a2]
+    if (any(names(estcoeff) %in% a3)) U7XSa3 <- mcmc[, a3]
+    if (any(names(estcoeff) %in% a4)) U7XSa4 <- mcmc[, a4]
+    if (any(names(estcoeff) %in% z1)) U7XSz1 <- mcmc[, z1]
+    if (any(names(estcoeff) %in% z2)) U7XSz2 <- mcmc[, z2]
+    if (any(names(estcoeff) %in% z3)) U7XSz3 <- mcmc[, z3]
+    if (any(names(estcoeff) %in% z4)) U7XSz4 <- mcmc[, z4]
     SstdZ <- sqrt(mcmc[,varZ])
 
     #### Percentile and Bias-Corrected Confidence Intervals of Conditional Indirect Effects ####
@@ -558,8 +752,8 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
 
     for (X in 1:5) {
       level <- X - 3
-      estX <- (a1+z1*level*stdZ)*(a2+z2*level*stdZ)*(a3+z3*level*stdZ)*(a4+z4*level*stdZ)
-      abX <- (Sa1+Sz1*level*SstdZ)*(Sa2+Sz2*level*SstdZ)*(Sa3+Sz3*level*SstdZ)*(Sa4+Sz4*level*SstdZ)
+      estX <- (U7Xa1+U7Xz1*level*stdZ)*(U7Xa2+U7Xz2*level*stdZ)*(U7Xa3+U7Xz3*level*stdZ)*(U7Xa4+U7Xz4*level*stdZ)
+      abX <- (U7XSa1+U7XSz1*level*SstdZ)*(U7XSa2+SU7Xz2*level*SstdZ)*(U7XSa3+U7XSz3*level*SstdZ)*(U7XSa4+U7XSz4*level*SstdZ)
       zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
       ## Percentile Confidence Intervals ##
@@ -616,25 +810,25 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
   if ((NoMod > 1) & (NoModz == 0)) {
 
     # Define estimated parameters for calculating indirect effects
-    if (any(names(estcoeff) %in% A1)) a1 <- estcoeff[A1]
-    if (any(names(estcoeff) %in% A2)) a2 <- estcoeff[A2]
-    if (any(names(estcoeff) %in% A3)) a3 <- estcoeff[A3]
-    if (any(names(estcoeff) %in% A4)) a4 <- estcoeff[A4]
-    if (any(names(estcoeff) %in% W1)) w1 <- estcoeff[W1]
-    if (any(names(estcoeff) %in% W2)) w2 <- estcoeff[W2]
-    if (any(names(estcoeff) %in% W3)) w3 <- estcoeff[W3]
-    if (any(names(estcoeff) %in% W4)) w4 <- estcoeff[W4]
+    if (any(names(estcoeff) %in% a1)) U7Xa1 <- estcoeff[a1]
+    if (any(names(estcoeff) %in% a2)) U7Xa2 <- estcoeff[a2]
+    if (any(names(estcoeff) %in% a3)) U7Xa3 <- estcoeff[a3]
+    if (any(names(estcoeff) %in% a4)) U7Xa4 <- estcoeff[a4]
+    if (any(names(estcoeff) %in% w1)) U7Xw1 <- estcoeff[w1]
+    if (any(names(estcoeff) %in% w2)) U7Xw2 <- estcoeff[w2]
+    if (any(names(estcoeff) %in% w3)) U7Xw3 <- estcoeff[w3]
+    if (any(names(estcoeff) %in% w4)) U7Xw4 <- estcoeff[w4]
     stdW <- sqrt(estcoeff[varW])
 
     # Capture simulated parameters for calculating indirect effects #
-    if (any(names(estcoeff) %in% A1)) Sa1 <- mcmc[, A1]
-    if (any(names(estcoeff) %in% A2)) Sa2 <- mcmc[, A2]
-    if (any(names(estcoeff) %in% A3)) Sa3 <- mcmc[, A3]
-    if (any(names(estcoeff) %in% A4)) Sa4 <- mcmc[, A4]
-    if (any(names(estcoeff) %in% W1)) Sw1 <- mcmc[, W1]
-    if (any(names(estcoeff) %in% W2)) Sw2 <- mcmc[, W2]
-    if (any(names(estcoeff) %in% W3)) Sw3 <- mcmc[, W3]
-    if (any(names(estcoeff) %in% W4)) Sw4 <- mcmc[, W4]
+    if (any(names(estcoeff) %in% a1)) U7XSa1 <- mcmc[, a1]
+    if (any(names(estcoeff) %in% a2)) U7XSa2 <- mcmc[, a2]
+    if (any(names(estcoeff) %in% a3)) U7XSa3 <- mcmc[, a3]
+    if (any(names(estcoeff) %in% a4)) U7XSa4 <- mcmc[, a4]
+    if (any(names(estcoeff) %in% w1)) U7XSw1 <- mcmc[, w1]
+    if (any(names(estcoeff) %in% w2)) U7XSw2 <- mcmc[, w2]
+    if (any(names(estcoeff) %in% w3)) U7XSw3 <- mcmc[, w3]
+    if (any(names(estcoeff) %in% w4)) U7XSw4 <- mcmc[, w4]
     SstdW <- sqrt(mcmc[,varW])
 
     #### Percentile and Bias-Corrected Confidence Intervals of Conditional Indirect Effects ####
@@ -646,8 +840,8 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
 
     for (X in 1:5) {
       level <- X - 3
-      estX <- (a1+w1*level*stdW)*(a2+w2*level*stdW)*(a3+w3*level*stdW)*(a4+w4*level*stdW)
-      abX <- (Sa1+Sw1*level*SstdW)*(Sa2+Sw2*level*SstdW)*(Sa3+Sw3*level*SstdW)*(Sa4+Sw4*level*SstdW)
+      estX <- (U7Xa1+U7Xw1*level*stdW)*(U7Xa2+U7Xw2*level*stdW)*(U7Xa3+U7Xw3*level*stdW)*(U7Xa4+U7Xw4*level*stdW)
+      abX <- (U7XSa1+U7XSw1*level*SstdW)*(U7XSa2+U7XSw2*level*SstdW)*(U7XSa3+U7XSw3*level*SstdW)*(U7XSa4+U7XSw4*level*SstdW)
       zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
       ## Percentile Confidence Intervals ##
@@ -707,43 +901,43 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
   if ((NoMod > 1) & (NoModz != 0) & (NoModw != 0)) {
 
   # Define estimated parameters for calculating indirect effects
-    if (any(names(estcoeff) %in% A1)) a1 <- estcoeff[A1]
-    if (any(names(estcoeff) %in% A2)) a2 <- estcoeff[A2]
-    if (any(names(estcoeff) %in% A3)) a3 <- estcoeff[A3]
-    if (any(names(estcoeff) %in% A4)) a4 <- estcoeff[A4]
-    if (any(names(estcoeff) %in% Z1)) z1 <- estcoeff[Z1]
-    if (any(names(estcoeff) %in% Z2)) z2 <- estcoeff[Z2]
-    if (any(names(estcoeff) %in% Z3)) z3 <- estcoeff[Z3]
-    if (any(names(estcoeff) %in% Z4)) z4 <- estcoeff[Z4]
-    if (any(names(estcoeff) %in% W1)) w1 <- estcoeff[W1]
-    if (any(names(estcoeff) %in% W2)) w2 <- estcoeff[W2]
-    if (any(names(estcoeff) %in% W3)) w3 <- estcoeff[W3]
-    if (any(names(estcoeff) %in% W4)) w4 <- estcoeff[W4]
-    if (any(names(estcoeff) %in% ZW1)) zw1 <- estcoeff[ZW1]
-    if (any(names(estcoeff) %in% ZW2)) zw2 <- estcoeff[ZW2]
-    if (any(names(estcoeff) %in% ZW3)) zw3 <- estcoeff[ZW3]
-    if (any(names(estcoeff) %in% ZW4)) zw4 <- estcoeff[ZW4]
+    if (any(names(estcoeff) %in% a1)) U7Xa1 <- estcoeff[a1]
+    if (any(names(estcoeff) %in% a2)) U7Xa2 <- estcoeff[a2]
+    if (any(names(estcoeff) %in% a3)) U7Xa3 <- estcoeff[a3]
+    if (any(names(estcoeff) %in% a4)) U7Xa4 <- estcoeff[a4]
+    if (any(names(estcoeff) %in% z1)) U7Xz1 <- estcoeff[z1]
+    if (any(names(estcoeff) %in% z2)) U7Xz2 <- estcoeff[z2]
+    if (any(names(estcoeff) %in% z3)) U7Xz3 <- estcoeff[z3]
+    if (any(names(estcoeff) %in% z4)) U7Xz4 <- estcoeff[z4]
+    if (any(names(estcoeff) %in% w1)) U7Xw1 <- estcoeff[w1]
+    if (any(names(estcoeff) %in% w2)) U7Xw2 <- estcoeff[w2]
+    if (any(names(estcoeff) %in% w3)) U7Xw3 <- estcoeff[w3]
+    if (any(names(estcoeff) %in% w4)) U7Xw4 <- estcoeff[w4]
+    if (any(names(estcoeff) %in% zw1)) U7Xzw1 <- estcoeff[zw1]
+    if (any(names(estcoeff) %in% zw2)) U7Xzw2 <- estcoeff[zw2]
+    if (any(names(estcoeff) %in% zw3)) U7Xzw3 <- estcoeff[zw3]
+    if (any(names(estcoeff) %in% zw4)) U7Xzw4 <- estcoeff[zw4]
     stdZ <- sqrt(estcoeff[varZ])
     stdW <- sqrt(estcoeff[varW])
 
 
   # Capture simulated parameters for calculating indirect effects
-    if (any(names(estcoeff) %in% A1)) Sa1 <- mcmc[, A1]
-    if (any(names(estcoeff) %in% A2)) Sa2 <- mcmc[, A2]
-    if (any(names(estcoeff) %in% A3)) Sa3 <- mcmc[, A3]
-    if (any(names(estcoeff) %in% A4)) Sa4 <- mcmc[, A4]
-    if (any(names(estcoeff) %in% Z1)) Sz1 <- mcmc[, Z1]
-    if (any(names(estcoeff) %in% Z2)) Sz2 <- mcmc[, Z2]
-    if (any(names(estcoeff) %in% Z3)) Sz3 <- mcmc[, Z3]
-    if (any(names(estcoeff) %in% Z4)) Sz4 <- mcmc[, Z4]
-    if (any(names(estcoeff) %in% W1)) Sw1 <- mcmc[, W1]
-    if (any(names(estcoeff) %in% W2)) Sw2 <- mcmc[, W2]
-    if (any(names(estcoeff) %in% W3)) Sw3 <- mcmc[, W3]
-    if (any(names(estcoeff) %in% W4)) Sw4 <- mcmc[, W4]
-    if (any(names(estcoeff) %in% ZW1)) Szw1 <- mcmc[, ZW1]
-    if (any(names(estcoeff) %in% ZW2)) Szw2 <- mcmc[, ZW2]
-    if (any(names(estcoeff) %in% ZW3)) Szw3 <- mcmc[, ZW3]
-    if (any(names(estcoeff) %in% ZW4)) Szw4 <- mcmc[, ZW4]
+    if (any(names(estcoeff) %in% a1)) U7XSa1 <- mcmc[, a1]
+    if (any(names(estcoeff) %in% a2)) U7XSa2 <- mcmc[, a2]
+    if (any(names(estcoeff) %in% a3)) U7XSa3 <- mcmc[, a3]
+    if (any(names(estcoeff) %in% a4)) U7XSa4 <- mcmc[, a4]
+    if (any(names(estcoeff) %in% z1)) U7XSz1 <- mcmc[, z1]
+    if (any(names(estcoeff) %in% z2)) U7XSz2 <- mcmc[, z2]
+    if (any(names(estcoeff) %in% z3)) U7XSz3 <- mcmc[, z3]
+    if (any(names(estcoeff) %in% z4)) U7XSz4 <- mcmc[, z4]
+    if (any(names(estcoeff) %in% w1)) U7XSw1 <- mcmc[, w1]
+    if (any(names(estcoeff) %in% w2)) U7XSw2 <- mcmc[, w2]
+    if (any(names(estcoeff) %in% w3)) U7XSw3 <- mcmc[, w3]
+    if (any(names(estcoeff) %in% w4)) U7XSw4 <- mcmc[, w4]
+    if (any(names(estcoeff) %in% zw1)) U7XSzw1 <- mcmc[, zw1]
+    if (any(names(estcoeff) %in% zw2)) U7XSzw2 <- mcmc[, zw2]
+    if (any(names(estcoeff) %in% zw3)) U7XSzw3 <- mcmc[, zw3]
+    if (any(names(estcoeff) %in% zw4)) U7XSzw4 <- mcmc[, zw4]
     SstdZ <- sqrt(mcmc[,varZ])
     SstdW <- sqrt(mcmc[,varW])
 
@@ -764,14 +958,14 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
       for (W in 1:5) {
         levelZ <- Z - 3
         levelW <- W - 3
-        estX <- (a1+z1*levelZ*stdZ+w1*levelW*stdW+zw1*levelZ*stdZ*levelW*stdW)*
-                (a2+z2*levelZ*stdZ+w2*levelW*stdW+zw2*levelZ*stdZ*levelW*stdW)*
-                (a3+z3*levelZ*stdZ+w3*levelW*stdW+zw3*levelZ*stdZ*levelW*stdW)*
-                (a4+z4*levelZ*stdZ+w4*levelW*stdW+zw4*levelZ*stdZ*levelW*stdW)
-        abX <- (Sa1+Sz1*levelZ*SstdZ+Sw1*levelW*SstdW+Szw1*levelZ*SstdZ*levelW*SstdW)*
-               (Sa2+Sz2*levelZ*SstdZ+Sw2*levelW*SstdW+Szw2*levelZ*SstdZ*levelW*SstdW)*
-               (Sa3+Sz3*levelZ*SstdZ+Sw3*levelW*SstdW+Szw3*levelZ*SstdZ*levelW*SstdW)*
-               (Sa4+Sz4*levelZ*SstdZ+Sw4*levelW*SstdW+Szw4*levelZ*SstdZ*levelW*SstdW)
+        estX <- (U7Xa1+U7Xz1*levelZ*stdZ+U7Xw1*levelW*stdW+U7Xzw1*levelZ*stdZ*levelW*stdW)*
+                (U7Xa2+U7Xz2*levelZ*stdZ+U7Xw2*levelW*stdW+U7Xzw2*levelZ*stdZ*levelW*stdW)*
+                (U7Xa3+U7Xz3*levelZ*stdZ+U7Xw3*levelW*stdW+U7Xzw3*levelZ*stdZ*levelW*stdW)*
+                (U7Xa4+U7Xz4*levelZ*stdZ+U7Xw4*levelW*stdW+U7Xzw4*levelZ*stdZ*levelW*stdW)
+        abX <- (U7XSa1+U7XSz1*levelZ*SstdZ+U7XSw1*levelW*SstdW+U7XSzw1*levelZ*SstdZ*levelW*SstdW)*
+               (U7XSa2+U7XSz2*levelZ*SstdZ+U7XSw2*levelW*SstdW+U7XSzw2*levelZ*SstdZ*levelW*SstdW)*
+               (U7XSa3+U7XSz3*levelZ*SstdZ+U7XSw3*levelW*SstdW+U7XSzw3*levelZ*SstdZ*levelW*SstdW)*
+               (U7XSa4+SU7Xz4*levelZ*SstdZ+U7XSw4*levelW*SstdW+U7XSzw4*levelZ*SstdZ*levelW*SstdW)
         zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
         ## Percentile Confidence Intervals ##
@@ -832,12 +1026,14 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
 
 
     ## Slope Difference Test 1 "HiZ/HiW - HiZ/LoW" ##
-    estX <- (a1+z1*stdZ+w1*stdW+zw1*stdZ*stdW)*(a2+z2*stdZ+w2*stdW+zw2*stdZ*stdW)*(a3+z3*stdZ+w3*stdW+zw3*stdZ*stdW)*(a4+z4*stdZ+w4*stdW+zw4*stdZ*stdW) -
-          (a1+z1*stdZ-w1*stdW-zw1*stdZ*stdW)*(a2+z2*stdZ-w2*stdW-zw2*stdZ*stdW)*(a3+z3*stdZ-w3*stdW-zw3*stdZ*stdW)*(a4+z4*stdZ-w4*stdW-zw4*stdZ*stdW)
-    abX <- (Sa1+Sz1*SstdZ+Sw1*SstdW+Szw1*SstdZ*SstdW)*(Sa2+Sz2*SstdZ+Sw2*SstdW+Szw2*SstdZ*SstdW)*(Sa3+Sz3*SstdZ+Sw3*SstdW+Szw3*SstdZ*SstdW)*
-           (Sa4+Sz4*SstdZ+Sw4*SstdW+Szw4*SstdZ*SstdW) -
-           (Sa1+Sz1*SstdZ-Sw1*SstdW-Szw1*SstdZ*SstdW)*(Sa2+Sz2*SstdZ-Sw2*SstdW-Szw2*SstdZ*SstdW)*(Sa3+Sz3*SstdZ-Sw3*SstdW-Szw3*SstdZ*SstdW)*
-           (Sa4+Sz4*SstdZ-Sw4*SstdW-Szw4*SstdZ*SstdW)
+    estX <- (U7Xa1+U7Xz1*stdZ+U7Xw1*stdW+U7Xzw1*stdZ*stdW)*(U7Xa2+U7Xz2*stdZ+U7Xw2*stdW+U7Xzw2*stdZ*stdW)*
+            (U7Xa3+U7Xz3*stdZ+U7Xw3*stdW+U7Xzw3*stdZ*stdW)*(U7Xa4+U7Xz4*stdZ+U7Xw4*stdW+U7Xzw4*stdZ*stdW) -
+            (U7Xa1+U7Xz1*stdZ-U7Xw1*stdW-U7Xzw1*stdZ*stdW)*(U7Xa2+U7Xz2*stdZ-U7Xw2*stdW-U7Xzw2*stdZ*stdW)*
+            (U7Xa3+U7Xz3*stdZ-U7Xw3*stdW-U7Xzw3*stdZ*stdW)*(U7Xa4+U7Xz4*stdZ-U7Xw4*stdW-U7Xzw4*stdZ*stdW)
+    abX <- (U7XSa1+U7XSz1*SstdZ+U7XSw1*SstdW+U7XSzw1*SstdZ*SstdW)*(U7XSa2+U7XSz2*SstdZ+U7XSw2*SstdW+U7XSzw2*SstdZ*SstdW)*
+           (U7XSa3+U7XSz3*SstdZ+U7XSw3*SstdW+U7XSzw3*SstdZ*SstdW)*(U7XSa4+U7XSz4*SstdZ+U7XSw4*SstdW+U7XSzw4*SstdZ*SstdW) -
+           (U7XSa1+U7XSz1*SstdZ-U7XSw1*SstdW-U7XSzw1*SstdZ*SstdW)*(U7XSa2+U7XSz2*SstdZ-U7XSw2*SstdW-U7XSzw2*SstdZ*SstdW)*
+           (U7XSa3+SU7Xz3*SstdZ-U7XSw3*SstdW-U7XSzw3*SstdZ*SstdW)*(U7XSa4+U7XSz4*SstdZ-U7XSw4*SstdW-U7XSzw4*SstdZ*SstdW)
     zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
@@ -875,12 +1071,14 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
     }
 
     ## Slope Difference Test 2 "HiZ/HiW - LoZ/HiW" ##
-    estX <- (a1+z1*stdZ+w1*stdW+zw1*stdZ*stdW)*(a2+z2*stdZ+w2*stdW+zw2*stdZ*stdW)*(a3+z3*stdZ+w3*stdW+zw3*stdZ*stdW)*(a4+z4*stdZ+w4*stdW+zw4*stdZ*stdW) -
-            (a1-z1*stdZ+w1*stdW-zw1*stdZ*stdW)*(a2-z2*stdZ+w2*stdW-zw2*stdZ*stdW)*(a3-z3*stdZ+w3*stdW-zw3*stdZ*stdW)*(a4-z4*stdZ+w4*stdW-zw4*stdZ*stdW)
-    abX <- (Sa1+Sz1*SstdZ+Sw1*SstdW+Szw1*SstdZ*SstdW)*(Sa2+Sz2*SstdZ+Sw2*SstdW+Szw2*SstdZ*SstdW)*(Sa3+Sz3*SstdZ+Sw3*SstdW+Szw3*SstdZ*SstdW)*
-           (Sa4+Sz4*SstdZ+Sw4*SstdW+Szw4*SstdZ*SstdW) -
-           (Sa1-Sz1*SstdZ+Sw1*SstdW-Szw1*SstdZ*SstdW)*(Sa2-Sz2*SstdZ+Sw2*SstdW-Szw2*SstdZ*SstdW)*(Sa3-Sz3*SstdZ+Sw3*SstdW-Szw3*SstdZ*SstdW)*
-           (Sa4-Sz4*SstdZ+Sw4*SstdW-Szw4*SstdZ*SstdW)
+    estX <- (U7Xa1+U7Xz1*stdZ+U7Xw1*stdW+U7Xzw1*stdZ*stdW)*(U7Xa2+U7Xz2*stdZ+U7Xw2*stdW+U7Xzw2*stdZ*stdW)*
+            (U7Xa3+U7Xz3*stdZ+U7Xw3*stdW+U7Xzw3*stdZ*stdW)*(U7Xa4+U7Xz4*stdZ+U7Xw4*stdW+U7Xzw4*stdZ*stdW) -
+            (U7Xa1-U7Xz1*stdZ+U7Xw1*stdW-U7Xzw1*stdZ*stdW)*(U7Xa2-U7Xz2*stdZ+U7Xw2*stdW-U7Xzw2*stdZ*stdW)*
+            (U7Xa3-U7Xz3*stdZ+U7Xw3*stdW-U7Xzw3*stdZ*stdW)*(U7Xa4-U7Xz4*stdZ+U7Xw4*stdW-U7Xzw4*stdZ*stdW)
+    abX <- (U7XSa1+U7XSz1*SstdZ+U7XSw1*SstdW+U7XSzw1*SstdZ*SstdW)*(U7XSa2+U7XSz2*SstdZ+U7XSw2*SstdW+U7XSzw2*SstdZ*SstdW)*
+           (U7XSa3+U7XSz3*SstdZ+U7XSw3*SstdW+U7XSzw3*SstdZ*SstdW)*(U7XSa4+U7XSz4*SstdZ+U7XSw4*SstdW+U7XSzw4*SstdZ*SstdW) -
+           (U7XSa1-U7XSz1*SstdZ+U7XSw1*SstdW-U7XSzw1*SstdZ*SstdW)*(U7XSa2-U7XSz2*SstdZ+U7XSw2*SstdW-U7XSzw2*SstdZ*SstdW)*
+           (U7XSa3-U7XSz3*SstdZ+U7XSw3*SstdW-U7XSzw3*SstdZ*SstdW)*(U7XSa4-U7XSz4*SstdZ+U7XSw4*SstdW-U7XSzw4*SstdZ*SstdW)
     zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
@@ -918,12 +1116,14 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
     }
 
     ## Slope Difference Test 3 "HiZ/LoW - LoZ/LoW" ##
-    estX <- (a1+z1*stdZ-w1*stdW-zw1*stdZ*stdW)*(a2+z2*stdZ-w2*stdW-zw2*stdZ*stdW)*(a3+z3*stdZ-w3*stdW-zw3*stdZ*stdW)*(a4+z4*stdZ-w4*stdW-zw4*stdZ*stdW) -
-            (a1-z1*stdZ-w1*stdW+zw1*stdZ*stdW)*(a2-z2*stdZ-w2*stdW+zw2*stdZ*stdW)*(a3-z3*stdZ-w3*stdW+zw3*stdZ*stdW)*(a4-z4*stdZ-w4*stdW+zw4*stdZ*stdW)
-    abX <- (Sa1+Sz1*SstdZ-Sw1*SstdW-Szw1*SstdZ*SstdW)*(Sa2+Sz2*SstdZ-Sw2*SstdW-Szw2*SstdZ*SstdW)*(Sa3+Sz3*SstdZ-Sw3*SstdW-Szw3*SstdZ*SstdW)*
-           (Sa4+Sz4*SstdZ-Sw4*SstdW-Szw4*SstdZ*SstdW) -
-           (Sa1-Sz1*SstdZ-Sw1*SstdW+Szw1*SstdZ*SstdW)*(Sa2-Sz2*SstdZ-Sw2*SstdW+Szw2*SstdZ*SstdW)*(Sa3-Sz3*SstdZ-Sw3*SstdW+Szw3*SstdZ*SstdW)*
-           (Sa4-Sz4*SstdZ-Sw4*SstdW+Szw4*SstdZ*SstdW)
+    estX <- (U7Xa1+U7Xz1*stdZ-U7Xw1*stdW-U7Xzw1*stdZ*stdW)*(U7Xa2+U7Xz2*stdZ-U7Xw2*stdW-U7Xzw2*stdZ*stdW)*
+            (U7Xa3+U7Xz3*stdZ-U7Xw3*stdW-U7Xzw3*stdZ*stdW)*(U7Xa4+U7Xz4*stdZ-U7Xw4*stdW-U7Xzw4*stdZ*stdW) -
+            (U7Xa1-U7Xz1*stdZ-U7Xw1*stdW+U7Xzw1*stdZ*stdW)*(U7Xa2-zU7X2*stdZ-U7Xw2*stdW+U7Xzw2*stdZ*stdW)*
+            (U7Xa3-U7Xz3*stdZ-U7Xw3*stdW+U7Xzw3*stdZ*stdW)*(U7Xa4-U7Xz4*stdZ-U7Xw4*stdW+U7Xzw4*stdZ*stdW)
+    abX <- (U7XSa1+U7XSz1*SstdZ-U7XSw1*SstdW-U7XSzw1*SstdZ*SstdW)*(U7XSa2+U7XSz2*SstdZ-U7XSw2*SstdW-U7XSzw2*SstdZ*SstdW)*
+           (U7XSa3+U7XSz3*SstdZ-U7XSw3*SstdW-U7XSzw3*SstdZ*SstdW)*(U7XSa4+U7XSz4*SstdZ-U7XSw4*SstdW-U7XSzw4*SstdZ*SstdW) -
+           (U7XSa1-U7XSz1*SstdZ-U7XSw1*SstdW+U7XSzw1*SstdZ*SstdW)*(U7XSa2-U7XSz2*SstdZ-U7XSw2*SstdW+U7XSzw2*SstdZ*SstdW)*
+           (U7XSa3-U7XSz3*SstdZ-U7XSw3*SstdW+U7XSzw3*SstdZ*SstdW)*(U7XSa4-U7XSz4*SstdZ-U7XSw4*SstdW+U7XSzw4*SstdZ*SstdW)
     zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
@@ -961,12 +1161,14 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
     }
 
     ## Slope Difference Test 4 "LoZ/HiW - LoZ/LoW" ##
-    estX <- (a1-z1*stdZ+w1*stdW-zw1*stdZ*stdW)*(a2-z2*stdZ+w2*stdW-zw2*stdZ*stdW)*(a3-z3*stdZ+w3*stdW-zw3*stdZ*stdW)*(a4-z4*stdZ+w4*stdW-zw4*stdZ*stdW) -
-            (a1-z1*stdZ-w1*stdW+zw1*stdZ*stdW)*(a2-z2*stdZ-w2*stdW+zw2*stdZ*stdW)*(a3-z3*stdZ-w3*stdW+zw3*stdZ*stdW)*(a4-z4*stdZ-w4*stdW+zw4*stdZ*stdW)
-    abX <- (Sa1-Sz1*SstdZ+Sw1*SstdW-Szw1*SstdZ*SstdW)*(Sa2-Sz2*SstdZ+Sw2*SstdW-Szw2*SstdZ*SstdW)*(Sa3-Sz3*SstdZ+Sw3*SstdW-Szw3*SstdZ*SstdW)*
-           (Sa4-Sz4*SstdZ+Sw4*SstdW-Szw4*SstdZ*SstdW) -
-           (Sa1-Sz1*SstdZ-Sw1*SstdW+Szw1*SstdZ*SstdW)*(Sa2-Sz2*SstdZ-Sw2*SstdW+Szw2*SstdZ*SstdW)*(Sa3-Sz3*SstdZ-Sw3*SstdW+Szw3*SstdZ*SstdW)*
-           (Sa4-Sz4*SstdZ-Sw4*SstdW+Szw4*SstdZ*SstdW)
+    estX <- (U7Xa1-U7Xz1*stdZ+U7Xw1*stdW-U7Xzw1*stdZ*stdW)*(U7Xa2-U7Xz2*stdZ+U7Xw2*stdW-U7Xzw2*stdZ*stdW)*
+            (U7Xa3-U7Xz3*stdZ+U7Xw3*stdW-U7Xzw3*stdZ*stdW)*(U7Xa4-U7Xz4*stdZ+U7Xw4*stdW-U7Xzw4*stdZ*stdW) -
+            (U7Xa1-U7Xz1*stdZ-U7Xw1*stdW+U7Xzw1*stdZ*stdW)*(U7Xa2-U7Xz2*stdZ-U7Xw2*stdW+U7Xzw2*stdZ*stdW)*
+            (U7Xa3-U7Xz3*stdZ-U7Xw3*stdW+U7Xzw3*stdZ*stdW)*(U7Xa4-U7Xz4*stdZ-U7Xw4*stdW+U7Xzw4*stdZ*stdW)
+    abX <- (U7XSa1-U7XSz1*SstdZ+U7XSw1*SstdW-U7XSzw1*SstdZ*SstdW)*(U7XSa2-U7XSz2*SstdZ+U7XSw2*SstdW-U7XSzw2*SstdZ*SstdW)*
+           (U7XSa3-U7XSz3*SstdZ+U7XSw3*SstdW-U7XSzw3*SstdZ*SstdW)*(U7XSa4-U7XSz4*SstdZ+U7XSw4*SstdW-U7XSzw4*SstdZ*SstdW) -
+           (U7XSa1-U7XSz1*SstdZ-U7XSw1*SstdW+U7XSzw1*SstdZ*SstdW)*(U7XSa2-U7XSz2*SstdZ-U7XSw2*SstdW+U7XSzw2*SstdZ*SstdW)*
+           (U7XSa3-U7XSz3*SstdZ-U7XSw3*SstdW+U7XSzw3*SstdZ*SstdW)*(U7XSa4-U7XSz4*SstdZ-U7XSw4*SstdW+U7XSzw4*SstdZ*SstdW)
     zX <- qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
@@ -1005,12 +1207,14 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
 
 
     ## Slope Difference Test 5 "HiZ/HiW - LoZ/LoW" ##
-    estX <- (a1+z1*stdZ+w1*stdW+zw1*stdZ*stdW)*(a2+z2*stdZ+w2*stdW+zw2*stdZ*stdW)*(a3+z3*stdZ+w3*stdW+zw3*stdZ*stdW)*(a4+z4*stdZ+w4*stdW+zw4*stdZ*stdW) -
-            (a1-z1*stdZ-w1*stdW+zw1*stdZ*stdW)*(a2-z2*stdZ-w2*stdW+zw2*stdZ*stdW)*(a3-z3*stdZ-w3*stdW+zw3*stdZ*stdW)*(a4-z4*stdZ-w4*stdW+zw4*stdZ*stdW)
-    abX <- (Sa1+Sz1*SstdZ+Sw1*SstdW+Szw1*SstdZ*SstdW)*(Sa2+Sz2*SstdZ+Sw2*SstdW+Szw2*SstdZ*SstdW)*(Sa3+Sz3*SstdZ+Sw3*SstdW+Szw3*SstdZ*SstdW)*
-           (Sa4+Sz4*SstdZ+Sw4*SstdW+Szw4*SstdZ*SstdW) -
-           (Sa1-Sz1*SstdZ-Sw1*SstdW+Szw1*SstdZ*SstdW)*(Sa2-Sz2*SstdZ-Sw2*SstdW+Szw2*SstdZ*SstdW)*(Sa3-Sz3*SstdZ-Sw3*SstdW+Szw3*SstdZ*SstdW)*
-           (Sa4-Sz4*SstdZ-Sw4*SstdW+Szw4*SstdZ*SstdW)
+    estX <- (U7Xa1+U7Xz1*stdZ+U7Xw1*stdW+U7Xzw1*stdZ*stdW)*(U7Xa2+U7Xz2*stdZ+U7Xw2*stdW+U7Xzw2*stdZ*stdW)*
+            (U7Xa3+U7Xz3*stdZ+U7Xw3*stdW+U7Xzw3*stdZ*stdW)*(U7Xa4+U7Xz4*stdZ+U7Xw4*stdW+U7Xzw4*stdZ*stdW) -
+            (U7Xa1-U7Xz1*stdZ-U7Xw1*stdW+U7Xzw1*stdZ*stdW)*(U7Xa2-U7Xz2*stdZ-U7Xw2*stdW+U7Xzw2*stdZ*stdW)*
+            (U7Xa3-U7Xz3*stdZ-U7Xw3*stdW+U7Xzw3*stdZ*stdW)*(U7Xa4-U7Xz4*stdZ-U7Xw4*stdW+U7Xzw4*stdZ*stdW)
+    abX <- (U7XSa1+U7XSz1*SstdZ+U7XSw1*SstdW+U7XSzw1*SstdZ*SstdW)*(U7XSa2+U7XSz2*SstdZ+U7XSw2*SstdW+U7XSzw2*SstdZ*SstdW)*
+           (U7XSa3+U7XSz3*SstdZ+U7XSw3*SstdW+U7XSzw3*SstdZ*SstdW)*(U7XSa4+U7XSz4*SstdZ+U7XSw4*SstdW+U7XSzw4*SstdZ*SstdW) -
+           (U7XSa1-U7XSz1*SstdZ-U7XSw1*SstdW+U7XSzw1*SstdZ*SstdW)*(U7XSa2-U7XSz2*SstdZ-U7XSw2*SstdW+U7XSzw2*SstdZ*SstdW)*
+           (U7XSa3-U7XSz3*SstdZ-U7XSw3*SstdW+U7XSzw3*SstdZ*SstdW)*(U7XSa4-U7XSz4*SstdZ-U7XSw4*SstdW+U7XSzw4*SstdZ*SstdW)
     zX <- qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
@@ -1069,12 +1273,14 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
 
 
     ## Slope Difference Test 6 "HiZ/LoW - LoZ/HiW" ##
-    estX <- (a1+z1*stdZ-w1*stdW-zw1*stdZ*stdW)*(a2+z2*stdZ-w2*stdW-zw2*stdZ*stdW)*(a3+z3*stdZ-w3*stdW-zw3*stdZ*stdW)*(a4+z4*stdZ-w4*stdW-zw4*stdZ*stdW) -
-            (a1-z1*stdZ+w1*stdW-zw1*stdZ*stdW)*(a2-z2*stdZ+w2*stdW-zw2*stdZ*stdW)*(a3-z3*stdZ+w3*stdW-zw3*stdZ*stdW)*(a4-z4*stdZ+w4*stdW-zw4*stdZ*stdW)
-     abX <- (Sa1+Sz1*SstdZ-Sw1*SstdW-Szw1*SstdZ*SstdW)*(Sa2+Sz2*SstdZ-Sw2*SstdW-Szw2*SstdZ*SstdW)*(Sa3+Sz3*SstdZ-Sw3*SstdW-Szw3*SstdZ*SstdW)*
-            (Sa4+Sz4*SstdZ-Sw4*SstdW-Szw4*SstdZ*SstdW) -
-            (Sa1-Sz1*SstdZ+Sw1*SstdW-Szw1*SstdZ*SstdW)*(Sa2-Sz2*SstdZ+Sw2*SstdW-Szw2*SstdZ*SstdW)*(Sa3-Sz3*SstdZ+Sw3*SstdW-Szw3*SstdZ*SstdW)*
-            (Sa4-Sz4*SstdZ+Sw4*SstdW-Szw4*SstdZ*SstdW)
+    estX <- (U7Xa1+U7Xz1*stdZ-U7Xw1*stdW-U7Xzw1*stdZ*stdW)*(U7Xa2+U7Xz2*stdZ-U7Xw2*stdW-U7Xzw2*stdZ*stdW)*
+            (U7Xa3+U7Xz3*stdZ-U7Xw3*stdW-U7Xzw3*stdZ*stdW)*(U7Xa4+U7Xz4*stdZ-U7Xw4*stdW-U7Xzw4*stdZ*stdW) -
+            (U7Xa1-U7Xz1*stdZ+U7Xw1*stdW-U7Xzw1*stdZ*stdW)*(U7Xa2-U7Xz2*stdZ+U7Xw2*stdW-U7Xzw2*stdZ*stdW)*
+            (U7Xa3-U7Xz3*stdZ+U7Xw3*stdW-U7Xzw3*stdZ*stdW)*(U7Xa4-U7Xz4*stdZ+U7Xw4*stdW-U7Xzw4*stdZ*stdW)
+     abX <- (U7XSa1+U7XSz1*SstdZ-U7XSw1*SstdW-U7XSzw1*SstdZ*SstdW)*(U7XSa2+U7XSz2*SstdZ-U7XSw2*SstdW-U7XSzw2*SstdZ*SstdW)*
+            (U7XSa3+U7XSz3*SstdZ-U7XSw3*SstdW-U7XSzw3*SstdZ*SstdW)*(U7XSa4+U7XSz4*SstdZ-U7XSw4*SstdW-U7XSzw4*SstdZ*SstdW) -
+            (U7XSa1-U7XSz1*SstdZ+U7XSw1*SstdW-U7XSzw1*SstdZ*SstdW)*(U7XSa2-U7XSz2*SstdZ+U7XSw2*SstdW-U7XSzw2*SstdZ*SstdW)*
+            (U7XSa3-U7XSz3*SstdZ+U7XSw3*SstdW-U7XSzw3*SstdZ*SstdW)*(U7XSa4-U7XSz4*SstdZ+U7XSw4*SstdW-U7XSzw4*SstdZ*SstdW)
       zX <- qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
@@ -1191,66 +1397,49 @@ mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
     Z <- "NA"
   }
 
-  return(list(a1=a1, a2=a2, a3=a3, a4=a4, z1=z1, z2=z2, z3=z3, z4=z4,
-              w1=w1, w2=w2, w3=w3, w4=w4, sd_z=sd_z,
-              Sa1=Sa1, Sa2=Sa2, Sa3=Sa3, Sa4=Sa4, Sz1=Sz1, Sz2=Sz2, Sz3=Sz3, Sz4=Sz4,
-              Sw1=Sw1, Sw2=Sw2, Sw3=Sw3, Sw4=Sw4,
+  return(list(a1=U7Xa1, a2=U7Xa2, a3=U7Xa3, a4=U7Xa4,
+              z1=U7Xz1, z2=U7Xz2, z3=U7Xz3, z4=U7Xz4,
+              w1=U7Xw1, w2=U7Xw2, w3=U7Xw3, w4=U7Xw4, sd_z=sd_z,
+              Sa1=U7XSa1, Sa2=U7XSa2, Sa3=U7XSa3, Sa4=U7XSa4,
+              Sz1=U7XSz1, Sz2=U7XSz2, Sz3=U7XSz3, Sz4=U7XSz4,
+              Sw1=U7XSw1, Sw2=U7XSw2, Sw3=U7XSw3, Sw4=U7XSw4,
               b.no = b.no, NoModz = NoModz, NoModw = NoModw, Z=Z))
-}
+
+}  ## ===== End (function mccimm) ===== ##
 
 
-## Simulation of Designed Function ##
-mccimm_modsem_fun <- function(object = est_lms, Z="NA", W="NA",
-                   A1="NA", Z1="NA", W1="NA", ZW1="NA",
-                   A2="NA", Z2="NA", W2="NA", ZW2="NA",
-                   A3="NA", Z3="NA", W3="NA", ZW3="NA",
-                   A4="NA", Z4="NA", W4="NA", ZW4="NA",
-                   Sfunction="NULL", R=5) {
 
+## ===== Simulation of Defined Function ===== ##
+#' Monte Carlo Simulation for Confidence Intervals of Defined Function (modsem)
+#'
+#' Generate confidence intervals of defined function from modsem results using Monte Carlo simulation.
+#'
+#' @param object modsem object (output from modsem).
+#' @param Sfunction function of estimated parameters from modsem object.
+#' @param R number of Monte Carlo simulation samples (in millions). For example, R=5 (default) generates 5,000,000 simulated samples.
+#'
+#' @return mccimm confidence intervals.
+#' @export
+#' @examples
+#'
+#' ## -- Example C -- ##
+#'
+#' # modsem object is "est_lms" 
+#'
+#' mccimm_modsem_fun(est_lms, Sfunction = "a1*a2")
+#'
 
-  ## -- Initialize variables -- ##
-  a1 <- 0
-  a2 <- 0
-  a3 <- 0
-  a4 <- 0
-  z1 <- 0
-  z2 <- 0
-  z3 <- 0
-  z4 <- 0
-  w1 <- 0
-  w2 <- 0
-  w3 <- 0
-  w4 <- 0
-  zw1 <- 0
-  zw2 <- 0
-  zw3 <- 0
-  zw4 <- 0
-  Sa1 <- matrix(1, R*1e6)
-  Sa2 <- matrix(1, R*1e6)
-  Sa3 <- matrix(1, R*1e6)
-  Sa4 <- matrix(1, R*1e6)
-  Sz1 <- matrix(0, R*1e6)
-  Sz2 <- matrix(0, R*1e6)
-  Sz3 <- matrix(0, R*1e6)
-  Sz4 <- matrix(0, R*1e6)
-  Sw1 <- matrix(0, R*1e6)
-  Sw2 <- matrix(0, R*1e6)
-  Sw3 <- matrix(0, R*1e6)
-  Sw4 <- matrix(0, R*1e6)
-  Szw1 <- matrix(0, R*1e6)
-  Szw2 <- matrix(0, R*1e6)
-  Szw3 <- matrix(0, R*1e6)
-  Szw4 <- matrix(0, R*1e6)
-  ## ------------------------------ ##
+mccimm_modsem_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
 
+  dp <- all.vars(parse(text = Sfunction))
+  var_label <- parameter_estimates(est_lms)$label
+  var_label <- var_label[var_label != ""]
+  if (all(unlist(dp) %in% unlist(var_label)) == FALSE) {
+    stop("Element(s) in the Sfunction not an estimated parameter in modsem object")
+  }
 
   ## Extract defined parameters and vcov ##
-  varZ <- "NA"
-  varW <- "NA"
-  if (Z != "NA") varZ <- paste0(Z, "~~", Z)
-  if (W != "NA") varW <- paste0(W, "~~", W)
-  dp <- c(A1, A2, A3, A4, Z1, Z2, Z3, Z4, W1, W2, W3, W4, ZW1, ZW2, ZW3, ZW4, varZ, varW)
-  dp <- dp[dp != "NA"]
+
 
   temp <- modsem_coef(object)
   estcoeff <- temp[dp]
@@ -1264,7 +1453,7 @@ mccimm_modsem_fun <- function(object = est_lms, Z="NA", W="NA",
   b.no <- nrow(mcmc)
   R.no <- format(R*1e6, scientific = FALSE)
 
-  # ===== Print number of bootstrap samples
+  # ===== Print number of simulated samples
   cat("\n", "   Number of requested simulated samples = ", R.no)
   cat("\n", "   Number of completed simulated samples = ", b.no, rep("\n",2))
 
@@ -1273,48 +1462,16 @@ mccimm_modsem_fun <- function(object = est_lms, Z="NA", W="NA",
 
   # ==================================================================== #
 
-  # Define estimated parameters for calculating indirect effects
-  if (any(names(estcoeff) %in% A1)) a1 <- estcoeff[A1]
-  if (any(names(estcoeff) %in% A2)) a2 <- estcoeff[A2]
-  if (any(names(estcoeff) %in% A3)) a3 <- estcoeff[A3]
-  if (any(names(estcoeff) %in% A4)) a4 <- estcoeff[A4]
-  if (any(names(estcoeff) %in% Z1)) z1 <- estcoeff[Z1]
-  if (any(names(estcoeff) %in% Z2)) z2 <- estcoeff[Z2]
-  if (any(names(estcoeff) %in% Z3)) z3 <- estcoeff[Z3]
-  if (any(names(estcoeff) %in% Z4)) z4 <- estcoeff[Z4]
-  if (any(names(estcoeff) %in% W1)) w1 <- estcoeff[W1]
-  if (any(names(estcoeff) %in% W2)) w2 <- estcoeff[W2]
-  if (any(names(estcoeff) %in% W3)) w3 <- estcoeff[W3]
-  if (any(names(estcoeff) %in% W4)) w4 <- estcoeff[W4]
-  if (any(names(estcoeff) %in% ZW1)) zw1 <- estcoeff[ZW1]
-  if (any(names(estcoeff) %in% ZW2)) zw2 <- estcoeff[ZW2]
-  if (any(names(estcoeff) %in% ZW3)) zw3 <- estcoeff[ZW3]
-  if (any(names(estcoeff) %in% ZW4)) zw4 <- estcoeff[ZW4]
-
   # Calculate estimated parameter from Dfunction
+  list2env(as.list(estcoeff), envir = .GlobalEnv)
   estM  <- eval(parse(text=Sfunction))
 
-  # Capture simulated parameters for calculating function values
-  if (any(names(estcoeff) %in% A1)) a1 <- mcmc[, A1]
-  if (any(names(estcoeff) %in% A2)) a2 <- mcmc[, A2]
-  if (any(names(estcoeff) %in% A3)) a3 <- mcmc[, A3]
-  if (any(names(estcoeff) %in% A4)) a4 <- mcmc[, A4]
-  if (any(names(estcoeff) %in% Z1)) z1 <- mcmc[, Z1]
-  if (any(names(estcoeff) %in% Z2)) z2 <- mcmc[, Z2]
-  if (any(names(estcoeff) %in% Z3)) z3 <- mcmc[, Z3]
-  if (any(names(estcoeff) %in% Z4)) z4 <- mcmc[, Z4]
-  if (any(names(estcoeff) %in% W1)) w1 <- mcmc[, W1]
-  if (any(names(estcoeff) %in% W2)) w2 <- mcmc[, W2]
-  if (any(names(estcoeff) %in% W3)) w3 <- mcmc[, W3]
-  if (any(names(estcoeff) %in% W4)) w4 <- mcmc[, W4]
-  if (any(names(estcoeff) %in% ZW1)) zw1 <- mcmc[, ZW1]
-  if (any(names(estcoeff) %in% ZW2)) zw2 <- mcmc[, ZW2]
-  if (any(names(estcoeff) %in% ZW3)) zw3 <- mcmc[, ZW3]
-  if (any(names(estcoeff) %in% ZW4)) zw4 <- mcmc[, ZW4]
 
   # Calculate Simulated parameter from Dfunction
-  abM <- eval(parse(text=Sfunction))
-
+  mcmc <- as.data.frame(mcmc)
+  mcmc <- mcmc %>%
+    mutate(abM = eval(parse(text=Sfunction)))
+  abM <- mcmc[, "abM"]
 
   #### Confidence Intervals and p-value ####
 
@@ -1376,12 +1533,36 @@ mccimm_modsem_fun <- function(object = est_lms, Z="NA", W="NA",
   rownames(BCCI) <- rep("    ", nrow(BCCI))
   print(BCCI, quote=FALSE, right=TRUE)
   cat("\n")
-}  ## End function mccimm_modsem_fun ##
+
+}  ## ===== End (function mccimm_modsem_fun) ===== ##
 
 
 
+## ===== FUNCTION JN_plot to plot Johnson-Neyman Figure ===== ##
+#' Generate Johnson-Neyman Figure from mccimm object
+#'
+#' Generate Johnson-Neyman Figure from mccimm object
+#'
+#' @param mccimmObject mccimm object (output from mccimm_modsem or mccimm_mplus).
+#' @param min_z minimum values of moderator Z on the graph.
+#' @param max_z maximum values of moderator Z on the graph. 
+#' @param detail detail of the Johnson-Neyman graph. The higher the number, the smoother the lines, but it will also take longer to generate.
+#' @param lower.quantile lower quantile for the confidence intervals. 0.025 for 95-percent confidence intervals (default). 0.005 for 99-percent confidence intervals.
+#' @param upper.quantile upper quantile for the confidence intervals. 0.975 for 95-percent confidence intervals (default). 0.995 for 99-percent confidence intervals.
+#' @param alpha alpha = 0.2 (default) Thickness of the lines.
+#' @param sd.line horiznotal line that shows mean +/- 2 (default) values of the moderator. 
+#'
+#' @return a figure for changing the titles.
+#' @export
+#' @examples
+#'
+#' ## -- Example D -- ##
+#'
+#' # modsem object is mcObject 
+#'
+#' J_N_figure <- JN_plot(mcObject)
+#'
 
-## -- FUNCTION JN_plot to plot Johnson-Neyman Figure -- ##
 JN_plot <- function (mccimmObject, ci="bc",
                      min_z = -3, max_z = 3, detail = 300,
                      lower.quantile = 0.025, upper.quantile = 0.975,
@@ -1546,4 +1727,198 @@ JN_plot <- function (mccimmObject, ci="bc",
   print(jnp)
   return(jnp)
 
-} # End plot Johnson-Neyman Figure
+} ## ===== End (plot Johnson-Neyman Figure) ===== ##
+
+
+## ===== Function TECH1 to identify position of reference parameters for Mplus outputs ===== ##
+#' Present Mplus results with matching numbers on TECH1 outputs from Mplus
+#'
+#' Present Mplus estimated parameters with matching number on TECH1 outputs (for inputs in mccimm_mplus)
+#'
+#' @param mplusoutput.file Mplus output file (with TECH 1 on the OUTPUT: command in Mplus input file).
+#'
+#' @return outputs on screen
+#' @export
+#' @examples
+#'
+#' ## -- Example E -- ##
+#'
+#' # modsem object is mcObject 
+#'
+#' TECH1("example_d3.out")
+#'
+TECH1 <- function(mplusoutput.file = "example_d3.out") {
+  mplus_output <- MplusAutomation::readModels(mplusoutput.file)
+  results <- mplus_output$parameters
+  spec <<- mplus_output$tech1$parameterSpecification
+
+  ## ----- One-level ----- ##
+  if (ncol(results$unstandardized) == 6) {
+
+    Tech1 <- matrix(nrow = 0, ncol = 4)
+    colnames(Tech1) <- c("par", "Row_Name", "Col_Name", "Value")
+    Tech1 <- data.frame(Tech1)
+
+    nuW <- Tech1_1_level(spec, "nu")
+    Tech1 <- rbind(Tech1, nuW)
+    lambdaW <- Tech1_1_level(spec, "lambda")
+    Tech1 <- rbind(Tech1, lambdaW)
+    thetaW <- Tech1_1_level(spec, "theta")
+    Tech1 <- rbind(Tech1, thetaW)
+    alphaW <- Tech1_1_level(spec, "alpha")
+    Tech1 <- rbind(Tech1, alphaW)
+    betaW <- Tech1_1_level(spec, "beta")
+    Tech1 <- rbind(Tech1, betaW)
+    psiW <- Tech1_1_level(spec, "psi")
+    Tech1 <- rbind(Tech1, psiW)
+
+    Tech1 <- Tech1[order(Tech1$Value),]
+
+    results <- mplus_output$parameters
+    res.tech1 <- data.frame(lapply(results$unstandardized, unlist))
+    res.tech1["tech1"] <- 0
+
+
+    ## -- Match TECH1 information to parameters file -- ##
+    for (i in 1:mplus_output$summaries$Parameters) {
+      t.par <- Tech1[i, "par"]
+      t.row <- Tech1[i, "Row_Name"]
+      t.col <- Tech1[i, "Col_Name"]
+      if (t.par == "psi" | t.par == "theta") {
+        if (t.row != t.col) {
+          lhs = paste0(t.row,".WITH")
+          ind <- which(res.tech1[,"paramHeader"] == lhs & res.tech1[,"param"] == t.col)
+        } else {
+          ind <- which((res.tech1[,"paramHeader"] == "Variances" | res.tech1[,"paramHeader"] == "Residual.Variances") & res.tech1[,"param"] == t.col)
+        }
+      }
+      if (t.par == "lambda") {
+        lhs = paste0(t.row,".BY")
+        ind <- which(res.tech1[,"paramHeader"] == lhs & res.tech1[,"param"] == t.col)
+      }
+      if (t.par == "alpha" | t.par == "nu") {
+        ind <- which((res.tech1[,"paramHeader"] == "Means" | res.tech1[,"paramHeader"] == "Intercepts") & res.tech1[,"param"] == t.col)
+      }
+      if (t.par == "beta") {
+        lhs = paste0(t.row,".ON")
+        ind <- which(res.tech1[,"paramHeader"] == lhs & res.tech1[,"param"] == t.col)
+      }
+      res.tech1[ind,"tech1"] <- i
+    }
+    ## end (for i) ------- ##
+    return(res.tech1)
+  }
+
+  ## ----- Two-levels ----- ##
+  if (ncol(results$unstandardized) == 7) {
+    Tech1 <- matrix(nrow = 0, ncol = 5)
+    colnames(Tech1) <- c("level", "par", "Row_Name", "Col_Name", "Value")
+    Tech1 <- data.frame(Tech1)
+
+    nuW <- Tech1_2_level(spec, "Within", "nu")
+    Tech1 <- rbind(Tech1, nuW)
+    lambdaW <- Tech1_2_level(spec, "Within", "lambda")
+    Tech1 <- rbind(Tech1, lambdaW)
+    thetaW <- Tech1_2_level(spec, "Within", "theta")
+    Tech1 <- rbind(Tech1, thetaW)
+    alphaW <- Tech1_2_level(spec, "Within", "alpha")
+    Tech1 <- rbind(Tech1, alphaW)
+    betaW <- Tech1_2_level(spec, "Within", "beta")
+    Tech1 <- rbind(Tech1, betaW)
+    psiW <- Tech1_2_level(spec, "Within", "psi")
+    Tech1 <- rbind(Tech1, psiW)
+
+    nuB <- Tech1_2_level(spec, "Between", "nu")
+    Tech1 <- rbind(Tech1, nuB)
+    lambdaB <- Tech1_2_level(spec, "Between", "lambda")
+    Tech1 <- rbind(Tech1, lambdaB)
+    thetaB <- Tech1_2_level(spec, "Between", "theta")
+    Tech1 <- rbind(Tech1, thetaB)
+    alphaB <- Tech1_2_level(spec, "Between", "alpha")
+    Tech1 <- rbind(Tech1, alphaB)
+    betaB <- Tech1_2_level(spec, "Between", "beta")
+    Tech1 <- rbind(Tech1, betaB)
+    psiB <- Tech1_2_level(spec, "Between", "psi")
+    Tech1 <- rbind(Tech1, psiB)
+
+    Tech1 <- Tech1[order(Tech1$Value),]
+
+    results <- mplus_output$parameters
+    res.tech1 <- data.frame(lapply(results$unstandardized, unlist))
+    res.tech1["tech1"] <- 0
+
+
+    ## -- Match TECH1 information to parameters file -- ##
+    for (i in 1:mplus_output$summaries$Parameters) {
+      t.level <- Tech1[i,"level"]
+      t.par <- Tech1[i, "par"]
+      t.row <- Tech1[i, "Row_Name"]
+      t.col <- Tech1[i, "Col_Name"]
+      if (t.par == "psi" | t.par == "theta") {
+        if (t.row != t.col) {
+          lhs = paste0(t.row,".WITH")
+          ind <- which(res.tech1[,"paramHeader"] == lhs & res.tech1[,"param"] == t.col & res.tech1[,"BetweenWithin"] == t.level)
+        } else {
+          ind <- which((res.tech1[,"paramHeader"] == "Variances" | res.tech1[,"paramHeader"] == "Residual.Variances") & res.tech1[,"param"] == t.col &
+             res.tech1[,"BetweenWithin"] == t.level)
+        }
+      }
+      if (t.par == "lambda") {
+        lhs = paste0(t.row,".BY")
+        ind <- which(res.tech1[,"paramHeader"] == lhs & res.tech1[,"param"] == t.col & res.tech1[,"BetweenWithin"] == t.level)
+      }
+      if (t.par == "alpha" | t.par == "nu") {
+        ind <- which((res.tech1[,"paramHeader"] == "Means" | res.tech1[,"paramHeader"] == "Intercepts") & res.tech1[,"param"] == t.col &
+             res.tech1[,"BetweenWithin"] == t.level)
+      }
+      if (t.par == "beta") {
+        lhs = paste0(t.row,".ON")
+        ind <- which(res.tech1[,"paramHeader"] == lhs & res.tech1[,"param"] == t.col & res.tech1[,"BetweenWithin"] == t.level)
+      }
+      res.tech1[ind,"tech1"] <- i
+    }
+    ## ------- ##
+
+    return(res.tech1)
+  }
+
+} # end (function TECH1)
+
+
+## -- Sub-function identifying what the numbers in TECH1 refer to (One-Level) -- ##
+Tech1_1_level <- function(spec, para) {
+  if (names(spec)[1] != "X") {
+    p.tech1 <- paste0("spec$", para)
+  } else {
+    p.tech1 <- paste0("spec$X$", para)
+  }
+  parameter <- eval(parse(text = p.tech1))
+  parameter_greater_than_0 <- which(parameter > 0, arr.ind = TRUE)
+  if (length(parameter_greater_than_0) > 0) {
+    result_parameter <- data.frame(
+      par = para,
+      Row_Name = rownames(parameter)[parameter_greater_than_0[, "row"]],
+      Col_Name = colnames(parameter)[parameter_greater_than_0[, "col"]],
+      Value = parameter[parameter_greater_than_0]
+    )
+    return(result_parameter)
+  }
+} # end (Sub-Function "Tech1_1_level")
+
+## -- Sub-function identifying what the numbers in TECH1 refer to (Two-Level) -- ##
+Tech1_2_level <- function(spec, level, para) {
+  p.tech1 <- paste0("spec$", toupper(level), "$", para)
+  parameter <- eval(parse(text = p.tech1))
+  parameter_greater_than_0 <- which(parameter > 0, arr.ind = TRUE)
+  if (length(parameter_greater_than_0) > 0) {
+    result_parameter <- data.frame(
+      level = level,
+      par = para,
+      Row_Name = rownames(parameter)[parameter_greater_than_0[, "row"]],
+      Col_Name = colnames(parameter)[parameter_greater_than_0[, "col"]],
+      Value = parameter[parameter_greater_than_0]
+    )
+    return(result_parameter)
+  }
+} # end (Sub-Function "Tech1_2_level")
+
