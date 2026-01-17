@@ -106,8 +106,19 @@ library(MplusAutomation)
   Temp3 <- modsem_vcov(object)
   Tech3 <- Temp3[dp, dp]
 
+  stdyx.temp <- standardized_estimates(object)
+  stdyx.estcoeff <- stdyx.temp[, "est"]
+  no.stdyx.estcoeff <- length(stdyx.estcoeff)
+  for (i in 1: no.stdyx.estcoeff) {
+    if(stdyx.temp[i,"label"] == "") {
+      names(stdyx.estcoeff)[i] <- paste0(stdyx.temp[i,"lhs"], stdyx.temp[i,"op"], stdyx.temp[i,"rhs"])
+    } else {
+      names(stdyx.estcoeff)[i] <- stdyx.temp[i,"label"]
+    }
+  } # end (for i)
 
-  return_mccimm <- mccimm(estcoeff, Tech3,
+
+  return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
                         Z, W,
                         varZ, varW,
                         a1, z1, w1, zw1,
@@ -234,7 +245,7 @@ mccimm_mplus <- function(mplus_output_file = "mplus_output.out",
   if (zw3 != "NA") zw3 <- "zw3"
   if (zw4 != "NA") zw4 <- "zw4"
 
-  return_mccimm <- mccimm(estcoeff, Tech3,
+  return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
                         Z, W,
                         varZ, varW,
                         a1, z1, w1, zw1,
@@ -254,7 +265,7 @@ mccimm_mplus <- function(mplus_output_file = "mplus_output.out",
 
 ## ====== Sub-Function "mccimm" Monte Carlo Confidence Intervals for Moderated Mediation ====== ##
 
-mccimm <- function(estcoeff, Tech3,
+mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
                    Z="NA", W="NA",
                    varZ="NA", varW="NA",
                    a1="NA", z1="NA", w1="NA", zw1="NA",
@@ -975,7 +986,7 @@ mccimm <- function(estcoeff, Tech3,
 
 
     # -- Plot Standardized 2-Way Interaction Effects -- #
-    # Define estimated parameters for calculating indirect effects
+    # Define estimated parameters for calculating standardized indirect effects
     if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
     if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
     if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
@@ -1406,13 +1417,38 @@ mccimm <- function(estcoeff, Tech3,
     cat("\n")
 
 
-    ## == Create 3-way Interaction Figure == ##
+    ## == Create 3-way Standardized Interaction Figure == ##
 
-    ## Slopes ##
-    TWx1 <- PCI[4,4,4] # Hi-Z, Hi-W
-    TWx2 <- PCI[4,4,2] # Hi-Z, Lo-W
-    TWx3 <- PCI[2,4,4] # Lo-Z, Hi-W
-    TWx4 <- PCI[2,4,2] # Lo-Z, Lo-W
+    # Define estimated parameters for calculating indirect effects
+    if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
+    if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
+    if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
+    if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
+    if (any(names(stdyx.estcoeff) %in% z1)) Z7Xz1 <- stdyx.estcoeff[z1]
+    if (any(names(stdyx.estcoeff) %in% z2)) Z7Xz2 <- stdyx.estcoeff[z2]
+    if (any(names(stdyx.estcoeff) %in% z3)) Z7Xz3 <- stdyx.estcoeff[z3]
+    if (any(names(stdyx.estcoeff) %in% z4)) Z7Xz4 <- stdyx.estcoeff[z4]
+    if (any(names(stdyx.estcoeff) %in% w1)) Z7Xw1 <- stdyx.estcoeff[w1]
+    if (any(names(stdyx.estcoeff) %in% w2)) Z7Xw2 <- stdyx.estcoeff[w2]
+    if (any(names(stdyx.estcoeff) %in% w3)) Z7Xw3 <- stdyx.estcoeff[w3]
+    if (any(names(stdyx.estcoeff) %in% w4)) Z7Xw4 <- stdyx.estcoeff[w4]
+    if (any(names(stdyx.estcoeff) %in% zw1)) Z7Xzw1 <- stdyx.estcoeff[zw1]
+    if (any(names(stdyx.estcoeff) %in% zw2)) Z7Xzw2 <- stdyx.estcoeff[zw2]
+    if (any(names(stdyx.estcoeff) %in% zw3)) Z7Xzw3 <- stdyx.estcoeff[zw3]
+    if (any(names(stdyx.estcoeff) %in% zw4)) Z7Xzw4 <- stdyx.estcoeff[zw4]
+
+    ## Unstandardized Slopes ##
+#    TWx1 <- PCI[4,4,4] # Hi-Z, Hi-W
+#    TWx2 <- PCI[4,4,2] # Hi-Z, Lo-W
+#    TWx3 <- PCI[2,4,4] # Lo-Z, Hi-W
+#    TWx4 <- PCI[2,4,2] # Lo-Z, Lo-W
+
+    ## Standardized Slopes ##
+    TWx1 <- (Z7Xa1+Z7Xz1+Z7Xw1+Z7Xzw1)*(Z7Xa2+Z7Xz2+Z7Xw2+Z7Xzw2)*(Z7Xa3+Z7Xz3+Z7Xw3+Z7Xzw3)*(Z7Xa4+Z7Xz4+Z7Xw4+Z7Xzw4) # Hi-Z, Hi-W 
+    TWx2 <- (Z7Xa1+Z7Xz1-Z7Xw1-Z7Xzw1)*(Z7Xa2+Z7Xz2-Z7Xw2-Z7Xzw2)*(Z7Xa3+Z7Xz3-Z7Xw3-Z7Xzw3)*(Z7Xa4+Z7Xz4-Z7Xw4-Z7Xzw4) # Hi-Z, Lo-W
+    TWx3 <- (Z7Xa1-Z7Xz1+Z7Xw1-Z7Xzw1)*(Z7Xa2-Z7Xz2+Z7Xw2-Z7Xzw2)*(Z7Xa3-Z7Xz3+Z7Xw3-Z7Xzw3)*(Z7Xa4-Z7Xz4+Z7Xw4-Z7Xzw4) # Lo-Z, Hi-W
+    TWx4 <- (Z7Xa1-Z7Xz1-Z7Xw1+Z7Xzw1)*(Z7Xa2-Z7Xz2-Z7Xw2+Z7Xzw2)*(Z7Xa3-Z7Xz3-Z7Xw3+Z7Xzw3)*(Z7Xa4-Z7Xz4-Z7Xw4+Z7Xzw4) # Lo-Z, Lo-W 
+
 
     df_wide <- data.frame(
       x_var = c(-2,2),
@@ -1436,14 +1472,14 @@ mccimm <- function(estcoeff, Tech3,
                     xlim(-2.5, 2.5) +
                     ylim(y.lower, y.upper) +
                     geom_line(linewidth=1) +
-                    scale_linetype_manual(name = "My Legend Title",
+                    scale_linetype_manual(name = "Moderator Levels",
                                           values = c("line1" = "solid", "line2" = "twodash", "line3" = "solid", "line4" = "twodash"),
                                           labels = c("Hi-Z, Hi-W", "Hi-Z, Lo-W", "Lo-Z, Hi-W", "Lo-Z, Lo-W")) +
                     scale_color_manual(values = c("line1" = "black", "line2" = "black", "line3" = "grey", "line4"="grey")) +
                     guides(color = "none") +
-                    labs(title = "Three-Way Interaction Effects",
+                    labs(title = "Standardized Three-Way Interaction Effects",
                              x = "X-axis Label",
-                             y = "Y-axis Label") +
+                             y = "Indirect Effect of X on Y (through M)") +
                     theme_classic() # Optional: Apply a theme
 
     ggplot2::ggsave("3-Way Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
@@ -1766,7 +1802,7 @@ JN_plot <- function (mccimmObject, ci="bc",
 
 
   ## -- Plot with ggplot2 -- ##
-  jnp <- ggplot2::ggplot(df_plot, ggplot2::aes(x = z, y = slope)) +
+  p_jn <- ggplot2::ggplot(df_plot, ggplot2::aes(x = z, y = slope)) +
        ggplot2::geom_ribbon(ggplot2::aes(ymin = lower_all, ymax = upper_all,
                      fill = Significance, group = run_id), alpha = alpha, na.rm = TRUE) +
        ggplot2::geom_line(ggplot2::aes(color = Significance,
@@ -1794,9 +1830,15 @@ JN_plot <- function (mccimmObject, ci="bc",
          }
        }
 
+  ggplot2::ggsave("Johnson-Neyman Figure.png", width = 22.86, height = 16.51, units = "cm")
+
   ## -- Print the Figure -- ##
-  print(jnp)
-  return(jnp)
+  print(p_jn)
+  return(p_jn)
+
+  cat("\n")
+  cat("Figure is p_jn and is saved as 'Johnson-Neyman Figure.png'", rep("\n", 2))
+
 
 } ## ===== End (plot Johnson-Neyman Figure) ===== ##
 
@@ -2036,10 +2078,12 @@ Two_Way_Figure <- function(estX.lo, estX.hi) {
                     y = "Mediating Effects of X on Y through M") +
            theme_classic()  # Optional: Apply a theme
 
+  print(p_int) # show p_int
+
   ggplot2::ggsave("2-Way Standardized Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
 
   cat("\n")
-  cat("Figure is p-int and is saved as '2-Way standardized Interaction Figure.png'", rep("\n", 2))
+  cat("Figure is p_int and is saved as '2-Way standardized Interaction Figure.png'", rep("\n", 2))
 
 } # end (Sub-Function: Two-Way_Figure)
 
