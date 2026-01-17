@@ -106,18 +106,20 @@ library(MplusAutomation)
   Temp3 <- modsem_vcov(object)
   Tech3 <- Temp3[dp, dp]
 
-  stdyx.temp <- standardized_estimates(object)
-  stdyx.estcoeff <- stdyx.temp[, "est"]
-  no.stdyx.estcoeff <- length(stdyx.estcoeff)
-  for (i in 1: no.stdyx.estcoeff) {
-    if(stdyx.temp[i,"label"] == "") {
-      names(stdyx.estcoeff)[i] <- paste0(stdyx.temp[i,"lhs"], stdyx.temp[i,"op"], stdyx.temp[i,"rhs"])
-    } else {
-      names(stdyx.estcoeff)[i] <- stdyx.temp[i,"label"]
-    }
-  } # end (for i)
+#  stdyx.temp <- standardized_estimates(object)
+#  stdyx.estcoeff <- stdyx.temp[, "est"]
+#  no.stdyx.estcoeff <- length(stdyx.estcoeff)
+#  for (i in 1: no.stdyx.estcoeff) {
+#    if(stdyx.temp[i,"label"] == "") {
+#      names(stdyx.estcoeff)[i] <- paste0(stdyx.temp[i,"lhs"], stdyx.temp[i,"op"], stdyx.temp[i,"rhs"])
+#    } else {
+#      names(stdyx.estcoeff)[i] <- stdyx.temp[i,"label"]
+#    }
+#  } # end (for i)
 
-
+  stdyx.temp <- modsem_coef(object, standardized=TRUE)
+  stdyx.estcoeff <- stdyx.temp[dp]
+ 
   return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
                         Z, W,
                         varZ, varW,
@@ -487,6 +489,19 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     print(BCCI, quote=FALSE, right=TRUE)
     cat("\n")
 
+
+    # - Define estimated parameters for calculating standardized indirect effects - #
+    if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
+    if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
+    if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
+    if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
+
+    # - Calculate Estimated Indirect Effect - #
+    estM  <- Z7Xa1*Z7Xa2*Z7Xa3*Z7Xa4
+
+    # -- Print standardized indirect effects -- #
+    cat("\n", "   Standardized indirect effects = ", estM, rep("\n",2))
+
   } # end (if (NoMod == 0))
   ### --- End No Moderating Effect --- ###
 
@@ -634,6 +649,10 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 
     estX.lo <- (Z7Xa1-Z7Xz1)*(Z7Xa2-Z7Xz2)*(Z7Xa3-Z7Xz3)*(Z7Xa4-Z7Xz4)
     estX.hi <- (Z7Xa1+Z7Xz1)*(Z7Xa2+Z7Xz2)*(Z7Xa3+Z7Xz3)*(Z7Xa4+Z7Xz4)
+
+    # -- Print standardized indirect effects -- #
+    cat("\n", "   Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", estX.lo)
+    cat("\n", "   Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", estX.hi, rep("\n",2))
 
     Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
 
@@ -788,6 +807,10 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     estX.lo <- (Z7Xa1-Z7Xw1)*(Z7Xa2-Z7Xw2)*(Z7Xa3-Z7Xw3)*(Z7Xa4-Z7Xw4)
     estX.hi <- (Z7Xa1+Z7Xw1)*(Z7Xa2+Z7Xw2)*(Z7Xa3+Z7Xw3)*(Z7Xa4+Z7Xw4)
 
+    # -- Print standardized indirect effects -- #
+    cat("\n", "   Standardized indirect effects when W is low (Mean - 1 S.D.) = ", estX.lo)
+    cat("\n", "   Standardized indirect effects when W is high (Mean + 1 S.D.) = ", estX.hi, rep("\n",2))
+
     Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
 
   } # End one moderating effect for W
@@ -892,6 +915,10 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 
     estX.lo <- (Z7Xa1-Z7Xz1)*(Z7Xa2-Z7Xz2)*(Z7Xa3-Z7Xz3)*(Z7Xa4-Z7Xz4)
     estX.hi <- (Z7Xa1+Z7Xz1)*(Z7Xa2+Z7Xz2)*(Z7Xa3+Z7Xz3)*(Z7Xa4+Z7Xz4)
+
+    # -- Print standardized indirect effects -- #
+    cat("\n", "   Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", estX.lo)
+    cat("\n", "   Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", estX.hi, rep("\n",2))
 
     Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
 
@@ -998,6 +1025,10 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 
     estX.lo <- (Z7Xa1-Z7Xw1)*(Z7Xa2-Z7Xw2)*(Z7Xa3-Z7Xw3)*(Z7Xa4-Z7Xw4)
     estX.hi <- (Z7Xa1+Z7Xw1)*(Z7Xa2+Z7Xw2)*(Z7Xa3+Z7Xw3)*(Z7Xa4+Z7Xw4)
+
+    # -- Print standardized indirect effects -- #
+    cat("\n", "   Standardized indirect effects when W is low (Mean - 1 S.D.) = ", estX.lo)
+    cat("\n", "   Standardized indirect effects when W is high (Mean + 1 S.D.) = ", estX.hi, rep("\n",2))
 
     Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
 
@@ -1448,6 +1479,12 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     TWx2 <- (Z7Xa1+Z7Xz1-Z7Xw1-Z7Xzw1)*(Z7Xa2+Z7Xz2-Z7Xw2-Z7Xzw2)*(Z7Xa3+Z7Xz3-Z7Xw3-Z7Xzw3)*(Z7Xa4+Z7Xz4-Z7Xw4-Z7Xzw4) # Hi-Z, Lo-W
     TWx3 <- (Z7Xa1-Z7Xz1+Z7Xw1-Z7Xzw1)*(Z7Xa2-Z7Xz2+Z7Xw2-Z7Xzw2)*(Z7Xa3-Z7Xz3+Z7Xw3-Z7Xzw3)*(Z7Xa4-Z7Xz4+Z7Xw4-Z7Xzw4) # Lo-Z, Hi-W
     TWx4 <- (Z7Xa1-Z7Xz1-Z7Xw1+Z7Xzw1)*(Z7Xa2-Z7Xz2-Z7Xw2+Z7Xzw2)*(Z7Xa3-Z7Xz3-Z7Xw3+Z7Xzw3)*(Z7Xa4-Z7Xz4-Z7Xw4+Z7Xzw4) # Lo-Z, Lo-W 
+
+    # -- Print standardized indirect effects -- #
+    cat("\n", "   Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is high (Mean + 1 S.D.) = ", TWx1)
+    cat("\n", "   Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is low (Mean - 1 S.D.) = ", TWx2)
+    cat("\n", "   Standardized indirect effects when Z is low (Mean - 1 S.D.) and W is high (Mean + 1 S.D.) = ", TWx3)
+    cat("\n", "   Standardized indirect effects when Z is low (Mean - 1 S.D.) and W is low (Mean - 1 S.D.) = ", TWx4, rep("\n",2))
 
 
     df_wide <- data.frame(
