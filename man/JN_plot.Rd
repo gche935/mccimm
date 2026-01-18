@@ -41,10 +41,10 @@ Generate Johnson-Neyman Figure from mccimm object
 }
 \examples{
 
-## -- Example D -- ##
+## -- Example -- ##
 
-# modsem object is mcObject 
+# modsem object is mcObject & output JN_plot object is JN_figure
 
-J_N_figure <- JN_plot(mcObject)
+JN_figure <- JN_plot(mcObject)
 
 }

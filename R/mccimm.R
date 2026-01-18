@@ -52,11 +52,25 @@
 #' @export
 #' @examples
 #'
-#' ## -- Example A -- ##
+#' ## -- Example -- ##
 #'
 #' # modsem object is "est_lms" & output mccimm object is mcObject
 #'
 #' mcObject <- mccimm_modsem(est_lms, A1="a1", A2="a2", A3="a3a", Z1="z1", Z="Autonomy")
+#'
+#'
+#' # Change 2-Way Figure Title and/or Axis Labels Afterwards 
+#' p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
+#'                                   x = "Replace with your X-axis Label",
+#'                                   y = "Replace with your Y-axis Label")
+#'
+#' # Change Figure Legend Labels Afterwards 
+#' p_int <- p_int + ggplot2::scale_color_manual(name = "Replace with your Legend Title",
+#'                                           values = c("line1" = "black", "line2" = "grey"),
+#'                                           labels = c("Z at mean - 1sd", "Z at mean + 1sd"))
+#'
+#' # Save the New Figure
+#' ggplot2::ggsave("New Standardized Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
 #'
 
   mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
@@ -178,12 +192,26 @@
 #' @export
 #' @examples
 #'
-#' ## -- Example B -- ##
+#' ## -- Example -- ##
 #'
 #' # mplus_output_file is "model cc4.out", results_file is "Model_CC4.txt" & moderator Z is "AUTO"
+#' # output mccimm object is mcObject
 #'
 #' mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", Z = "AUTO", varZ = "72",
 #'             a1 = "60", a2 = "65", z1 = "62")#'
+#'
+#' # Change 2-Way Figure Title and/or Axis Labels Afterwards 
+#' p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
+#'                                   x = "Replace with your X-axis Label",
+#'                                   y = "Replace with your Y-axis Label")
+#'
+#' # Change Figure Legend Labels Afterwards 
+#' p_int <- p_int + ggplot2::scale_color_manual(name = "Replace with your Legend Title",
+#'                                           values = c("line1" = "black", "line2" = "grey"),
+#'                                           labels = c("Z at mean - 1sd", "Z at mean + 1sd"))
+#'
+#' # Save the New Figure
+#' ggplot2::ggsave("New Standardized Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
 #'
 
 mccimm_mplus <- function(mplus_output_file = "mplus_output.out",
@@ -1553,7 +1581,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 
 
 
-## ===== Simulation of Defined Function ===== ##
+## ===== Simulation of Defined Function (modsem) ===== ##
 #' Monte Carlo Simulation for Confidence Intervals of Defined Function (modsem)
 #'
 #' Generate confidence intervals of defined function from modsem results using Monte Carlo simulation.
@@ -1566,7 +1594,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 #' @export
 #' @examples
 #'
-#' ## -- Example C -- ##
+#' ## -- Example -- ##
 #'
 #' # modsem object is "est_lms"
 #'
@@ -1682,6 +1710,200 @@ mccimm_modsem_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
 
 
 
+## ====== Function "mccimm_mplus_fun" Monte Carlo Confidence Intervals for Defined Function (mplus) ====== ##
+#' Monte Carlo Simulation for Confidence Intervals of Defined Function (mplus)
+#'
+#' Generate confidence intervals of defined function from Mplus results using Monte Carlo simulation.
+#' Location of estimated parameters can be found in modsem::TECH1().
+#'
+#' \if{html}{
+#' \figure{Figure.png}{options: width="75\%" alt="Description of my figure"}
+#' }
+#' \if{latex}{
+#' \figure{Figure.pdf}{options: width=15cm}
+#' }
+#'
+#' @param mplus_output_file Mplus output (.out) file (output from Mplus).
+#' @param results_file Mplus a text file (.txt) that saves the Mplus results (RESULTS IS "filename.txt" in Mplus SAVEDATA:).
+#' @param a1 location of parameter a1 in Mplus Tech1 outputs.
+#' @param a2 location of parameter a2 in Mplus Tech1 outputs.
+#' @param a3 location of parameter a3 in Mplus Tech1 outputs.
+#' @param a4 location of parameter a4 in Mplus Tech1 outputs.
+#' @param z1 location of parameter z1 in Mplus Tech1 outputs.
+#' @param z2 location of parameter z2 in Mplus Tech1 outputs.
+#' @param z3 location of parameter z3 in Mplus Tech1 outputs.
+#' @param z4 location of parameter z4 in Mplus Tech1 outputs.
+#' @param w1 location of parameter w1 in Mplus Tech1 outputs.
+#' @param w2 location of parameter w2 in Mplus Tech1 outputs.
+#' @param w3 location of parameter w3 in Mplus Tech1 outputs.
+#' @param w4 location of parameter w4 in Mplus Tech1 outputs.
+#' @param zw1 location of parameter zw1 in Mplus Tech1 outputs.
+#' @param zw2 location of parameter zw2 in Mplus Tech1 outputs.
+#' @param zw3 location of parameter zw3 in Mplus Tech1 outputs.
+#' @param zw4 location of parameter zw4 in Mplus Tech1 outputs.
+#' @param Sfunction function of estimated parameters from modsem object.
+#' @param R number of Monte Carlo simulation samples (in millions). For example, R=5 (default) generates 5,000,000 simulated samples.
+#'
+#' @return confidence intervals of defined function
+#' @export
+#' @examples
+#'
+#' ## -- Example -- ##
+#'
+#' # mplus_output_file is "model cc4.out", results_file is "Model_CC4.txt" & moderator Z is "AUTO"
+#' # output mccimm object is mcObject
+#'
+#' mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", 
+#'             a1 = "60", a2 = "65", Sfunction="a1*a2")
+#'
+
+mccimm_mplus_fun <- function(mplus_output_file = "mplus_output.out",
+                             results_file = "results.txt",
+                             a1="NA", a2="NA", a3="NA", a4="NA",
+                             z1="NA", z2="NA", z3="NA", z4="NA",
+                             w1="NA", w2="NA", w3="NA", w4="NA",
+                             zw1="NA", zw2="NA", zw3="NA", zw4="NA",
+                             Sfunction="NULL", R=5) {
+
+  mplus_output <- readModels(mplus_output_file)
+  results <- mplus_output$parameters$unstandardized
+  temp <- scan(results_file, sep="")
+
+  Temp3 <- mplus_output$tech3$paramCov
+  Temp3[upper.tri(Temp3, diag = FALSE)] <- 0
+
+  Tech3 <- Temp3 + t(Temp3)
+  Tech3 <- Tech3 - diag(diag(Temp3))
+
+  ## -- Extract defined parameters and vcov -- ##
+  dp <- c(varZ, varW, a1, a2, a3, a4, z1, z2, z3, z4, w1, w2, w3, w4, zw1, zw2, zw3, zw4)
+
+  dp_no <- suppressWarnings(as.numeric(dp))
+  dp_list <- c("varZ", "varW", "a1", "a2", "a3", "a4", "z1", "z2", "z3", "z4", "w1", "w2", "w3", "w4", "zw1", "zw2", "zw3", "zw4")
+  non_na_list <- dp_list[which(!is.na(dp_no))]
+  dp <- dp[dp != "NA"]
+  dp <- as.numeric(dp)
+
+  estcoeff <- temp[dp]
+  names(estcoeff) <- non_na_list
+
+  Tech3 <- Tech3[dp, dp]
+  rownames(Tech3) <- non_na_list
+  colnames(Tech3) <- non_na_list
+
+  # -- Reassigning variable names -- #
+  if (varZ != "NA") varZ <- "varZ"
+  if (varW != "NA") varW <- "varW"
+  if (a1 != "NA") a1 <- "a1"
+  if (a2 != "NA") a2 <- "a2"
+  if (a3 != "NA") a3 <- "a3"
+  if (a4 != "NA") a4 <- "a4"
+  if (z1 != "NA") z1 <- "z1"
+  if (z2 != "NA") z2 <- "z2"
+  if (z3 != "NA") z3 <- "z3"
+  if (z4 != "NA") z4 <- "z4"
+  if (w1 != "NA") w1 <- "w1"
+  if (w2 != "NA") w2 <- "w2"
+  if (w3 != "NA") w3 <- "w3"
+  if (w4 != "NA") w4 <- "w4"
+  if (zw1 != "NA") zw1 <- "zw1"
+  if (zw2 != "NA") zw2 <- "zw2"
+  if (zw3 != "NA") zw3 <- "zw3"
+  if (zw4 != "NA") zw4 <- "zw4"
+
+  ## -- Monte Carlo Simulation of R*1e6 samples, default: R = 5 -- ##
+  mcmc <- MASS::mvrnorm(n=R*1e6, mu=estcoeff, Sigma=Tech3, tol = 1e-6)
+
+  b.no <- nrow(mcmc)
+  R.no <- format(R*1e6, scientific = FALSE)
+
+  # ===== Print number of simulated samples
+  cat("\n", "   Number of requested simulated samples = ", R.no)
+  cat("\n", "   Number of completed simulated samples = ", b.no, rep("\n",2))
+
+
+  cat("Simulated Defined Function Values", rep("\n", 2))
+
+  # ==================================================================== #
+
+  # Calculate estimated parameter from Dfunction
+  list2env(as.list(estcoeff), envir = .GlobalEnv)
+  estM  <- eval(parse(text=Sfunction))
+
+
+  # Calculate Simulated parameter from Dfunction
+  mcmc <- as.data.frame(mcmc)
+  mcmc <- mcmc %>%
+    mutate(abM = eval(parse(text=Sfunction)))
+  abM <- mcmc[, "abM"]
+
+  #### Confidence Intervals and p-value ####
+
+  # Calculate Percentile Probability
+  if (quantile(abM,probs=0.5)>0) {
+    pM = 2*(sum(abM<0)/b.no)
+  } else {
+    pM = 2*(sum(abM>0)/b.no)
+  }
+
+  #### Percentile Confidence Intervals of Conditional Indirect Effects ####
+  PCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
+                                             c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
+
+  PCI[1,1] <- format(round(quantile(abM,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,2] <- format(round(quantile(abM,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,3] <- format(round(quantile(abM,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,5] <- format(round(quantile(abM,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,6] <- format(round(quantile(abM,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,7] <- format(round(quantile(abM,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,8] <- format(round(pM, digits = 4), nsmall = 4, scientific = FALSE)
+
+  # Bias-Corrected Factor
+  zM = qnorm(sum(abM<estM)/b.no)
+
+  # Calculate Bias-Corrected Probability
+
+  if ((estM>0 & min(abM)>0) | (estM<0 & max(abM)<0)) {
+    pbM = 0
+  } else if (qnorm(sum(abM>0)/b.no)+2*zM<0) {
+    pbM = 2*pnorm((qnorm(sum(abM>0)/b.no)+2*zM))
+  } else {
+    pbM = 2*pnorm(-1*(qnorm(sum(abM>0)/b.no)+2*zM))
+  }
+
+  #### Bias-Corrected Confidence Intervals ####
+
+  BCCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
+                                              c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
+
+  BCCI[1,1] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,2] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,3] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,5] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,6] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,7] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,8] <- format(round(pbM, digits = 4), nsmall = 4, scientific = FALSE)
+
+  cat("\n")
+  cat("Percentile Confidence Intervals for Sfunction", rep("\n", 2))
+  rownames(PCI) <- rep("    ", nrow(PCI))
+  print(PCI, quote=FALSE, right=TRUE)
+  cat("\n")
+
+  cat("\n")
+  cat("Bias-Corrected Confidence Intervals for Sfunction", rep("\n", 2))
+  rownames(BCCI) <- rep("    ", nrow(BCCI))
+  print(BCCI, quote=FALSE, right=TRUE)
+  cat("\n")
+
+}  ## ===== End (function mccimm_mplus_fun) ===== ##
+
+
+
+
+
 ## ===== FUNCTION JN_plot to plot Johnson-Neyman Figure ===== ##
 #' Generate Johnson-Neyman Figure from mccimm object
 #'
@@ -1700,11 +1922,11 @@ mccimm_modsem_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
 #' @export
 #' @examples
 #'
-#' ## -- Example D -- ##
+#' ## -- Example -- ##
 #'
-#' # modsem object is mcObject
+#' # modsem object is mcObject & output JN_plot object is JN_figure
 #'
-#' J_N_figure <- JN_plot(mcObject)
+#' JN_figure <- JN_plot(mcObject)
 #'
 
 JN_plot <- function (mccimmObject, ci="bc",
@@ -1891,8 +2113,9 @@ JN_plot <- function (mccimmObject, ci="bc",
 #' @export
 #' @examples
 #'
-#' ## -- Example E -- ##
+#' ## -- Example -- ##
 #'
+#' # Mplus output file "example_d3.out" & output TECH1 object is Tech1
 #'
 #' Tech1 <- TECH1("example_d3.out")
 #'

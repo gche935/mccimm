@@ -84,10 +84,24 @@ Generate confidence intervals of moderated-mediating effects from modsem results
 }
 \examples{
 
-## -- Example A -- ##
+## -- Example -- ##
 
 # modsem object is "est_lms" & output mccimm object is mcObject
 
 mcObject <- mccimm_modsem(est_lms, A1="a1", A2="a2", A3="a3a", Z1="z1", Z="Autonomy")
+
+
+# Change 2-Way Figure Title and/or Axis Labels Afterwards 
+p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
+                                  x = "Replace with your X-axis Label",
+                                  y = "Replace with your Y-axis Label")
+
+# Change Figure Legend Labels Afterwards 
+p_int <- p_int + ggplot2::scale_color_manual(name = "Replace with your Legend Title",
+                                          values = c("line1" = "black", "line2" = "grey"),
+                                          labels = c("Z at mean - 1sd", "Z at mean + 1sd"))
+
+# Save the New Figure
+ggplot2::ggsave("New Standardized Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
 
 }

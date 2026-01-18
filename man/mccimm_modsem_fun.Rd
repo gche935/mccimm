@@ -21,9 +21,9 @@ Generate confidence intervals of defined function from modsem results using Mont
 }
 \examples{
 
-## -- Example C -- ##
+## -- Example -- ##
 
-# modsem object is "est_lms" 
+# modsem object is "est_lms"
 
 mccimm_modsem_fun(est_lms, Sfunction = "a1*a2")
 

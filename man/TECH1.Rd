@@ -17,10 +17,10 @@ Present Mplus estimated parameters with matching number on TECH1 outputs (for in
 }
 \examples{
 
-## -- Example E -- ##
+## -- Example -- ##
 
-# modsem object is mcObject 
+# Mplus output file "example_d3.out" & output TECH1 object is Tech1
 
-TECH1("example_d3.out")
+Tech1 <- TECH1("example_d3.out")
 
 }
