@@ -852,7 +852,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     for (X in 1:5) {
       level <- X - 3
       estX <- (U7Xa1+U7Xz1*level*stdZ)*(U7Xa2+U7Xz2*level*stdZ)*(U7Xa3+U7Xz3*level*stdZ)*(U7Xa4+U7Xz4*level*stdZ)
-      abX <- (U7XSa1+U7XSz1*level*SstdZ)*(U7XSa2+SU7Xz2*level*SstdZ)*(U7XSa3+U7XSz3*level*SstdZ)*(U7XSa4+U7XSz4*level*SstdZ)
+      abX <- (U7XSa1+U7XSz1*level*SstdZ)*(U7XSa2+U7XSz2*level*SstdZ)*(U7XSa3+U7XSz3*level*SstdZ)*(U7XSa4+U7XSz4*level*SstdZ)
       zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
       ## Percentile Confidence Intervals ##
@@ -1104,7 +1104,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
         abX <- (U7XSa1+U7XSz1*levelZ*SstdZ+U7XSw1*levelW*SstdW+U7XSzw1*levelZ*SstdZ*levelW*SstdW)*
                (U7XSa2+U7XSz2*levelZ*SstdZ+U7XSw2*levelW*SstdW+U7XSzw2*levelZ*SstdZ*levelW*SstdW)*
                (U7XSa3+U7XSz3*levelZ*SstdZ+U7XSw3*levelW*SstdW+U7XSzw3*levelZ*SstdZ*levelW*SstdW)*
-               (U7XSa4+SU7Xz4*levelZ*SstdZ+U7XSw4*levelW*SstdW+U7XSzw4*levelZ*SstdZ*levelW*SstdW)
+               (U7XSa4+U7XSz4*levelZ*SstdZ+U7XSw4*levelW*SstdW+U7XSzw4*levelZ*SstdZ*levelW*SstdW)
         zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
         ## Percentile Confidence Intervals ##
@@ -1172,7 +1172,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     abX <- (U7XSa1+U7XSz1*SstdZ+U7XSw1*SstdW+U7XSzw1*SstdZ*SstdW)*(U7XSa2+U7XSz2*SstdZ+U7XSw2*SstdW+U7XSzw2*SstdZ*SstdW)*
            (U7XSa3+U7XSz3*SstdZ+U7XSw3*SstdW+U7XSzw3*SstdZ*SstdW)*(U7XSa4+U7XSz4*SstdZ+U7XSw4*SstdW+U7XSzw4*SstdZ*SstdW) -
            (U7XSa1+U7XSz1*SstdZ-U7XSw1*SstdW-U7XSzw1*SstdZ*SstdW)*(U7XSa2+U7XSz2*SstdZ-U7XSw2*SstdW-U7XSzw2*SstdZ*SstdW)*
-           (U7XSa3+SU7Xz3*SstdZ-U7XSw3*SstdW-U7XSzw3*SstdZ*SstdW)*(U7XSa4+U7XSz4*SstdZ-U7XSw4*SstdW-U7XSzw4*SstdZ*SstdW)
+           (U7XSa3+U7XSz3*SstdZ-U7XSw3*SstdW-U7XSzw3*SstdZ*SstdW)*(U7XSa4+U7XSz4*SstdZ-U7XSw4*SstdW-U7XSzw4*SstdZ*SstdW)
     zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
@@ -1257,7 +1257,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     ## Slope Difference Test 3 "HiZ/LoW - LoZ/LoW" ##
     estX <- (U7Xa1+U7Xz1*stdZ-U7Xw1*stdW-U7Xzw1*stdZ*stdW)*(U7Xa2+U7Xz2*stdZ-U7Xw2*stdW-U7Xzw2*stdZ*stdW)*
             (U7Xa3+U7Xz3*stdZ-U7Xw3*stdW-U7Xzw3*stdZ*stdW)*(U7Xa4+U7Xz4*stdZ-U7Xw4*stdW-U7Xzw4*stdZ*stdW) -
-            (U7Xa1-U7Xz1*stdZ-U7Xw1*stdW+U7Xzw1*stdZ*stdW)*(U7Xa2-zU7X2*stdZ-U7Xw2*stdW+U7Xzw2*stdZ*stdW)*
+            (U7Xa1-U7Xz1*stdZ-U7Xw1*stdW+U7Xzw1*stdZ*stdW)*(U7Xa2-U7Xz2*stdZ-U7Xw2*stdW+U7Xzw2*stdZ*stdW)*
             (U7Xa3-U7Xz3*stdZ-U7Xw3*stdW+U7Xzw3*stdZ*stdW)*(U7Xa4-U7Xz4*stdZ-U7Xw4*stdW+U7Xzw4*stdZ*stdW)
     abX <- (U7XSa1+U7XSz1*SstdZ-U7XSw1*SstdW-U7XSzw1*SstdZ*SstdW)*(U7XSa2+U7XSz2*SstdZ-U7XSw2*SstdW-U7XSzw2*SstdZ*SstdW)*
            (U7XSa3+U7XSz3*SstdZ-U7XSw3*SstdW-U7XSzw3*SstdZ*SstdW)*(U7XSa4+U7XSz4*SstdZ-U7XSw4*SstdW-U7XSzw4*SstdZ*SstdW) -
