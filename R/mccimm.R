@@ -1713,15 +1713,8 @@ mccimm_modsem_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
 ## ====== Function "mccimm_mplus_fun" Monte Carlo Confidence Intervals for Defined Function (mplus) ====== ##
 #' Monte Carlo Simulation for Confidence Intervals of Defined Function (mplus)
 #'
-#' Generate confidence intervals of defined function from Mplus results using Monte Carlo simulation.
+#' Generate confidence intervals of a defined function from Mplus results using Monte Carlo simulation.
 #' Location of estimated parameters can be found in modsem::TECH1().
-#'
-#' \if{html}{
-#' \figure{Figure.png}{options: width="75\%" alt="Description of my figure"}
-#' }
-#' \if{latex}{
-#' \figure{Figure.pdf}{options: width=15cm}
-#' }
 #'
 #' @param mplus_output_file Mplus output (.out) file (output from Mplus).
 #' @param results_file Mplus a text file (.txt) that saves the Mplus results (RESULTS IS "filename.txt" in Mplus SAVEDATA:).
@@ -1741,7 +1734,7 @@ mccimm_modsem_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
 #' @param zw2 location of parameter zw2 in Mplus Tech1 outputs.
 #' @param zw3 location of parameter zw3 in Mplus Tech1 outputs.
 #' @param zw4 location of parameter zw4 in Mplus Tech1 outputs.
-#' @param Sfunction function of estimated parameters from modsem object.
+#' @param Sfunction function of estimated parameters from Mplus outputs.
 #' @param R number of Monte Carlo simulation samples (in millions). For example, R=5 (default) generates 5,000,000 simulated samples.
 #'
 #' @return confidence intervals of defined function

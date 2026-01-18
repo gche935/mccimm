@@ -64,7 +64,7 @@ mccimm_mplus_fun(
 
 \item{zw4}{location of parameter zw4 in Mplus Tech1 outputs.}
 
-\item{Sfunction}{function of estimated parameters from modsem object.}
+\item{Sfunction}{function of estimated parameters from Mplus outputs.}
 
 \item{R}{number of Monte Carlo simulation samples (in millions). For example, R=5 (default) generates 5,000,000 simulated samples.}
 }
@@ -72,16 +72,8 @@ mccimm_mplus_fun(
 confidence intervals of defined function
 }
 \description{
-Generate confidence intervals of defined function from Mplus results using Monte Carlo simulation.
+Generate confidence intervals of a defined function from Mplus results using Monte Carlo simulation.
 Location of estimated parameters can be found in modsem::TECH1().
-}
-\details{
-\if{html}{
-\figure{Figure.png}{options: width="75\%" alt="Description of my figure"}
-}
-\if{latex}{
-\figure{Figure.pdf}{options: width=15cm}
-}
 }
 \examples{
 
