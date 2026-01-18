@@ -9,10 +9,10 @@
 ###############################################################################################
 
 ## == Required packages (load when loading mccimm) == ##
-library(MASS)
-library(ggplot2)
-library(tidyr)
-library(MplusAutomation)
+#library(MASS)
+#library(ggplot2)
+#library(tidyr)
+#library(MplusAutomation)
 
 
 ## ====== Function "mccimm_modsem" Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem) ====== ##
@@ -28,24 +28,24 @@ library(MplusAutomation)
 #' }
 #'
 #' @param object modsem object (output from modsem).
-#' @param Z name of moderate Z. 
+#' @param Z name of moderate Z.
 #' @param W name of moderator W.
 #' @param a1 parameter name of a1 path (main effect).
-#' @param a2 parameter name of a2 path (main effect). 
-#' @param a3 parameter name of a3 path (main effect). 
-#' @param a4 parameter name of a4 path (main effect). 
+#' @param a2 parameter name of a2 path (main effect).
+#' @param a3 parameter name of a3 path (main effect).
+#' @param a4 parameter name of a4 path (main effect).
 #' @param z1 parameter name of z1 path (interaction effect).
-#' @param z2 parameter name of z2 path (interaction effect). 
-#' @param z3 parameter name of z3 path (interaction effect). 
-#' @param z4 parameter name of z4 path (interaction effect). 
+#' @param z2 parameter name of z2 path (interaction effect).
+#' @param z3 parameter name of z3 path (interaction effect).
+#' @param z4 parameter name of z4 path (interaction effect).
 #' @param w1 parameter name of w1 path (interaction effect).
-#' @param w2 parameter name of w2 path (interaction effect). 
-#' @param w3 parameter name of w3 path (interaction effect). 
+#' @param w2 parameter name of w2 path (interaction effect).
+#' @param w3 parameter name of w3 path (interaction effect).
 #' @param w4 parameter name of w4 path (interaction effect).
 #' @param zw1 parameter name of zw1 path (3-way interaction effect).
-#' @param zw2 parameter name of zw2 path (3-way interaction effect). 
-#' @param zw3 parameter name of zw3 path (3-way interaction effect). 
-#' @param zw4 parameter name of zw4 path (3-way interaction effect). 
+#' @param zw2 parameter name of zw2 path (3-way interaction effect).
+#' @param zw3 parameter name of zw3 path (3-way interaction effect).
+#' @param zw4 parameter name of zw4 path (3-way interaction effect).
 #' @param R number of Monte Carlo simulation samples (in millions). For example, R=5 (default) generates 5,000,000 simulated samples.
 #'
 #' @return mccimm output for plotting Johnson-Neyman Figure.
@@ -71,22 +71,22 @@ library(MplusAutomation)
 #  object <- est_lms
 #  Z <- "Autonomy"          ## Specify moderator Z
 #  W <- "NA"
-#  A1 <- "a1"
-#  A2 <- "a2"
-#  A3 <- "a3a"
-#  A4 <- "NA"
-#  Z1 <- "z1"
-#  Z2 <- "NA"
-#  Z3 <- "NA"
-#  Z4 <- "NA"
-#  W1 <- "NA"
-#  W2 <- "NA"
-#  W3 <- "NA"
-#  W4 <- "NA"
-#  ZW1 <- "NA"
-#  ZW2 <- "NA"
-#  ZW3 <- "NA"
-#  ZW4 <- "NA"
+#  a1 <- "a1"
+#  a2 <- "a2"
+#  a3 <- "a3a"
+#  a4 <- "NA"
+#  z1 <- "z1"
+#  z2 <- "NA"
+#  z3 <- "NA"
+#  z4 <- "NA"
+#  w1 <- "NA"
+#  w2 <- "NA"
+#  w3 <- "NA"
+#  w4 <- "NA"
+#  zw1 <- "NA"
+#  zw2 <- "NA"
+#  zw3 <- "NA"
+#  zw4 <- "NA"
 
 #  R <- 1 # Number of simulated samples = R*1e6 (default: R = 5)
   ## ------------------------------- ##
@@ -119,7 +119,7 @@ library(MplusAutomation)
 
   stdyx.temp <- modsem_coef(object, standardized=TRUE)
   stdyx.estcoeff <- stdyx.temp[dp]
- 
+
   return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
                         Z, W,
                         varZ, varW,
@@ -152,7 +152,7 @@ library(MplusAutomation)
 #'
 #' @param mplus_output_file Mplus output (.out) file (output from Mplus).
 #' @param results_file Mplus a text file (.txt) that saves the Mplus results (RESULTS IS "filename.txt" in Mplus SAVEDATA:).
-#' @param Z name of moderate Z. 
+#' @param Z name of moderate Z.
 #' @param W name of moderator W.
 #' @param varZ location of parameter varZ in Mplus Tech1 outputs.
 #' @param varW location of parameter varW in Mplus Tech1 outputs.
@@ -1475,10 +1475,10 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 #    TWx4 <- PCI[2,4,2] # Lo-Z, Lo-W
 
     ## Standardized Slopes ##
-    TWx1 <- (Z7Xa1+Z7Xz1+Z7Xw1+Z7Xzw1)*(Z7Xa2+Z7Xz2+Z7Xw2+Z7Xzw2)*(Z7Xa3+Z7Xz3+Z7Xw3+Z7Xzw3)*(Z7Xa4+Z7Xz4+Z7Xw4+Z7Xzw4) # Hi-Z, Hi-W 
+    TWx1 <- (Z7Xa1+Z7Xz1+Z7Xw1+Z7Xzw1)*(Z7Xa2+Z7Xz2+Z7Xw2+Z7Xzw2)*(Z7Xa3+Z7Xz3+Z7Xw3+Z7Xzw3)*(Z7Xa4+Z7Xz4+Z7Xw4+Z7Xzw4) # Hi-Z, Hi-W
     TWx2 <- (Z7Xa1+Z7Xz1-Z7Xw1-Z7Xzw1)*(Z7Xa2+Z7Xz2-Z7Xw2-Z7Xzw2)*(Z7Xa3+Z7Xz3-Z7Xw3-Z7Xzw3)*(Z7Xa4+Z7Xz4-Z7Xw4-Z7Xzw4) # Hi-Z, Lo-W
     TWx3 <- (Z7Xa1-Z7Xz1+Z7Xw1-Z7Xzw1)*(Z7Xa2-Z7Xz2+Z7Xw2-Z7Xzw2)*(Z7Xa3-Z7Xz3+Z7Xw3-Z7Xzw3)*(Z7Xa4-Z7Xz4+Z7Xw4-Z7Xzw4) # Lo-Z, Hi-W
-    TWx4 <- (Z7Xa1-Z7Xz1-Z7Xw1+Z7Xzw1)*(Z7Xa2-Z7Xz2-Z7Xw2+Z7Xzw2)*(Z7Xa3-Z7Xz3-Z7Xw3+Z7Xzw3)*(Z7Xa4-Z7Xz4-Z7Xw4+Z7Xzw4) # Lo-Z, Lo-W 
+    TWx4 <- (Z7Xa1-Z7Xz1-Z7Xw1+Z7Xzw1)*(Z7Xa2-Z7Xz2-Z7Xw2+Z7Xzw2)*(Z7Xa3-Z7Xz3-Z7Xw3+Z7Xzw3)*(Z7Xa4-Z7Xz4-Z7Xw4+Z7Xzw4) # Lo-Z, Lo-W
 
     # -- Print standardized indirect effects -- #
     cat("\n", "   Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is high (Mean + 1 S.D.) = ", TWx1)
@@ -1568,7 +1568,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 #'
 #' ## -- Example C -- ##
 #'
-#' # modsem object is "est_lms" 
+#' # modsem object is "est_lms"
 #'
 #' mccimm_modsem_fun(est_lms, Sfunction = "a1*a2")
 #'
@@ -1689,12 +1689,12 @@ mccimm_modsem_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
 #'
 #' @param mccimmObject mccimm object (output from mccimm_modsem or mccimm_mplus).
 #' @param min_z minimum values of moderator Z on the graph.
-#' @param max_z maximum values of moderator Z on the graph. 
+#' @param max_z maximum values of moderator Z on the graph.
 #' @param detail detail of the Johnson-Neyman graph. The higher the number, the smoother the lines, but it will also take longer to generate.
 #' @param lower.quantile lower quantile for the confidence intervals. 0.025 for 95-percent confidence intervals (default). 0.005 for 99-percent confidence intervals.
 #' @param upper.quantile upper quantile for the confidence intervals. 0.975 for 95-percent confidence intervals (default). 0.995 for 99-percent confidence intervals.
 #' @param alpha alpha = 0.2 (default) Thickness of the lines.
-#' @param sd.line horiznotal line that shows mean +/- 2 (default) values of the moderator. 
+#' @param sd.line horiznotal line that shows mean +/- 2 (default) values of the moderator.
 #'
 #' @return a figure for changing the titles.
 #' @export
@@ -1702,7 +1702,7 @@ mccimm_modsem_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
 #'
 #' ## -- Example D -- ##
 #'
-#' # modsem object is mcObject 
+#' # modsem object is mcObject
 #'
 #' J_N_figure <- JN_plot(mcObject)
 #'
@@ -1893,7 +1893,7 @@ JN_plot <- function (mccimmObject, ci="bc",
 #'
 #' ## -- Example E -- ##
 #'
-#' # modsem object is mcObject 
+#' # modsem object is mcObject
 #'
 #' TECH1("example_d3.out")
 #'
@@ -2081,7 +2081,7 @@ Tech1_2_level <- function(spec, level, para) {
 
 Two_Way_Figure <- function(estX.lo, estX.hi) {
 
-  # -- Calculate endpoints of two lines-- # 
+  # -- Calculate endpoints of two lines-- #
   df_wide <- data.frame(
     x_var = c(-2,2),
     line1 = c(estX.lo*-2, estX.lo*2),
@@ -2098,7 +2098,7 @@ Two_Way_Figure <- function(estX.lo, estX.hi) {
     y.upper = 1.5*max(df_long$y_value) - 0.5*mean(df_long$y_value)
     y.lower = 1.5*min(df_long$y_value) - 0.5*mean(df_long$y_value)
 
-  # -- Plot Figure p_int -- #  
+  # -- Plot Figure p_int -- #
   p_int <<- ggplot2::ggplot(data = df_long, aes(x = x_var, y = y_value, color = line_id, linetype = line_id)) +
                     xlim(-2.5, 2.5) +
                     ylim(y.lower, y.upper) +

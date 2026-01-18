@@ -10,10 +10,12 @@ Encoding: UTF-8
 Depends: R (>= 3.5.1),
          MASS,
          ggplot2,
+         tidyr,
          MplusAutomation
 Imports:
     MASS,
     ggplot2,
+    tidyr,
     MplusAutomation
 RoxygenNote: 7.3.3
 URL: https://github.com/gche935/mccimm
