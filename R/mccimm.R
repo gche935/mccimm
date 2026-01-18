@@ -1893,9 +1893,8 @@ JN_plot <- function (mccimmObject, ci="bc",
 #'
 #' ## -- Example E -- ##
 #'
-#' # modsem object is mcObject
 #'
-#' TECH1("example_d3.out")
+#' Tech1 <- TECH1("example_d3.out")
 #'
 TECH1 <- function(mplusoutput.file = "example_d3.out") {
   mplus_output <- MplusAutomation::readModels(mplusoutput.file)
@@ -2031,6 +2030,12 @@ TECH1 <- function(mplusoutput.file = "example_d3.out") {
 
     return(res.tech1)
   }
+
+  sink("Tech1.txt")
+  print(res.tech1)
+  sink()
+  cat("\n")
+  cat("Output is saved as 'Tech1.txt'", rep("\n", 2))
 
 } # end (function TECH1)
 

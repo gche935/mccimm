@@ -1,7 +1,7 @@
 Package: mccimm
 Type: Package
 Title: Monte Carlo simulation of Confidence Intervals for Moderated Mediation (modsem & Mplus) 
-Version: 0.0.1
+Version: Beta 0.1.1
 Author: Anonymous 
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: Generate confidence intervals for moderated mediation with Monte Carlo simulated samples from modsem or Mplus results  
