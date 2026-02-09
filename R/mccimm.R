@@ -56,7 +56,7 @@
 #'
 #' # modsem object is "est_lms" & output mccimm object is mcObject
 #'
-#' mcObject <- mccimm_modsem(est_lms, A1="a1", A2="a2", A3="a3a", Z1="z1", Z="Autonomy")
+#' mcObject <- mccimm_modsem(est_lms, a1="a1", a2="a2", a3="a3a", a1="z1", Z="Autonomy")
 #'
 #'
 #' # Change 2-Way Figure Title and/or Axis Labels Afterwards 
