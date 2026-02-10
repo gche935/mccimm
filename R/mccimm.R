@@ -73,7 +73,7 @@
 #' ggplot2::ggsave("New Standardized Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
 #'
 
-  mccimm_modsem <- function(object = est_lms, Z="NA", W="NA",
+  mccimm_modsem <- function(object, Z="NA", W="NA",
                    a1="NA", z1="NA", w1="NA", zw1="NA",
                    a2="NA", z2="NA", w2="NA", zw2="NA",
                    a3="NA", z3="NA", w3="NA", zw3="NA",
@@ -1707,10 +1707,10 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 #' mccimm_modsem_fun(est_lms, Sfunction = "a1*a2")
 #'
 
-mccimm_modsem_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
+mccimm_modsem_fun <- function(object, Sfunction="NULL", R=5) {
 
   dp <- all.vars(parse(text = Sfunction))
-  var_label <- parameter_estimates(est_lms)$label
+  var_label <- parameter_estimates(object)$label
   var_label <- var_label[var_label != ""]
   if (all(unlist(dp) %in% unlist(var_label)) == FALSE) {
     stop("Element(s) in the Sfunction not an estimated parameter in modsem object")
@@ -1838,10 +1838,10 @@ mccimm_modsem_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
 #' mccimm_lavaan_fun(est_lms, Sfunction = "a1*a2")
 #'
 
-mccimm_lavaan_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
+mccimm_lavaan_fun <- function(object, Sfunction="NULL", R=5) {
 
   dp <- all.vars(parse(text = Sfunction))
-  var_label <- parameter_estimates(est_lms)$label
+  var_label <- lavaan::parameterEstimates(object)$label
   var_label <- var_label[var_label != ""]
   if (all(unlist(dp) %in% unlist(var_label)) == FALSE) {
     stop("Element(s) in the Sfunction not an estimated parameter in modsem object")
