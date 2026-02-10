@@ -217,26 +217,6 @@
 
   ## --- Initial Inputs for programming --- ##
 
-#  object <- est_lms
-#  Z <- "Autonomy"          ## Specify moderator Z
-#  W <- "NA"
-#  a1 <- "a1"
-#  a2 <- "a2"
-#  a3 <- "a3a"
-#  a4 <- "NA"
-#  z1 <- "z1"
-#  z2 <- "NA"
-#  z3 <- "NA"
-#  z4 <- "NA"
-#  w1 <- "NA"
-#  w2 <- "NA"
-#  w3 <- "NA"
-#  w4 <- "NA"
-#  zw1 <- "NA"
-#  zw2 <- "NA"
-#  zw3 <- "NA"
-#  zw4 <- "NA"
-
 #  R <- 1 # Number of simulated samples = R*1e6 (default: R = 5)
   ## ------------------------------- ##
 
