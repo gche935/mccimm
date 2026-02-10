@@ -3,6 +3,7 @@
 export(JN_plot)
 export(TECH1)
 export(mccimm_lavaan)
+export(mccimm_lavaan_fun)
 export(mccimm_modsem)
 export(mccimm_modsem_fun)
 export(mccimm_mplus)

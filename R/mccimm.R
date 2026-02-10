@@ -235,17 +235,6 @@
   Temp3 <- lavaan::vcov(object)
   Tech3 <- Temp3[dp, dp]
 
-#  stdyx.temp <- standardized_estimates(object)
-#  stdyx.estcoeff <- stdyx.temp[, "est"]
-#  no.stdyx.estcoeff <- length(stdyx.estcoeff)
-#  for (i in 1: no.stdyx.estcoeff) {
-#    if(stdyx.temp[i,"label"] == "") {
-#      names(stdyx.estcoeff)[i] <- paste0(stdyx.temp[i,"lhs"], stdyx.temp[i,"op"], stdyx.temp[i,"rhs"])
-#    } else {
-#      names(stdyx.estcoeff)[i] <- stdyx.temp[i,"label"]
-#    }
-#  } # end (for i)
-
   dd <- lavaan::parameterEstimates(object, standardized=TRUE, remove.nonfree=TRUE, remove.def=TRUE)
   stdyx.temp <- dd[, "std.all"]
   names(stdyx.temp) <- names(temp)
@@ -1824,6 +1813,136 @@ mccimm_modsem_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
   cat("\n")
 
 }  ## ===== End (function mccimm_modsem_fun) ===== ##
+
+
+
+
+
+## ===== Simulation of Defined Function (lavaan) ===== ##
+#' Monte Carlo Simulation for Confidence Intervals of Defined Function (lavaan)
+#'
+#' Generate confidence intervals of defined function from lavaan results using Monte Carlo simulation.
+#'
+#' @param object lavaan object (output from lavaan).
+#' @param Sfunction function of estimated parameters from lavaan object.
+#' @param R number of Monte Carlo simulation samples (in millions). For example, R=5 (default) generates 5,000,000 simulated samples.
+#'
+#' @return mccimm confidence intervals.
+#' @export
+#' @examples
+#'
+#' ## -- Example -- ##
+#'
+#' # lavaan object is "est_lms"
+#'
+#' mccimm_lavaan_fun(est_lms, Sfunction = "a1*a2")
+#'
+
+mccimm_lavaan_fun <- function(object = est_lms, Sfunction="NULL", R=5) {
+
+  dp <- all.vars(parse(text = Sfunction))
+  var_label <- parameter_estimates(est_lms)$label
+  var_label <- var_label[var_label != ""]
+  if (all(unlist(dp) %in% unlist(var_label)) == FALSE) {
+    stop("Element(s) in the Sfunction not an estimated parameter in modsem object")
+  }
+
+  ## Extract defined parameters and vcov ##
+  temp <- lavaan::coef(object)
+  estcoeff <- temp[dp]
+  Temp3 <- lavaan::vcov(object)
+  Tech3 <- Temp3[dp, dp]
+
+  ## -- Monte Carlo Simulation of R*1e6 samples, default: R = 5 -- ##
+  mcmc <- MASS::mvrnorm(n=R*1e6, mu=estcoeff, Sigma=Tech3, tol = 1e-6)
+
+  b.no <- nrow(mcmc)
+  R.no <- format(R*1e6, scientific = FALSE)
+
+  # ===== Print number of simulated samples
+  cat("\n", "   Number of requested simulated samples = ", R.no)
+  cat("\n", "   Number of completed simulated samples = ", b.no, rep("\n",2))
+
+
+  cat("Simulated Defined Function Values", rep("\n", 2))
+
+  # ==================================================================== #
+
+  # Calculate estimated parameter from Dfunction
+  list2env(as.list(estcoeff), envir = .GlobalEnv)
+  estM  <- eval(parse(text=Sfunction))
+
+
+  # Calculate Simulated parameter from Dfunction
+  mcmc <- as.data.frame(mcmc)
+  mcmc <- mcmc %>%
+    mutate(abM = eval(parse(text=Sfunction)))
+  abM <- mcmc[, "abM"]
+
+  #### Confidence Intervals and p-value ####
+
+  # Calculate Percentile Probability
+  if (quantile(abM,probs=0.5)>0) {
+    pM = 2*(sum(abM<0)/b.no)
+  } else {
+    pM = 2*(sum(abM>0)/b.no)
+  }
+
+  #### Percentile Confidence Intervals of Conditional Indirect Effects ####
+  PCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
+                                             c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
+
+  PCI[1,1] <- format(round(quantile(abM,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,2] <- format(round(quantile(abM,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,3] <- format(round(quantile(abM,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,5] <- format(round(quantile(abM,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,6] <- format(round(quantile(abM,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,7] <- format(round(quantile(abM,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,8] <- format(round(pM, digits = 4), nsmall = 4, scientific = FALSE)
+
+  # Bias-Corrected Factor
+  zM = qnorm(sum(abM<estM)/b.no)
+
+  # Calculate Bias-Corrected Probability
+
+  if ((estM>0 & min(abM)>0) | (estM<0 & max(abM)<0)) {
+    pbM = 0
+  } else if (qnorm(sum(abM>0)/b.no)+2*zM<0) {
+    pbM = 2*pnorm((qnorm(sum(abM>0)/b.no)+2*zM))
+  } else {
+    pbM = 2*pnorm(-1*(qnorm(sum(abM>0)/b.no)+2*zM))
+  }
+
+  #### Bias-Corrected Confidence Intervals ####
+
+  BCCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
+                                              c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
+
+  BCCI[1,1] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,2] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,3] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,5] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,6] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,7] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,8] <- format(round(pbM, digits = 4), nsmall = 4, scientific = FALSE)
+
+  cat("\n")
+  cat("Percentile Confidence Intervals for Sfunction", rep("\n", 2))
+  rownames(PCI) <- rep("    ", nrow(PCI))
+  print(PCI, quote=FALSE, right=TRUE)
+  cat("\n")
+
+  cat("\n")
+  cat("Bias-Corrected Confidence Intervals for Sfunction", rep("\n", 2))
+  rownames(BCCI) <- rep("    ", nrow(BCCI))
+  print(BCCI, quote=FALSE, right=TRUE)
+  cat("\n")
+
+}  ## ===== End (function mccimm_lavaan_fun) ===== ##
+
+
 
 
 
