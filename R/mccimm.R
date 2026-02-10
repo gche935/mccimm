@@ -247,6 +247,9 @@
 #  } # end (for i)
 
   stdyx.temp <- lavaan::coef(object, standardized=TRUE)
+  dd <- parameterEstimates(object, standardized=TRUE, remove.nonfree=TRUE, remove.def=TRUE)
+  stdyx.temp <- dd[, "std.all"]
+  names(stdyx.temp) <- names(temp)
   stdyx.estcoeff <- stdyx.temp[dp]
 
   return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
