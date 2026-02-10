@@ -150,6 +150,141 @@
 
 
 
+## ====== Function "mccimm_lavaan" Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (lavaan) ====== ##
+#' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (lavaan)
+#'
+#' Generate confidence intervals of moderated-mediating effects from lavaan results using Monte Carlo simulation.
+#'
+#' \if{html}{
+#' \figure{Figure.png}{options: width="75\%" alt="Description of my figure"}
+#' }
+#' \if{latex}{
+#' \figure{Figure.pdf}{options: width=15cm}
+#' }
+#'
+#' @param object lavaan object (output from lavaan).
+#' @param Z name of moderate Z.
+#' @param W name of moderator W.
+#' @param a1 parameter name of a1 path (main effect).
+#' @param a2 parameter name of a2 path (main effect).
+#' @param a3 parameter name of a3 path (main effect).
+#' @param a4 parameter name of a4 path (main effect).
+#' @param z1 parameter name of z1 path (interaction effect).
+#' @param z2 parameter name of z2 path (interaction effect).
+#' @param z3 parameter name of z3 path (interaction effect).
+#' @param z4 parameter name of z4 path (interaction effect).
+#' @param w1 parameter name of w1 path (interaction effect).
+#' @param w2 parameter name of w2 path (interaction effect).
+#' @param w3 parameter name of w3 path (interaction effect).
+#' @param w4 parameter name of w4 path (interaction effect).
+#' @param zw1 parameter name of zw1 path (3-way interaction effect).
+#' @param zw2 parameter name of zw2 path (3-way interaction effect).
+#' @param zw3 parameter name of zw3 path (3-way interaction effect).
+#' @param zw4 parameter name of zw4 path (3-way interaction effect).
+#' @param R number of Monte Carlo simulation samples (in millions). For example, R=5 (default) generates 5,000,000 simulated samples.
+#'
+#' @return mccimm output for plotting Johnson-Neyman Figure.
+#' @export
+#' @examples
+#'
+#' ## -- Example -- ##
+#'
+#' # lavaan object is "est_lms" & output mccimm object is mcObject
+#'
+#' mcObject <- mccimm_lavaan(est_lms, a1="a1", a2="a2", a3="a3a", a1="z1", Z="Autonomy")
+#'
+#'
+#' # Change 2-Way Figure Title and/or Axis Labels Afterwards 
+#' p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
+#'                                   x = "Replace with your X-axis Label",
+#'                                   y = "Replace with your Y-axis Label")
+#'
+#' # Change Figure Legend Labels Afterwards 
+#' p_int <- p_int + ggplot2::scale_color_manual(name = "Replace with your Legend Title",
+#'                                           values = c("line1" = "black", "line2" = "grey"),
+#'                                           labels = c("Z at mean - 1sd", "Z at mean + 1sd"))
+#'
+#' # Save the New Figure
+#' ggplot2::ggsave("New Standardized Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
+#'
+
+  mccimm_lavaan <- function(object, Z="NA", W="NA",
+                   a1="NA", z1="NA", w1="NA", zw1="NA",
+                   a2="NA", z2="NA", w2="NA", zw2="NA",
+                   a3="NA", z3="NA", w3="NA", zw3="NA",
+                   a4="NA", z4="NA", w4="NA", zw4="NA",
+                   R=5) {
+
+  ## --- Initial Inputs for programming --- ##
+
+#  object <- est_lms
+#  Z <- "Autonomy"          ## Specify moderator Z
+#  W <- "NA"
+#  a1 <- "a1"
+#  a2 <- "a2"
+#  a3 <- "a3a"
+#  a4 <- "NA"
+#  z1 <- "z1"
+#  z2 <- "NA"
+#  z3 <- "NA"
+#  z4 <- "NA"
+#  w1 <- "NA"
+#  w2 <- "NA"
+#  w3 <- "NA"
+#  w4 <- "NA"
+#  zw1 <- "NA"
+#  zw2 <- "NA"
+#  zw3 <- "NA"
+#  zw4 <- "NA"
+
+#  R <- 1 # Number of simulated samples = R*1e6 (default: R = 5)
+  ## ------------------------------- ##
+
+
+  ## -- Extract defined parameters and vcov -- ##
+  varZ <- "NA"
+  varW <- "NA"
+  if (Z != "NA") varZ <- paste0(Z, "~~", Z)
+  if (W != "NA") varW <- paste0(W, "~~", W)
+  dp <- c(a1, a2, a3, a4, z1, z2, z3, z4, w1, w2, w3, w4, zw1, zw2, zw3, zw4, varZ, varW)
+  dp <- dp[dp != "NA"]
+
+
+  temp <- lavaan::coef(object)
+  estcoeff <- temp[dp]
+  Temp3 <- lavaan::vcov(object)
+  Tech3 <- Temp3[dp, dp]
+
+#  stdyx.temp <- standardized_estimates(object)
+#  stdyx.estcoeff <- stdyx.temp[, "est"]
+#  no.stdyx.estcoeff <- length(stdyx.estcoeff)
+#  for (i in 1: no.stdyx.estcoeff) {
+#    if(stdyx.temp[i,"label"] == "") {
+#      names(stdyx.estcoeff)[i] <- paste0(stdyx.temp[i,"lhs"], stdyx.temp[i,"op"], stdyx.temp[i,"rhs"])
+#    } else {
+#      names(stdyx.estcoeff)[i] <- stdyx.temp[i,"label"]
+#    }
+#  } # end (for i)
+
+  stdyx.temp <- lavaan::coef(object, standardized=TRUE)
+  stdyx.estcoeff <- stdyx.temp[dp]
+
+  return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
+                        Z, W,
+                        varZ, varW,
+                        a1, z1, w1, zw1,
+                        a2, z2, w2, zw2,
+                        a3, z3, w3, zw3,
+                        a4, z4, w4, zw4,
+                        R=5)
+
+  return(return_mccimm)
+
+}  ## end (Function "mccimm_lavaan") ##
+
+
+
+
 
 ## ====== Function "mccimm_mplus" Monte Carlo Confidence Intervals for Moderated Mediation (mplus) ====== ##
 #' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem)
