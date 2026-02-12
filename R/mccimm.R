@@ -120,19 +120,13 @@
   Temp3 <- modsem_vcov(object)
   Tech3 <- Temp3[dp, dp]
 
-  stdyx.temp <- standardized_estimates(object)
-  stdyx.estcoeff <- stdyx.temp[, "est"]
-  no.stdyx.estcoeff <- length(stdyx.estcoeff)
-  for (i in 1: no.stdyx.estcoeff) {
-    if(stdyx.temp[i,"label"] == "") {
-      names(stdyx.estcoeff)[i] <- paste0(stdyx.temp[i,"lhs"], stdyx.temp[i,"op"], stdyx.temp[i,"rhs"])
-    } else {
-      names(stdyx.estcoeff)[i] <- stdyx.temp[i,"label"]
-    }
-  } # end (for i)
+  dd <- modsem::parameter_estimates(object, standardized=TRUE, remove.nonfree=TRUE, remove.def=TRUE)
+  stdyx.temp <- dd[, "std.all"]
+  names(stdyx.temp) <- names(temp)
+  stdyx.estcoeff <- stdyx.temp[dp]
 
 #  stdyx.temp <- modsem_coef(object, standardized=TRUE)
-  stdyx.estcoeff <- stdyx.temp[dp]
+#  stdyx.estcoeff <- stdyx.temp[dp]
 
   return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
                         Z, W,
