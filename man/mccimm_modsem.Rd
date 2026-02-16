@@ -5,7 +5,7 @@
 \title{Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem)}
 \usage{
 mccimm_modsem(
-  object = est_lms,
+  object,
   Z = "NA",
   W = "NA",
   a1 = "NA",
@@ -91,12 +91,12 @@ Generate confidence intervals of moderated-mediating effects from modsem results
 mcObject <- mccimm_modsem(est_lms, a1="a1", a2="a2", a3="a3a", a1="z1", Z="Autonomy")
 
 
-# Change 2-Way Figure Title and/or Axis Labels Afterwards 
+# Change 2-Way Figure Title and/or Axis Labels Afterwards
 p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
                                   x = "Replace with your X-axis Label",
                                   y = "Replace with your Y-axis Label")
 
-# Change Figure Legend Labels Afterwards 
+# Change Figure Legend Labels Afterwards
 p_int <- p_int + ggplot2::scale_color_manual(name = "Replace with your Legend Title",
                                           values = c("line1" = "black", "line2" = "grey"),
                                           labels = c("Z at mean - 1sd", "Z at mean + 1sd"))

@@ -73,7 +73,7 @@ confidence intervals of defined function
 }
 \description{
 Generate confidence intervals of a defined function from Mplus results using Monte Carlo simulation.
-Location of estimated parameters can be found in modsem::TECH1().
+Location of estimated parameters can be found in mccimm::TECH1().
 }
 \examples{
 
@@ -82,7 +82,7 @@ Location of estimated parameters can be found in modsem::TECH1().
 # mplus_output_file is "model cc4.out", results_file is "Model_CC4.txt" & moderator Z is "AUTO"
 # output mccimm object is mcObject
 
-mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", 
+mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt",
             a1 = "60", a2 = "65", Sfunction="a1*a2")
 
 }

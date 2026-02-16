@@ -4,7 +4,7 @@
 \alias{mccimm_lavaan_fun}
 \title{Monte Carlo Simulation for Confidence Intervals of Defined Function (lavaan)}
 \usage{
-mccimm_lavaan_fun(object = est_lms, Sfunction = "NULL", R = 5)
+mccimm_lavaan_fun(object, Sfunction = "NULL", R = 5)
 }
 \arguments{
 \item{object}{lavaan object (output from lavaan).}

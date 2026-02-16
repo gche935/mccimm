@@ -2,7 +2,7 @@
 % Please edit documentation in R/mccimm.R
 \name{mccimm_mplus}
 \alias{mccimm_mplus}
-\title{Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem)}
+\title{Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (mplus)}
 \usage{
 mccimm_mplus(
   mplus_output_file = "mplus_output.out",
@@ -82,7 +82,7 @@ mccimm output for plotting Johnson-Neyman Figure.
 }
 \description{
 Generate confidence intervals of moderated-mediating effects from modsem results using Monte Carlo simulation.
-Location of estimated parameters can be found in modsem::TECH1().
+Location of estimated parameters can be found in mccimm::TECH1().
 }
 \details{
 \if{html}{
@@ -102,12 +102,12 @@ Location of estimated parameters can be found in modsem::TECH1().
 mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", Z = "AUTO", varZ = "72",
             a1 = "60", a2 = "65", z1 = "62")#'
 
-# Change 2-Way Figure Title and/or Axis Labels Afterwards 
+# Change 2-Way Figure Title and/or Axis Labels Afterwards
 p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
                                   x = "Replace with your X-axis Label",
                                   y = "Replace with your Y-axis Label")
 
-# Change Figure Legend Labels Afterwards 
+# Change Figure Legend Labels Afterwards
 p_int <- p_int + ggplot2::scale_color_manual(name = "Replace with your Legend Title",
                                           values = c("line1" = "black", "line2" = "grey"),
                                           labels = c("Z at mean - 1sd", "Z at mean + 1sd"))

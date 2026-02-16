@@ -59,12 +59,12 @@
 #' mcObject <- mccimm_modsem(est_lms, a1="a1", a2="a2", a3="a3a", a1="z1", Z="Autonomy")
 #'
 #'
-#' # Change 2-Way Figure Title and/or Axis Labels Afterwards 
+#' # Change 2-Way Figure Title and/or Axis Labels Afterwards
 #' p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
 #'                                   x = "Replace with your X-axis Label",
 #'                                   y = "Replace with your Y-axis Label")
 #'
-#' # Change Figure Legend Labels Afterwards 
+#' # Change Figure Legend Labels Afterwards
 #' p_int <- p_int + ggplot2::scale_color_manual(name = "Replace with your Legend Title",
 #'                                           values = c("line1" = "black", "line2" = "grey"),
 #'                                           labels = c("Z at mean - 1sd", "Z at mean + 1sd"))
@@ -188,12 +188,12 @@
 #' mcObject <- mccimm_lavaan(est_lms, a1="a1", a2="a2", a3="a3a", a1="z1", Z="Autonomy")
 #'
 #'
-#' # Change 2-Way Figure Title and/or Axis Labels Afterwards 
+#' # Change 2-Way Figure Title and/or Axis Labels Afterwards
 #' p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
 #'                                   x = "Replace with your X-axis Label",
 #'                                   y = "Replace with your Y-axis Label")
 #'
-#' # Change Figure Legend Labels Afterwards 
+#' # Change Figure Legend Labels Afterwards
 #' p_int <- p_int + ggplot2::scale_color_manual(name = "Replace with your Legend Title",
 #'                                           values = c("line1" = "black", "line2" = "grey"),
 #'                                           labels = c("Z at mean - 1sd", "Z at mean + 1sd"))
@@ -252,10 +252,10 @@
 
 
 ## ====== Function "mccimm_mplus" Monte Carlo Confidence Intervals for Moderated Mediation (mplus) ====== ##
-#' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem)
+#' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (mplus)
 #'
 #' Generate confidence intervals of moderated-mediating effects from modsem results using Monte Carlo simulation.
-#' Location of estimated parameters can be found in modsem::TECH1().
+#' Location of estimated parameters can be found in mccimm::TECH1().
 #'
 #' \if{html}{
 #' \figure{Figure.png}{options: width="75\%" alt="Description of my figure"}
@@ -300,12 +300,12 @@
 #' mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", Z = "AUTO", varZ = "72",
 #'             a1 = "60", a2 = "65", z1 = "62")#'
 #'
-#' # Change 2-Way Figure Title and/or Axis Labels Afterwards 
+#' # Change 2-Way Figure Title and/or Axis Labels Afterwards
 #' p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
 #'                                   x = "Replace with your X-axis Label",
 #'                                   y = "Replace with your Y-axis Label")
 #'
-#' # Change Figure Legend Labels Afterwards 
+#' # Change Figure Legend Labels Afterwards
 #' p_int <- p_int + ggplot2::scale_color_manual(name = "Replace with your Legend Title",
 #'                                           values = c("line1" = "black", "line2" = "grey"),
 #'                                           labels = c("Z at mean - 1sd", "Z at mean + 1sd"))
@@ -1944,7 +1944,7 @@ mccimm_lavaan_fun <- function(object, Sfunction="NULL", R=5) {
 #' Monte Carlo Simulation for Confidence Intervals of Defined Function (mplus)
 #'
 #' Generate confidence intervals of a defined function from Mplus results using Monte Carlo simulation.
-#' Location of estimated parameters can be found in modsem::TECH1().
+#' Location of estimated parameters can be found in mccimm::TECH1().
 #'
 #' @param mplus_output_file Mplus output (.out) file (output from Mplus).
 #' @param results_file Mplus a text file (.txt) that saves the Mplus results (RESULTS IS "filename.txt" in Mplus SAVEDATA:).
@@ -1976,7 +1976,7 @@ mccimm_lavaan_fun <- function(object, Sfunction="NULL", R=5) {
 #' # mplus_output_file is "model cc4.out", results_file is "Model_CC4.txt" & moderator Z is "AUTO"
 #' # output mccimm object is mcObject
 #'
-#' mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", 
+#' mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt",
 #'             a1 = "60", a2 = "65", Sfunction="a1*a2")
 #'
 

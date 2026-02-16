@@ -4,7 +4,7 @@
 \alias{mccimm_modsem_fun}
 \title{Monte Carlo Simulation for Confidence Intervals of Defined Function (modsem)}
 \usage{
-mccimm_modsem_fun(object = est_lms, Sfunction = "NULL", R = 5)
+mccimm_modsem_fun(object, Sfunction = "NULL", R = 5)
 }
 \arguments{
 \item{object}{modsem object (output from modsem).}
