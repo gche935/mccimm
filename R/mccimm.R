@@ -120,8 +120,8 @@
   Temp3 <- modsem_vcov(object)
   Tech3 <- Temp3[dp, dp]
 
-  dd <- modsem::parameter_estimates(object, standardized=TRUE, remove.nonfree=TRUE, remove.def=TRUE)
-  stdyx.temp <- dd[, "std.all"]
+  dd <- modsem::standardized_estimates(object, correction=TRUE)
+  stdyx.temp <- dd[, "est"]
   names(stdyx.temp) <- names(temp)
   stdyx.estcoeff <- stdyx.temp[dp]
 
