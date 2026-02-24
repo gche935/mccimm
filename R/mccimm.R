@@ -120,13 +120,15 @@
   Temp3 <- modsem_vcov(object)
   Tech3 <- Temp3[dp, dp]
 
-  dd <- modsem::standardized_estimates(object, correction=TRUE)
-  stdyx.temp <- dd[, "est"]
-  names(stdyx.temp) <- names(temp)
-  stdyx.estcoeff <- stdyx.temp[dp]
-
-#  stdyx.temp <- modsem_coef(object, standardized=TRUE)
-#  stdyx.estcoeff <- stdyx.temp[dp]
+  if (Z != "NA" & W != "NA" {
+    dd <- modsem::standardized_estimates(object, correction=TRUE)
+    stdyx.temp <- dd[, "est"]
+    names(stdyx.temp) <- names(temp)
+    stdyx.estcoeff <- stdyx.temp[dp]
+  } else {
+    stdyx.temp <- modsem_coef(object, standardized=TRUE)
+    stdyx.estcoeff <- stdyx.temp[dp]
+  } # end (if Z! & W!)
 
   return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
                         Z, W,
