@@ -120,7 +120,7 @@
   Temp3 <- modsem_vcov(object)
   Tech3 <- Temp3[dp, dp]
 
-  if (Z != "NA" & W != "NA" {
+  if (Z != "NA" & W != "NA") {
     dd <- modsem::standardized_estimates(object, correction=TRUE)
     stdyx.temp <- dd[, "est"]
     names(stdyx.temp) <- names(temp)
