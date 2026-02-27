@@ -302,6 +302,7 @@
 #' mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", Z = "AUTO", varZ = "72",
 #'             a1 = "60", a2 = "65", z1 = "62")
 #'
+#'
 #' # Change 2-Way Figure Title and/or Axis Labels Afterwards
 #' p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
 #'                                   x = "Replace with your X-axis Label",
@@ -1600,7 +1601,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     if (is.null(stdyx.resulst) != TRUE) {
 
       ## == Create 3-way Standardized Interaction Figure == ##
- 
+
       # Define estimated parameters for calculating indirect effects
       if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
       if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
