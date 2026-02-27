@@ -300,7 +300,7 @@
 #' # output mccimm object is mcObject
 #'
 #' mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", Z = "AUTO", varZ = "72",
-#'             a1 = "60", a2 = "65", z1 = "62")#'
+#'             a1 = "60", a2 = "65", z1 = "62")
 #'
 #' # Change 2-Way Figure Title and/or Axis Labels Afterwards
 #' p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
@@ -766,25 +766,29 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     print(BCCI, quote=FALSE, right=TRUE)
     cat("\n")
 
-    # -- Plot Standardized 2-Way Interaction Effects -- #
-    # Define estimated parameters for calculating indirect effects
-    if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
-    if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
-    if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
-    if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
-    if (any(names(stdyx.estcoeff) %in% z1)) Z7Xz1 <- stdyx.estcoeff[z1]
-    if (any(names(stdyx.estcoeff) %in% z2)) Z7Xz2 <- stdyx.estcoeff[z2]
-    if (any(names(stdyx.estcoeff) %in% z3)) Z7Xz3 <- stdyx.estcoeff[z3]
-    if (any(names(stdyx.estcoeff) %in% z4)) Z7Xz4 <- stdyx.estcoeff[z4]
+    if (is.null(stdyx.resulst) != TRUE) {
+      # -- Plot Standardized 2-Way Interaction Effects -- #
+      # Define estimated parameters for calculating indirect effects
+      if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
+      if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
+      if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
+      if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
+      if (any(names(stdyx.estcoeff) %in% z1)) Z7Xz1 <- stdyx.estcoeff[z1]
+      if (any(names(stdyx.estcoeff) %in% z2)) Z7Xz2 <- stdyx.estcoeff[z2]
+      if (any(names(stdyx.estcoeff) %in% z3)) Z7Xz3 <- stdyx.estcoeff[z3]
+      if (any(names(stdyx.estcoeff) %in% z4)) Z7Xz4 <- stdyx.estcoeff[z4]
 
-    estX.lo <- (Z7Xa1-Z7Xz1)*(Z7Xa2-Z7Xz2)*(Z7Xa3-Z7Xz3)*(Z7Xa4-Z7Xz4)
-    estX.hi <- (Z7Xa1+Z7Xz1)*(Z7Xa2+Z7Xz2)*(Z7Xa3+Z7Xz3)*(Z7Xa4+Z7Xz4)
+      estX.lo <- (Z7Xa1-Z7Xz1)*(Z7Xa2-Z7Xz2)*(Z7Xa3-Z7Xz3)*(Z7Xa4-Z7Xz4)
+      estX.hi <- (Z7Xa1+Z7Xz1)*(Z7Xa2+Z7Xz2)*(Z7Xa3+Z7Xz3)*(Z7Xa4+Z7Xz4)
 
-    # -- Print standardized indirect effects -- #
-    cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", estX.lo)
-    cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", estX.hi, "\n")
+      # -- Print standardized indirect effects -- #
+      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", estX.lo)
+      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", estX.hi, "\n")
 
-    Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
+      Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
+    } else {
+      cat("\n", "Standardized indirect effects are not available", "\n")
+    } # end (if stdyx.results)
 
   } # End one moderating effect for Z
 
@@ -923,25 +927,30 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     cat("\n")
 
 
-    # -- Plot Standardized 2-Way Interaction Effects -- #
-    # Define estimated parameters for calculating indirect effects
-    if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
-    if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
-    if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
-    if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
-    if (any(names(stdyx.estcoeff) %in% w1)) Z7Xw1 <- stdyx.estcoeff[w1]
-    if (any(names(stdyx.estcoeff) %in% w2)) Z7Xw2 <- stdyx.estcoeff[w2]
-    if (any(names(stdyx.estcoeff) %in% w3)) Z7Xw3 <- stdyx.estcoeff[w3]
-    if (any(names(stdyx.estcoeff) %in% w4)) Z7Xw4 <- stdyx.estcoeff[w4]
+    if (is.null(stdyx.resulst) != TRUE) {
 
-    estX.lo <- (Z7Xa1-Z7Xw1)*(Z7Xa2-Z7Xw2)*(Z7Xa3-Z7Xw3)*(Z7Xa4-Z7Xw4)
-    estX.hi <- (Z7Xa1+Z7Xw1)*(Z7Xa2+Z7Xw2)*(Z7Xa3+Z7Xw3)*(Z7Xa4+Z7Xw4)
+      # -- Plot Standardized 2-Way Interaction Effects -- #
+      # Define estimated parameters for calculating indirect effects
+      if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
+      if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
+      if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
+      if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
+      if (any(names(stdyx.estcoeff) %in% w1)) Z7Xw1 <- stdyx.estcoeff[w1]
+      if (any(names(stdyx.estcoeff) %in% w2)) Z7Xw2 <- stdyx.estcoeff[w2]
+      if (any(names(stdyx.estcoeff) %in% w3)) Z7Xw3 <- stdyx.estcoeff[w3]
+      if (any(names(stdyx.estcoeff) %in% w4)) Z7Xw4 <- stdyx.estcoeff[w4]
 
-    # -- Print standardized indirect effects -- #
-    cat("\n", "Standardized indirect effects when W is low (Mean - 1 S.D.) = ", estX.lo)
-    cat("\n", "Standardized indirect effects when W is high (Mean + 1 S.D.) = ", estX.hi, "\n")
+      estX.lo <- (Z7Xa1-Z7Xw1)*(Z7Xa2-Z7Xw2)*(Z7Xa3-Z7Xw3)*(Z7Xa4-Z7Xw4)
+      estX.hi <- (Z7Xa1+Z7Xw1)*(Z7Xa2+Z7Xw2)*(Z7Xa3+Z7Xw3)*(Z7Xa4+Z7Xw4)
 
-    Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
+      # -- Print standardized indirect effects -- #
+      cat("\n", "Standardized indirect effects when W is low (Mean - 1 S.D.) = ", estX.lo)
+      cat("\n", "Standardized indirect effects when W is high (Mean + 1 S.D.) = ", estX.hi, "\n")
+
+      Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
+    } else {
+      cat("\n", "Standardized indirect effects are not available", "\n")
+    } # end (if stdyx.results)
 
   } # End one moderating effect for W
 
@@ -1032,25 +1041,31 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     cat("\n")
     cat("Index of Moderated Mediation is not defined for two or more moderating effects","\n")
 
-    # -- Plot Standardized 2-Way Interaction Effects -- #
-    # Define estimated parameters for calculating indirect effects
-    if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
-    if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
-    if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
-    if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
-    if (any(names(stdyx.estcoeff) %in% z1)) Z7Xz1 <- stdyx.estcoeff[z1]
-    if (any(names(stdyx.estcoeff) %in% z2)) Z7Xz2 <- stdyx.estcoeff[z2]
-    if (any(names(stdyx.estcoeff) %in% z3)) Z7Xz3 <- stdyx.estcoeff[z3]
-    if (any(names(stdyx.estcoeff) %in% z4)) Z7Xz4 <- stdyx.estcoeff[z4]
+    if (is.null(stdyx.resulst) != TRUE) {
 
-    estX.lo <- (Z7Xa1-Z7Xz1)*(Z7Xa2-Z7Xz2)*(Z7Xa3-Z7Xz3)*(Z7Xa4-Z7Xz4)
-    estX.hi <- (Z7Xa1+Z7Xz1)*(Z7Xa2+Z7Xz2)*(Z7Xa3+Z7Xz3)*(Z7Xa4+Z7Xz4)
+      # -- Plot Standardized 2-Way Interaction Effects -- #
+      # Define estimated parameters for calculating indirect effects
+      if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
+      if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
+      if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
+      if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
+      if (any(names(stdyx.estcoeff) %in% z1)) Z7Xz1 <- stdyx.estcoeff[z1]
+      if (any(names(stdyx.estcoeff) %in% z2)) Z7Xz2 <- stdyx.estcoeff[z2]
+      if (any(names(stdyx.estcoeff) %in% z3)) Z7Xz3 <- stdyx.estcoeff[z3]
+      if (any(names(stdyx.estcoeff) %in% z4)) Z7Xz4 <- stdyx.estcoeff[z4]
 
-    # -- Print standardized indirect effects -- #
-    cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", estX.lo)
-    cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", estX.hi, "\n")
+      estX.lo <- (Z7Xa1-Z7Xz1)*(Z7Xa2-Z7Xz2)*(Z7Xa3-Z7Xz3)*(Z7Xa4-Z7Xz4)
+      estX.hi <- (Z7Xa1+Z7Xz1)*(Z7Xa2+Z7Xz2)*(Z7Xa3+Z7Xz3)*(Z7Xa4+Z7Xz4)
 
-    Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
+      # -- Print standardized indirect effects -- #
+      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", estX.lo)
+      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", estX.hi, "\n")
+
+      Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
+
+    } else {
+      cat("\n", "Standardized indirect effects are not available", "\n")
+    } # end (if stdyx.results)
 
   } # End more than one moderating effect for Z
 
@@ -1141,26 +1156,31 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     cat("\n")
     cat("Index of Moderated Mediation is not defined for two or more moderating effects","\n")
 
+    if (is.null(stdyx.resulst) != TRUE) {
 
-    # -- Plot Standardized 2-Way Interaction Effects -- #
-    # Define estimated parameters for calculating standardized indirect effects
-    if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
-    if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
-    if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
-    if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
-    if (any(names(stdyx.estcoeff) %in% w1)) Z7Xw1 <- stdyx.estcoeff[w1]
-    if (any(names(stdyx.estcoeff) %in% w2)) Z7Xw2 <- stdyx.estcoeff[w2]
-    if (any(names(stdyx.estcoeff) %in% w3)) Z7Xw3 <- stdyx.estcoeff[w3]
-    if (any(names(stdyx.estcoeff) %in% w4)) Z7Xw4 <- stdyx.estcoeff[w4]
+      # -- Plot Standardized 2-Way Interaction Effects -- #
+      # Define estimated parameters for calculating standardized indirect effects
+      if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
+      if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
+      if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
+      if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
+      if (any(names(stdyx.estcoeff) %in% w1)) Z7Xw1 <- stdyx.estcoeff[w1]
+      if (any(names(stdyx.estcoeff) %in% w2)) Z7Xw2 <- stdyx.estcoeff[w2]
+      if (any(names(stdyx.estcoeff) %in% w3)) Z7Xw3 <- stdyx.estcoeff[w3]
+      if (any(names(stdyx.estcoeff) %in% w4)) Z7Xw4 <- stdyx.estcoeff[w4]
 
-    estX.lo <- (Z7Xa1-Z7Xw1)*(Z7Xa2-Z7Xw2)*(Z7Xa3-Z7Xw3)*(Z7Xa4-Z7Xw4)
-    estX.hi <- (Z7Xa1+Z7Xw1)*(Z7Xa2+Z7Xw2)*(Z7Xa3+Z7Xw3)*(Z7Xa4+Z7Xw4)
+      estX.lo <- (Z7Xa1-Z7Xw1)*(Z7Xa2-Z7Xw2)*(Z7Xa3-Z7Xw3)*(Z7Xa4-Z7Xw4)
+      estX.hi <- (Z7Xa1+Z7Xw1)*(Z7Xa2+Z7Xw2)*(Z7Xa3+Z7Xw3)*(Z7Xa4+Z7Xw4)
 
-    # -- Print standardized indirect effects -- #
-    cat("\n", "Standardized indirect effects when W is low (Mean - 1 S.D.) = ", estX.lo)
-    cat("\n", "Standardized indirect effects when W is high (Mean + 1 S.D.) = ", estX.hi, "\n")
+      # -- Print standardized indirect effects -- #
+      cat("\n", "Standardized indirect effects when W is low (Mean - 1 S.D.) = ", estX.lo)
+      cat("\n", "Standardized indirect effects when W is high (Mean + 1 S.D.) = ", estX.hi, "\n")
 
-    Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
+      Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
+
+    } else {
+      cat("\n", "Standardized indirect effects are not available", "\n")
+    } # end (if stdyx.results)
 
   } # End more than one moderating effect for W
 
@@ -1577,26 +1597,27 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     print(BCCISDT, quote=FALSE, right=TRUE)
     cat("\n")
 
+    if (is.null(stdyx.resulst) != TRUE) {
 
-    ## == Create 3-way Standardized Interaction Figure == ##
-
-    # Define estimated parameters for calculating indirect effects
-    if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
-    if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
-    if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
-    if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
-    if (any(names(stdyx.estcoeff) %in% z1)) Z7Xz1 <- stdyx.estcoeff[z1]
-    if (any(names(stdyx.estcoeff) %in% z2)) Z7Xz2 <- stdyx.estcoeff[z2]
-    if (any(names(stdyx.estcoeff) %in% z3)) Z7Xz3 <- stdyx.estcoeff[z3]
-    if (any(names(stdyx.estcoeff) %in% z4)) Z7Xz4 <- stdyx.estcoeff[z4]
-    if (any(names(stdyx.estcoeff) %in% w1)) Z7Xw1 <- stdyx.estcoeff[w1]
-    if (any(names(stdyx.estcoeff) %in% w2)) Z7Xw2 <- stdyx.estcoeff[w2]
-    if (any(names(stdyx.estcoeff) %in% w3)) Z7Xw3 <- stdyx.estcoeff[w3]
-    if (any(names(stdyx.estcoeff) %in% w4)) Z7Xw4 <- stdyx.estcoeff[w4]
-    if (any(names(stdyx.estcoeff) %in% zw1)) Z7Xzw1 <- stdyx.estcoeff[zw1]
-    if (any(names(stdyx.estcoeff) %in% zw2)) Z7Xzw2 <- stdyx.estcoeff[zw2]
-    if (any(names(stdyx.estcoeff) %in% zw3)) Z7Xzw3 <- stdyx.estcoeff[zw3]
-    if (any(names(stdyx.estcoeff) %in% zw4)) Z7Xzw4 <- stdyx.estcoeff[zw4]
+      ## == Create 3-way Standardized Interaction Figure == ##
+ 
+      # Define estimated parameters for calculating indirect effects
+      if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
+      if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
+      if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
+      if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
+      if (any(names(stdyx.estcoeff) %in% z1)) Z7Xz1 <- stdyx.estcoeff[z1]
+      if (any(names(stdyx.estcoeff) %in% z2)) Z7Xz2 <- stdyx.estcoeff[z2]
+      if (any(names(stdyx.estcoeff) %in% z3)) Z7Xz3 <- stdyx.estcoeff[z3]
+      if (any(names(stdyx.estcoeff) %in% z4)) Z7Xz4 <- stdyx.estcoeff[z4]
+      if (any(names(stdyx.estcoeff) %in% w1)) Z7Xw1 <- stdyx.estcoeff[w1]
+      if (any(names(stdyx.estcoeff) %in% w2)) Z7Xw2 <- stdyx.estcoeff[w2]
+      if (any(names(stdyx.estcoeff) %in% w3)) Z7Xw3 <- stdyx.estcoeff[w3]
+      if (any(names(stdyx.estcoeff) %in% w4)) Z7Xw4 <- stdyx.estcoeff[w4]
+      if (any(names(stdyx.estcoeff) %in% zw1)) Z7Xzw1 <- stdyx.estcoeff[zw1]
+      if (any(names(stdyx.estcoeff) %in% zw2)) Z7Xzw2 <- stdyx.estcoeff[zw2]
+      if (any(names(stdyx.estcoeff) %in% zw3)) Z7Xzw3 <- stdyx.estcoeff[zw3]
+      if (any(names(stdyx.estcoeff) %in% zw4)) Z7Xzw4 <- stdyx.estcoeff[zw4]
 
     ## Unstandardized Slopes ##
 #    TWx1 <- PCI[4,4,4] # Hi-Z, Hi-W
@@ -1604,38 +1625,37 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 #    TWx3 <- PCI[2,4,4] # Lo-Z, Hi-W
 #    TWx4 <- PCI[2,4,2] # Lo-Z, Lo-W
 
-    ## Standardized Slopes ##
-    TWx1 <- (Z7Xa1+Z7Xz1+Z7Xw1+Z7Xzw1)*(Z7Xa2+Z7Xz2+Z7Xw2+Z7Xzw2)*(Z7Xa3+Z7Xz3+Z7Xw3+Z7Xzw3)*(Z7Xa4+Z7Xz4+Z7Xw4+Z7Xzw4) # Hi-Z, Hi-W
-    TWx2 <- (Z7Xa1+Z7Xz1-Z7Xw1-Z7Xzw1)*(Z7Xa2+Z7Xz2-Z7Xw2-Z7Xzw2)*(Z7Xa3+Z7Xz3-Z7Xw3-Z7Xzw3)*(Z7Xa4+Z7Xz4-Z7Xw4-Z7Xzw4) # Hi-Z, Lo-W
-    TWx3 <- (Z7Xa1-Z7Xz1+Z7Xw1-Z7Xzw1)*(Z7Xa2-Z7Xz2+Z7Xw2-Z7Xzw2)*(Z7Xa3-Z7Xz3+Z7Xw3-Z7Xzw3)*(Z7Xa4-Z7Xz4+Z7Xw4-Z7Xzw4) # Lo-Z, Hi-W
-    TWx4 <- (Z7Xa1-Z7Xz1-Z7Xw1+Z7Xzw1)*(Z7Xa2-Z7Xz2-Z7Xw2+Z7Xzw2)*(Z7Xa3-Z7Xz3-Z7Xw3+Z7Xzw3)*(Z7Xa4-Z7Xz4-Z7Xw4+Z7Xzw4) # Lo-Z, Lo-W
+      ## Standardized Slopes ##
+      TWx1 <- (Z7Xa1+Z7Xz1+Z7Xw1+Z7Xzw1)*(Z7Xa2+Z7Xz2+Z7Xw2+Z7Xzw2)*(Z7Xa3+Z7Xz3+Z7Xw3+Z7Xzw3)*(Z7Xa4+Z7Xz4+Z7Xw4+Z7Xzw4) # Hi-Z, Hi-W
+      TWx2 <- (Z7Xa1+Z7Xz1-Z7Xw1-Z7Xzw1)*(Z7Xa2+Z7Xz2-Z7Xw2-Z7Xzw2)*(Z7Xa3+Z7Xz3-Z7Xw3-Z7Xzw3)*(Z7Xa4+Z7Xz4-Z7Xw4-Z7Xzw4) # Hi-Z, Lo-W
+      TWx3 <- (Z7Xa1-Z7Xz1+Z7Xw1-Z7Xzw1)*(Z7Xa2-Z7Xz2+Z7Xw2-Z7Xzw2)*(Z7Xa3-Z7Xz3+Z7Xw3-Z7Xzw3)*(Z7Xa4-Z7Xz4+Z7Xw4-Z7Xzw4) # Lo-Z, Hi-W
+      TWx4 <- (Z7Xa1-Z7Xz1-Z7Xw1+Z7Xzw1)*(Z7Xa2-Z7Xz2-Z7Xw2+Z7Xzw2)*(Z7Xa3-Z7Xz3-Z7Xw3+Z7Xzw3)*(Z7Xa4-Z7Xz4-Z7Xw4+Z7Xzw4) # Lo-Z, Lo-W
 
-    # -- Print standardized indirect effects -- #
-    cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is high (Mean + 1 S.D.) = ", TWx1)
-    cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is low (Mean - 1 S.D.) = ", TWx2)
-    cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) and W is high (Mean + 1 S.D.) = ", TWx3)
-    cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) and W is low (Mean - 1 S.D.) = ", TWx4, "\n")
+      # -- Print standardized indirect effects -- #
+      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is high (Mean + 1 S.D.) = ", TWx1)
+      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is low (Mean - 1 S.D.) = ", TWx2)
+      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) and W is high (Mean + 1 S.D.) = ", TWx3)
+      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) and W is low (Mean - 1 S.D.) = ", TWx4, "\n")
 
-
-    df_wide <- data.frame(
-      x_var = c(-2,2),
-      line1 = c(TWx1*-2, TWx1*2),
-      line2 = c(TWx2*-2, TWx2*2),
-      line3 = c(TWx3*-2, TWx3*2),
-      line4 = c(TWx4*-2, TWx4*2)
-    )
-
-    # Convert to long format
-    df_long <- df_wide %>%
-      pivot_longer(
-        cols = starts_with("line"),
-        names_to = "line_id",
-        values_to = "y_value"
+      df_wide <- data.frame(
+        x_var = c(-2,2),
+        line1 = c(TWx1*-2, TWx1*2),
+        line2 = c(TWx2*-2, TWx2*2),
+        line3 = c(TWx3*-2, TWx3*2),
+        line4 = c(TWx4*-2, TWx4*2)
       )
-    y.upper = 1.5*max(df_long$y_value) - 0.5*mean(df_long$y_value)
-    y.lower = 1.5*min(df_long$y_value) - 0.5*mean(df_long$y_value)
 
-    p_int <<- ggplot(data = df_long, aes(x = x_var, y = y_value, color = line_id, linetype = line_id)) +
+      # Convert to long format
+      df_long <- df_wide %>%
+        pivot_longer(
+          cols = starts_with("line"),
+          names_to = "line_id",
+          values_to = "y_value"
+        )
+      y.upper = 1.5*max(df_long$y_value) - 0.5*mean(df_long$y_value)
+      y.lower = 1.5*min(df_long$y_value) - 0.5*mean(df_long$y_value)
+
+      p_int <<- ggplot(data = df_long, aes(x = x_var, y = y_value, color = line_id, linetype = line_id)) +
                     xlim(-2.5, 2.5) +
                     ylim(y.lower, y.upper) +
                     geom_line(linewidth=1) +
@@ -1649,12 +1669,15 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
                              y = "Indirect Effect of X on Y (through M)") +
                     theme_classic() # Optional: Apply a theme
 
-    ggplot2::ggsave("3-Way Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
+      ggplot2::ggsave("3-Way Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
 
-    cat("\n")
-    cat("Figure p_int is saved in '3-Way Interaction Figure.png'", rep("\n", 2))
+      cat("\n")
+      cat("Figure p_int is saved in '3-Way Interaction Figure.png'", rep("\n", 2))
 
-    ## == Close 3-Way Interaction Figure
+      ## == Close 3-Way Interaction Figure
+    } else {
+      cat("\n", "Standardized indirect effects are not available", "\n")
+    } # end (if stdyx.results)
 
   }
 
