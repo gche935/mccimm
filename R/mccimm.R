@@ -330,7 +330,7 @@ mccimm_mplus <- function(mplus_output_file = "mplus_output.out",
   mplus_output <- readModels(mplus_output_file)
   results <- mplus_output$parameters$unstandardized
   temp <- scan(results_file, sep="")
-  stdyx.results <- mplus_output$parameters$stdyx.standardized
+  # stdyx.results <- mplus_output$parameters$stdyx.standardized
   no.parameters <- mplus_output$summaries$Parameters
   stdyx.temp <- temp[-(1:(2*no.parameters))]
 
@@ -767,7 +767,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     print(BCCI, quote=FALSE, right=TRUE)
     cat("\n")
 
-    if (is.null(stdyx.results) != TRUE) {
+    if (is.null(stdyx.estcoeff) != TRUE) {
       # -- Plot Standardized 2-Way Interaction Effects -- #
       # Define estimated parameters for calculating indirect effects
       if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
@@ -789,7 +789,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
     } else {
       cat("\n", "Standardized indirect effects are not available", "\n")
-    } # end (if stdyx.results)
+    } # end (if stdyx.estcoeff)
 
   } # End one moderating effect for Z
 
@@ -928,7 +928,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     cat("\n")
 
 
-    if (is.null(stdyx.results) != TRUE) {
+    if (is.null(stdyx.estcoeff) != TRUE) {
 
       # -- Plot Standardized 2-Way Interaction Effects -- #
       # Define estimated parameters for calculating indirect effects
@@ -951,7 +951,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
     } else {
       cat("\n", "Standardized indirect effects are not available", "\n")
-    } # end (if stdyx.results)
+    } # end (if stdyx.estcoeff)
 
   } # End one moderating effect for W
 
@@ -1042,7 +1042,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     cat("\n")
     cat("Index of Moderated Mediation is not defined for two or more moderating effects","\n")
 
-    if (is.null(stdyx.results) != TRUE) {
+    if (is.null(stdyx.estcoeff) != TRUE) {
 
       # -- Plot Standardized 2-Way Interaction Effects -- #
       # Define estimated parameters for calculating indirect effects
@@ -1066,7 +1066,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 
     } else {
       cat("\n", "Standardized indirect effects are not available", "\n")
-    } # end (if stdyx.results)
+    } # end (if stdyx.estcoeff)
 
   } # End more than one moderating effect for Z
 
@@ -1157,7 +1157,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     cat("\n")
     cat("Index of Moderated Mediation is not defined for two or more moderating effects","\n")
 
-    if (is.null(stdyx.results) != TRUE) {
+    if (is.null(stdyx.estcoeff) != TRUE) {
 
       # -- Plot Standardized 2-Way Interaction Effects -- #
       # Define estimated parameters for calculating standardized indirect effects
@@ -1181,7 +1181,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
 
     } else {
       cat("\n", "Standardized indirect effects are not available", "\n")
-    } # end (if stdyx.results)
+    } # end (if stdyx.estcoeff)
 
   } # End more than one moderating effect for W
 
@@ -1598,7 +1598,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     print(BCCISDT, quote=FALSE, right=TRUE)
     cat("\n")
 
-    if (is.null(stdyx.results) != TRUE) {
+    if (is.null(stdyx.estcoeff) != TRUE) {
 
       ## == Create 3-way Standardized Interaction Figure == ##
 
@@ -1678,7 +1678,7 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       ## == Close 3-Way Interaction Figure
     } else {
       cat("\n", "Standardized indirect effects are not available", "\n")
-    } # end (if stdyx.results)
+    } # end (if stdyx.estcoeff)
 
   }
 
