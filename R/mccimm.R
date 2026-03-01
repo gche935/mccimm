@@ -330,9 +330,9 @@ mccimm_mplus <- function(mplus_output_file = "mplus_output.out",
   mplus_output <- readModels(mplus_output_file)
   results <- mplus_output$parameters$unstandardized
   temp <- scan(results_file, sep="")
-  # stdyx.results <- mplus_output$parameters$stdyx.standardized
+  stdyx.temp <- mplus_output$parameters$stdyx.standardized
   no.parameters <- mplus_output$summaries$Parameters
-  stdyx.temp <- temp[-(1:(2*no.parameters))]
+  # stdyx.temp <- temp[-(1:(2*no.parameters))]
 
   Temp3 <- mplus_output$tech3$paramCov
   Temp3[upper.tri(Temp3, diag = FALSE)] <- 0
