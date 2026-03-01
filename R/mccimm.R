@@ -1664,13 +1664,15 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
                                           values = c("line1" = "solid", "line2" = "twodash", "line3" = "solid", "line4" = "twodash"),
                                           labels = c("Hi-Z, Hi-W", "Hi-Z, Lo-W", "Lo-Z, Hi-W", "Lo-Z, Lo-W")) +
                     scale_color_manual(values = c("line1" = "black", "line2" = "black", "line3" = "grey", "line4"="grey")) +
-                    guides(color = "none") +
+                  #  guides(color = "none") +
                     labs(title = "Standardized Three-Way Interaction Effects",
                              x = "X-axis Label",
                              y = "Indirect Effect of X on Y (through M)") +
                     theme_classic() # Optional: Apply a theme
 
       ggplot2::ggsave("3-Way Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
+
+      print(p_int) # show p_int
 
       cat("\n")
       cat("Figure p_int is saved in '3-Way Interaction Figure.png'", rep("\n", 2))
