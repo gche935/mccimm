@@ -102,6 +102,7 @@ Location of estimated parameters can be found in mccimm::TECH1().
 mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", Z = "AUTO", varZ = "72",
             a1 = "60", a2 = "65", z1 = "62")
 
+
 # Change 2-Way Figure Title and/or Axis Labels Afterwards
 p_int <- p_int + ggplot2::labs(title = "Replace with your Figure Title",
                                   x = "Replace with your X-axis Label",
