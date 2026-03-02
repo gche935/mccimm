@@ -784,8 +784,8 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       estX.hi <- (Z7Xa1+Z7Xz1)*(Z7Xa2+Z7Xz2)*(Z7Xa3+Z7Xz3)*(Z7Xa4+Z7Xz4)
 
       # -- Print standardized indirect effects -- #
-      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", estX.lo)
-      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", estX.hi, "\n")
+      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", format(estX.lo, digits=4, nsmall=4))
+      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", format(estX.hi, digits=4, nsmall=4), "\n")
 
       Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
     } else {
@@ -946,8 +946,8 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       estX.hi <- (Z7Xa1+Z7Xw1)*(Z7Xa2+Z7Xw2)*(Z7Xa3+Z7Xw3)*(Z7Xa4+Z7Xw4)
 
       # -- Print standardized indirect effects -- #
-      cat("\n", "Standardized indirect effects when W is low (Mean - 1 S.D.) = ", estX.lo)
-      cat("\n", "Standardized indirect effects when W is high (Mean + 1 S.D.) = ", estX.hi, "\n")
+      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", format(estX.lo, digits=4, nsmall=4))
+      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", format(estX.hi, digits=4, nsmall=4), "\n")
 
       Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
     } else {
@@ -1060,8 +1060,8 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       estX.hi <- (Z7Xa1+Z7Xz1)*(Z7Xa2+Z7Xz2)*(Z7Xa3+Z7Xz3)*(Z7Xa4+Z7Xz4)
 
       # -- Print standardized indirect effects -- #
-      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", estX.lo)
-      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", estX.hi, "\n")
+      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", format(estX.lo, digits=4, nsmall=4))
+      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", format(estX.hi, digits=4, nsmall=4), "\n")
 
       Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
 
@@ -1175,8 +1175,8 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       estX.hi <- (Z7Xa1+Z7Xw1)*(Z7Xa2+Z7Xw2)*(Z7Xa3+Z7Xw3)*(Z7Xa4+Z7Xw4)
 
       # -- Print standardized indirect effects -- #
-      cat("\n", "Standardized indirect effects when W is low (Mean - 1 S.D.) = ", estX.lo)
-      cat("\n", "Standardized indirect effects when W is high (Mean + 1 S.D.) = ", estX.hi, "\n")
+      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) = ", format(estX.lo, digits=4, nsmall=4))
+      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) = ", format(estX.hi, digits=4, nsmall=4), "\n")
 
       Two_Way_Figure(estX.lo, estX.hi) # Plot standardized Figure with Sub-Function
 
@@ -1634,10 +1634,10 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       TWx4 <- (Z7Xa1-Z7Xz1-Z7Xw1+Z7Xzw1)*(Z7Xa2-Z7Xz2-Z7Xw2+Z7Xzw2)*(Z7Xa3-Z7Xz3-Z7Xw3+Z7Xzw3)*(Z7Xa4-Z7Xz4-Z7Xw4+Z7Xzw4) # Lo-Z, Lo-W
 
       # -- Print standardized indirect effects -- #
-      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is high (Mean + 1 S.D.) = ", TWx1)
-      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is low (Mean - 1 S.D.) = ", TWx2)
-      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) and W is high (Mean + 1 S.D.) = ", TWx3)
-      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) and W is low (Mean - 1 S.D.) = ", TWx4, "\n")
+      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is high (Mean + 1 S.D.) = ", format(TWx1, digits=4, nsmall=4))
+      cat("\n", "Standardized indirect effects when Z is high (Mean + 1 S.D.) and W is low (Mean - 1 S.D.) = ", format(TWx2, digits=4, nsmall=4))
+      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) and W is high (Mean + 1 S.D.) = ", format(TWx3, digits=4, nsmall=4))
+      cat("\n", "Standardized indirect effects when Z is low (Mean - 1 S.D.) and W is low (Mean - 1 S.D.) = ", format(TWx4, digits=4, nsmall=4), "\n")
 
       df_wide <- data.frame(
         x_var = c(-2,2),
@@ -2601,8 +2601,10 @@ Two_Way_Figure <- function(estX.lo, estX.hi) {
   ggplot2::ggsave("2-Way Standardized Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
 
   cat("\n")
-  cat("Figure is p_int and is saved as '2-Way standardized Interaction Figure.png'", rep("\n", 2))
+  cat("Figure p_int is saved as '2-Way Standardized Interaction Figure.png'", rep("\n", 2))
 
 } # end (Sub-Function: Two-Way_Figure)
 
 ## ===== Close 2-Way Standardized Interaction Figure ===== ##
+
+
