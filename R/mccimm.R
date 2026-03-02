@@ -2006,7 +2006,7 @@ mccimm_lavaan_fun <- function(object, Sfunction="NULL", R=5) {
 #' # mplus_output_file is "model cc4.out", results_file is "Model_CC4.txt" & moderator Z is "AUTO"
 #' # output mccimm object is mcObject
 #'
-#' mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt",
+#' mcObject <- mccimm_mplus_fun("model cc4.out", "Model_CC4.txt",
 #'             a1 = "60", a2 = "65", Sfunction="a1*a2")
 #'
 
@@ -2029,24 +2029,22 @@ mccimm_mplus_fun <- function(mplus_output_file = "mplus_output.out",
   Tech3 <- Tech3 - diag(diag(Temp3))
 
   ## -- Extract defined parameters and vcov -- ##
-  dp <- c(varZ, varW, a1, a2, a3, a4, z1, z2, z3, z4, w1, w2, w3, w4, zw1, zw2, zw3, zw4)
+  dp <- c(a1, a2, a3, a4, z1, z2, z3, z4, w1, w2, w3, w4, zw1, zw2, zw3, zw4)
 
   dp_no <- suppressWarnings(as.numeric(dp))
-  dp_list <- c("varZ", "varW", "a1", "a2", "a3", "a4", "z1", "z2", "z3", "z4", "w1", "w2", "w3", "w4", "zw1", "zw2", "zw3", "zw4")
-  non_na_list <- dp_list[which(!is.na(dp_no))]
+  dp_list <- c("a1", "a2", "a3", "a4", "z1", "z2", "z3", "z4", "w1", "w2", "w3", "w4", "zw1", "zw2", "zw3", "zw4")
+  non_na_list <<- dp_list[which(!is.na(dp_no))]
   dp <- dp[dp != "NA"]
   dp <- as.numeric(dp)
-
-  estcoeff <- temp[dp]
+ 
+  estcoeff <<- temp[dp]
   names(estcoeff) <- non_na_list
 
-  Tech3 <- Tech3[dp, dp]
+  Tech3 <<- Tech3[dp, dp]
   rownames(Tech3) <- non_na_list
   colnames(Tech3) <- non_na_list
 
   # -- Reassigning variable names -- #
-  if (varZ != "NA") varZ <- "varZ"
-  if (varW != "NA") varW <- "varW"
   if (a1 != "NA") a1 <- "a1"
   if (a2 != "NA") a2 <- "a2"
   if (a3 != "NA") a3 <- "a3"
