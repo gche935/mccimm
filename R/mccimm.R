@@ -2481,6 +2481,9 @@ TECH1 <- function(mplusoutput.file = "example_d3.out") {
         if (t.row != t.col) {
           lhs = paste0(t.col,".WITH")
           ind <- which(res.tech1[,"paramHeader"] == lhs & res.tech1[,"param"] == t.row & res.tech1[,"BetweenWithin"] == t.level)
+          lhs = paste0(t.row,".WITH")
+          ind <- which(res.tech1[,"paramHeader"] == lhs & res.tech1[,"param"] == t.col & res.tech1[,"BetweenWithin"] == t.level)
+
         } else {
           ind <- which((res.tech1[,"paramHeader"] == "Variances" | res.tech1[,"paramHeader"] == "Residual.Variances") & res.tech1[,"param"] == t.col &
              res.tech1[,"BetweenWithin"] == t.level)
