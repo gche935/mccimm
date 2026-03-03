@@ -2079,7 +2079,7 @@ mccimm_mplus_fun <- function(mplus_output_file = "mplus_output.out",
 
   # Calculate estimated parameter from Dfunction
   list2env(as.list(estcoeff), envir = .GlobalEnv)
-  estM  <- eval(parse(text=Sfunction))
+  estM  <<- eval(parse(text=Sfunction))
 
 
   # Calculate Simulated parameter from Dfunction
