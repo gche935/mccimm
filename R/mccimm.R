@@ -2037,33 +2037,33 @@ mccimm_mplus_fun <- function(mplus_output_file = "mplus_output.out",
   dp <- dp[dp != "NA"]
   dp <- as.numeric(dp)
  
-  estcoeff <<- temp[dp]
+  estcoeff <- temp[dp]
   names(estcoeff) <- non_na_list
 
-  Tech3 <<- Tech3[dp, dp]
+  Tech3 <- Tech3[dp, dp]
   rownames(Tech3) <- non_na_list
   colnames(Tech3) <- non_na_list
 
   # -- Reassigning variable names -- #
-  if (a1 != "NA") a1 <- "a1"
-  if (a2 != "NA") a2 <- "a2"
-  if (a3 != "NA") a3 <- "a3"
-  if (a4 != "NA") a4 <- "a4"
-  if (z1 != "NA") z1 <- "z1"
-  if (z2 != "NA") z2 <- "z2"
-  if (z3 != "NA") z3 <- "z3"
-  if (z4 != "NA") z4 <- "z4"
-  if (w1 != "NA") w1 <- "w1"
-  if (w2 != "NA") w2 <- "w2"
-  if (w3 != "NA") w3 <- "w3"
-  if (w4 != "NA") w4 <- "w4"
-  if (zw1 != "NA") zw1 <- "zw1"
-  if (zw2 != "NA") zw2 <- "zw2"
-  if (zw3 != "NA") zw3 <- "zw3"
-  if (zw4 != "NA") zw4 <- "zw4"
+#  if (a1 != "NA") a1 <- "a1"
+#  if (a2 != "NA") a2 <- "a2"
+#  if (a3 != "NA") a3 <- "a3"
+#  if (a4 != "NA") a4 <- "a4"
+#  if (z1 != "NA") z1 <- "z1"
+#  if (z2 != "NA") z2 <- "z2"
+#  if (z3 != "NA") z3 <- "z3"
+#  if (z4 != "NA") z4 <- "z4"
+#  if (w1 != "NA") w1 <- "w1"
+#  if (w2 != "NA") w2 <- "w2"
+#  if (w3 != "NA") w3 <- "w3"
+#  if (w4 != "NA") w4 <- "w4"
+#  if (zw1 != "NA") zw1 <- "zw1"
+#  if (zw2 != "NA") zw2 <- "zw2"
+#  if (zw3 != "NA") zw3 <- "zw3"
+#  if (zw4 != "NA") zw4 <- "zw4"
 
   ## -- Monte Carlo Simulation of R*1e6 samples, default: R = 5 -- ##
-  mcmc <- MASS::mvrnorm(n=R*1e6, mu=estcoeff, Sigma=Tech3, tol = 1e-6)
+  mcmc <<- MASS::mvrnorm(n=R*1e6, mu=estcoeff, Sigma=Tech3, tol = 1e-6)
 
   b.no <- nrow(mcmc)
   R.no <- format(R*1e6, scientific = FALSE)
@@ -2083,7 +2083,7 @@ mccimm_mplus_fun <- function(mplus_output_file = "mplus_output.out",
 
 
   # Calculate Simulated parameter from Dfunction
-  mcmc <- as.data.frame(mcmc)
+  mcmc <<- as.data.frame(mcmc)
   mcmc <- mcmc %>%
     mutate(abM = eval(parse(text=Sfunction)))
   abM <- mcmc[, "abM"]
@@ -2479,8 +2479,8 @@ TECH1 <- function(mplusoutput.file = "example_d3.out") {
       t.col <- Tech1[i, "Col_Name"]
       if (t.par == "psi" | t.par == "theta") {
         if (t.row != t.col) {
-          lhs = paste0(t.row,".WITH")
-          ind <- which(res.tech1[,"paramHeader"] == lhs & res.tech1[,"param"] == t.col & res.tech1[,"BetweenWithin"] == t.level)
+          lhs = paste0(t.col,".WITH")
+          ind <- which(res.tech1[,"paramHeader"] == lhs & res.tech1[,"param"] == t.row & res.tech1[,"BetweenWithin"] == t.level)
         } else {
           ind <- which((res.tech1[,"paramHeader"] == "Variances" | res.tech1[,"paramHeader"] == "Residual.Variances") & res.tech1[,"param"] == t.col &
              res.tech1[,"BetweenWithin"] == t.level)
