@@ -2045,22 +2045,22 @@ mccimm_mplus_fun <- function(mplus_output_file = "mplus_output.out",
   colnames(Tech3) <- non_na_list
 
   # -- Reassigning variable names -- #
-#  if (a1 != "NA") a1 <- "a1"
-#  if (a2 != "NA") a2 <- "a2"
-#  if (a3 != "NA") a3 <- "a3"
-#  if (a4 != "NA") a4 <- "a4"
-#  if (z1 != "NA") z1 <- "z1"
-#  if (z2 != "NA") z2 <- "z2"
-#  if (z3 != "NA") z3 <- "z3"
-#  if (z4 != "NA") z4 <- "z4"
-#  if (w1 != "NA") w1 <- "w1"
-#  if (w2 != "NA") w2 <- "w2"
-#  if (w3 != "NA") w3 <- "w3"
-#  if (w4 != "NA") w4 <- "w4"
-#  if (zw1 != "NA") zw1 <- "zw1"
-#  if (zw2 != "NA") zw2 <- "zw2"
-#  if (zw3 != "NA") zw3 <- "zw3"
-#  if (zw4 != "NA") zw4 <- "zw4"
+  if (a1 != "NA") a1 <- temp[as.numeric(a1)]
+  if (a2 != "NA") a2 <- temp[as.numeric(a2)]
+  if (a3 != "NA") a3 <- temp[as.numeric(a3)]
+  if (a4 != "NA") a4 <- temp[as.numeric(a4)]
+  if (z1 != "NA") z1 <- temp[as.numeric(z1)]
+  if (z2 != "NA") z2 <- temp[as.numeric(z2)]
+  if (z3 != "NA") z3 <- temp[as.numeric(z3)]
+  if (z4 != "NA") z4 <- temp[as.numeric(z4)]
+  if (w1 != "NA") w1 <- temp[as.numeric(w1)]
+  if (w2 != "NA") w2 <- temp[as.numeric(w2)]
+  if (w3 != "NA") w3 <- temp[as.numeric(w3)]
+  if (w4 != "NA") w4 <- temp[as.numeric(w4)]
+  if (zw1 != "NA") zw1 <- temp[as.numeric(zw1)]
+  if (zw2 != "NA") zw2 <- temp[as.numeric(zw2)]
+  if (zw3 != "NA") zw3 <- temp[as.numeric(zw3)]
+  if (zw4 != "NA") zw4 <- temp[as.numeric(zw4)]
 
   ## -- Monte Carlo Simulation of R*1e6 samples, default: R = 5 -- ##
   mcmc <<- MASS::mvrnorm(n=R*1e6, mu=estcoeff, Sigma=Tech3, tol = 1e-6)
@@ -2077,16 +2077,20 @@ mccimm_mplus_fun <- function(mplus_output_file = "mplus_output.out",
 
   # ==================================================================== #
 
+
   # Calculate estimated parameter from Dfunction
 #  list2env(as.list(estcoeff), envir = .GlobalEnv)
   estM  <- eval(parse(text=Sfunction))
 
+ cat("estM = ", estM)
 
   # Calculate Simulated parameter from Dfunction
   mcmc <<- as.data.frame(mcmc)
   mcmc <- mcmc %>%
     mutate(abM = eval(parse(text=Sfunction)))
   abM <- mcmc[, "abM"]
+
+head(mcmc)
 
   #### Confidence Intervals and p-value ####
 
