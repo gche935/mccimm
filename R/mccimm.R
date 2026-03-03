@@ -621,18 +621,19 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     print(BCCI, quote=FALSE, right=TRUE)
     cat("\n")
 
-
-    # - Define estimated parameters for calculating standardized indirect effects - #
-    if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
-    if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
-    if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
-    if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
-
-    # - Calculate Estimated Indirect Effect - #
-    estM  <- Z7Xa1*Z7Xa2*Z7Xa3*Z7Xa4
-
-    # -- Print standardized indirect effects -- #
-    cat("\n", "   Standardized indirect effects = ", estM, rep("\n",2))
+    if (is.null(stdyx.estcoeff) != TRUE) {
+      # - Define estimated parameters for calculating standardized indirect effects - #
+      if (any(names(stdyx.estcoeff) %in% a1)) Z7Xa1 <- stdyx.estcoeff[a1]
+      if (any(names(stdyx.estcoeff) %in% a2)) Z7Xa2 <- stdyx.estcoeff[a2]
+      if (any(names(stdyx.estcoeff) %in% a3)) Z7Xa3 <- stdyx.estcoeff[a3]
+      if (any(names(stdyx.estcoeff) %in% a4)) Z7Xa4 <- stdyx.estcoeff[a4]
+      # - Calculate Estimated Indirect Effect - #
+      estM  <- Z7Xa1*Z7Xa2*Z7Xa3*Z7Xa4
+      # -- Print standardized indirect effects -- #
+      cat("\n", "   Standardized indirect effects = ", estM, rep("\n",2))
+    } else {
+      cat("\n", "** Standardized indirect effects are not available **", "\n")
+    } # end (if stdyx.estcoeff)
 
   } # end (if (NoMod == 0))
   ### --- End No Moderating Effect --- ###
