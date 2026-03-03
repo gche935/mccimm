@@ -2079,18 +2079,13 @@ mccimm_mplus_fun <- function(mplus_output_file = "mplus_output.out",
 
 
   # Calculate estimated parameter from Dfunction
-#  list2env(as.list(estcoeff), envir = .GlobalEnv)
   estM  <- eval(parse(text=Sfunction))
-
- cat("estM = ", estM)
 
   # Calculate Simulated parameter from Dfunction
   mcmc <<- as.data.frame(mcmc)
   mcmc <- mcmc %>%
     mutate(abM = eval(parse(text=Sfunction)))
   abM <- mcmc[, "abM"]
-
-head(mcmc)
 
   #### Confidence Intervals and p-value ####
 
