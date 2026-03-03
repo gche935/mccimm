@@ -574,14 +574,14 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     PCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
                                              c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
 
-    PCI[1,1] <- format(quantile(abM,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[1,2] <- format(quantile(abM,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[1,3] <- format(quantile(abM,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[1,4] <- format(estM, digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[1,5] <- format(quantile(abM,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[1,6] <- format(quantile(abM,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[1,7] <- format(quantile(abM,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[1,8] <- format(pM, digits = 4, nsmall = 4, scientific = FALSE)
+    PCI[1,1] <- format(round(quantile(abM,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[1,2] <- format(round(quantile(abM,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[1,3] <- format(round(quantile(abM,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[1,5] <- format(round(quantile(abM,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[1,6] <- format(round(quantile(abM,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[1,7] <- format(round(quantile(abM,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[1,8] <- format(round(pM, digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected Factor
     zM = qnorm(sum(abM<estM)/b.no)
@@ -600,14 +600,14 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     BCCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
                                               c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
 
-    BCCI[1,1] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[1,2] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[1,3] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[1,4] <- format(estM, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[1,5] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[1,6] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[1,7] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[1,8] <- format(pbM, digits = 4, nsmall = 4, scientific = FALSE)
+    BCCI[1,1] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[1,2] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[1,3] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[1,5] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[1,6] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[1,7] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[1,8] <- format(round(pbM, digits = 4), nsmall = 4, scientific = FALSE)
 
     cat("\n")
     cat("Percentile Confidence Intervals for Indirect Effect", rep("\n", 2))
@@ -689,73 +689,73 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
       ## Percentile Confidence Intervals ##
-      PCI[X,1] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,2] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,3] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,5] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,6] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,7] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI[X,1] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,2] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,3] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,5] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,6] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,7] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
       # Percentile p-value #
       if (quantile(abX,probs=0.5)>0) {
-        PCI[X,8] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+        PCI[X,8] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
       } else {
-        PCI[X,8] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+        PCI[X,8] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
       }
 
       ## Bias-Corrected Confidence Intervals ##
-      BCCI[X,1] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,2] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,3] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,5] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,6] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,7] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI[X,1] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,2] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,3] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,5] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,6] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,7] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
       # Bias-Corrected p-value
       if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
         BCCI[X,8] = 0
       } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-        BCCI[X,8] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+        BCCI[X,8] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
       } else {
-        BCCI[X,8] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+        BCCI[X,8] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
       }
     }
 
     # Percentile Confidence Intervals for Index MM
-    PCI[6,1] <- format(quantile(IndexMM,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,2] <- format(quantile(IndexMM,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,3] <- format(quantile(IndexMM,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,4] <- format(estIMM, digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,5] <- format(quantile(IndexMM,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,6] <- format(quantile(IndexMM,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,7] <- format(quantile(IndexMM,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCI[6,1] <- format(round(quantile(IndexMM,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,2] <- format(round(quantile(IndexMM,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,3] <- format(round(quantile(IndexMM,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,4] <- format(round(estIMM, digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,5] <- format(round(quantile(IndexMM,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,6] <- format(round(quantile(IndexMM,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,7] <- format(round(quantile(IndexMM,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile Probability for Index MM
     if (quantile(IndexMM,probs=0.5)>0) {
-      PCI[6,8] <- format(2*(sum(IndexMM<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)  # Probability
+      PCI[6,8] <- format(round(2*(sum(IndexMM<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)  # Probability
     } else {
-      PCI[6,8] <- format(2*(sum(IndexMM>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)  # Probability
+      PCI[6,8] <- format(round(2*(sum(IndexMM>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)  # Probability
     }
 
     # Bias-Corrected Confidence Intervals for Index MM
     zIMM = qnorm(sum(IndexMM<estIMM)/b.no)
-    BCCI[6,1] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,2] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,3] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,4] <- format(estIMM, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,5] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,6] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,7] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCI[6,1] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,2] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,3] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,4] <- format(round(estIMM, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,5] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,6] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,7] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected Probability for Index MM
     if ((estIMM>0 & min(IndexMM)>0) | (estIMM<0 & max(IndexMM)<0)) {
       BCCI[6,8] = 0
     } else if (qnorm(sum(IndexMM>0)/b.no)+2*zIMM<0) {
-      BCCI[6,8] = format(2*pnorm((qnorm(sum(IndexMM>0)/b.no)+2*zIMM)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI[6,8] = format(round(2*pnorm((qnorm(sum(IndexMM>0)/b.no)+2*zIMM)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCI[6,8] = format(2*pnorm(-1*(qnorm(sum(IndexMM>0)/b.no)+2*zIMM)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI[6,8] = format(round(2*pnorm(-1*(qnorm(sum(IndexMM>0)/b.no)+2*zIMM)), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     cat("\n")
@@ -783,39 +783,39 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     ## Percentile Confidence Intervals ##
     PCI.SST[1,] <- PCI[2,]
     PCI.SST[2,] <- PCI[4,]
-    PCI.SST[3,1] <- format(quantile(abSST,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,2] <- format(quantile(abSST,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,3] <- format(quantile(abSST,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,4] <- format(estSST, digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,5] <- format(quantile(abSST,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,6] <- format(quantile(abSST,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,7] <- format(quantile(abSST,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCI.SST[3,1] <- format(round(quantile(abSST,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,2] <- format(round(quantile(abSST,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,3] <- format(round(quantile(abSST,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,4] <- format(round(estSST, digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,5] <- format(round(quantile(abSST,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,6] <- format(round(quantile(abSST,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,7] <- format(round(quantile(abSST,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile p-value #
     if (quantile(abSST,probs=0.5)>0) {
-      PCI.SST[3,8] <- format(2*(sum(abSST<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI.SST[3,8] <- format(round(2*(sum(abSST<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      PCI.SST[3,8] <- format(2*(sum(abSST>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI.SST[3,8] <- format(round(2*(sum(abSST>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Bias-Corrected Confidence Intervals ##
     BCCI.SST[1,] <- BCCI[2,]
     BCCI.SST[2,] <- BCCI[4,]
-    BCCI.SST[3,1] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,2] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,3] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,4] <- format(estSST, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,5] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,6] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,7] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,1] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,2] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,3] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,4] <- format(round(estSST, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,5] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,6] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,7] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected p-value
     if ((estSST>0 & min(abSST)>0) | (estSST<0 & max(abSST)<0)) {
       BCCI.SST[3,8] = 0
     } else if (qnorm(sum(abSST>0)/b.no)+2*zSST<0) {
-      BCCI.SST[3,8] = format(2*pnorm((qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI.SST[3,8] = format(round(2*pnorm((qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCI.SST[3,8] = format(2*pnorm(-1*(qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI.SST[3,8] = format(round(2*pnorm(-1*(qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4), nsmall = 4, scientific = FALSE)
     }
     
     cat(rep("\n", 2))
@@ -908,74 +908,74 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
       ## Percentile Confidence Intervals ##
-      PCI[X,1] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,2] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,3] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,5] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,6] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,7] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI[X,1] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,2] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,3] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,5] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,6] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,7] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
       # Percentile p-value #
       if (quantile(abX,probs=0.5)>0) {
-        PCI[X,8] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+        PCI[X,8] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
       } else {
-        PCI[X,8] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+        PCI[X,8] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
       }
 
       ## Bias-Corrected Confidence Intervals ##
-      BCCI[X,1] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,2] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,3] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,5] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,6] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,7] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI[X,1] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,2] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,3] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,5] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,6] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,7] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
       # Bias-Corrected p-value
       if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
         BCCI[X,8] = 0
       } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-        BCCI[X,8] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+        BCCI[X,8] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
       } else {
-        BCCI[X,8] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+        BCCI[X,8] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
       }
     }
 
     # Percentile Confidence Intervals for Index MM
-    PCI[6,1] <- format(quantile(IndexMM,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,2] <- format(quantile(IndexMM,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,3] <- format(quantile(IndexMM,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,4] <- format(estIMM, digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,5] <- format(quantile(IndexMM,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,6] <- format(quantile(IndexMM,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI[6,7] <- format(quantile(IndexMM,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCI[6,1] <- format(round(quantile(IndexMM,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,2] <- format(round(quantile(IndexMM,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,3] <- format(round(quantile(IndexMM,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,4] <- format(round(estIMM, digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,5] <- format(round(quantile(IndexMM,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,6] <- format(round(quantile(IndexMM,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI[6,7] <- format(round(quantile(IndexMM,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile Probability for Index MM
     if (quantile(IndexMM,probs=0.5)>0) {
-      PCI[6,8] <- format(2*(sum(IndexMM<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)  # Probability
+      PCI[6,8] <- format(round(2*(sum(IndexMM<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)  # Probability
     } else {
-      PCI[6,8] <- format(2*(sum(IndexMM>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)  # Probability
+      PCI[6,8] <- format(round(2*(sum(IndexMM>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)  # Probability
     }
 
 
     # Bias-Corrected Confidence Intervals for Index MM
     zIMM = qnorm(sum(IndexMM<estIMM)/b.no)
-    BCCI[6,1] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,2] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,3] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,4] <- format(estIMM, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,5] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,6] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI[6,7] <- format(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCI[6,1] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,2] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,3] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,4] <- format(round(estIMM, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,5] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,6] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI[6,7] <- format(round(quantile(IndexMM,probs=pnorm(2*zIMM+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected Probability for Index MM
     if ((estIMM>0 & min(IndexMM)>0) | (estIMM<0 & max(IndexMM)<0)) {
       BCCI[6,8] = 0
     } else if (qnorm(sum(IndexMM>0)/b.no)+2*zIMM<0) {
-      BCCI[6,8] = format(2*pnorm((qnorm(sum(IndexMM>0)/b.no)+2*zIMM)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI[6,8] = format(round(2*pnorm((qnorm(sum(IndexMM>0)/b.no)+2*zIMM)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCI[6,8] = format(2*pnorm(-1*(qnorm(sum(IndexMM>0)/b.no)+2*zIMM)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI[6,8] = format(round(2*pnorm(-1*(qnorm(sum(IndexMM>0)/b.no)+2*zIMM)), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     cat("\n")
@@ -1004,39 +1004,39 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     ## Percentile Confidence Intervals ##
     PCI.SST[1,] <- PCI[2,]
     PCI.SST[2,] <- PCI[4,]
-    PCI.SST[3,1] <- format(quantile(abSST,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,2] <- format(quantile(abSST,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,3] <- format(quantile(abSST,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,4] <- format(estSST, digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,5] <- format(quantile(abSST,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,6] <- format(quantile(abSST,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,7] <- format(quantile(abSST,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCI.SST[3,1] <- format(round(quantile(abSST,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,2] <- format(round(quantile(abSST,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,3] <- format(round(quantile(abSST,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,4] <- format(round(estSST, digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,5] <- format(round(quantile(abSST,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,6] <- format(round(quantile(abSST,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,7] <- format(round(quantile(abSST,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile p-value #
     if (quantile(abSST,probs=0.5)>0) {
-      PCI.SST[3,8] <- format(2*(sum(abSST<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI.SST[3,8] <- format(round(2*(sum(abSST<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      PCI.SST[3,8] <- format(2*(sum(abSST>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI.SST[3,8] <- format(round(2*(sum(abSST>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Bias-Corrected Confidence Intervals ##
     BCCI.SST[1,] <- BCCI[2,]
     BCCI.SST[2,] <- BCCI[4,]
-    BCCI.SST[3,1] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,2] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,3] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,4] <- format(estSST, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,5] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,6] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,7] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,1] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,2] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,3] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,4] <- format(round(estSST, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,5] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,6] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,7] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected p-value
     if ((estSST>0 & min(abSST)>0) | (estSST<0 & max(abSST)<0)) {
       BCCI.SST[3,8] = 0
     } else if (qnorm(sum(abSST>0)/b.no)+2*zSST<0) {
-      BCCI.SST[3,8] = format(2*pnorm((qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI.SST[3,8] = format(round(2*pnorm((qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCI.SST[3,8] = format(2*pnorm(-1*(qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI.SST[3,8] = format(round(2*pnorm(-1*(qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4), nsmall = 4, scientific = FALSE)
     }
     
     cat(rep("\n", 2))
@@ -1117,37 +1117,37 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
       ## Percentile Confidence Intervals ##
-      PCI[X,1] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,2] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,3] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,5] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,6] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,7] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI[X,1] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,2] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,3] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,5] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,6] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,7] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
       # Percentile p-value #
       if (quantile(abX,probs=0.5)>0) {
-        PCI[X,8] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+        PCI[X,8] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
       } else {
-        PCI[X,8] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+        PCI[X,8] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
       }
 
       ## Bias-Corrected Confidence Intervals ##
-      BCCI[X,1] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,2] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,3] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,5] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,6] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,7] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI[X,1] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,2] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,3] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,5] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,6] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,7] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
       # Bias-Corrected p-value
       if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
         BCCI[X,8] = 0
       } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-        BCCI[X,8] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+        BCCI[X,8] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
       } else {
-        BCCI[X,8] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+        BCCI[X,8] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
       }
     }
 
@@ -1179,39 +1179,39 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     ## Percentile Confidence Intervals ##
     PCI.SST[1,] <- PCI[2,]
     PCI.SST[2,] <- PCI[4,]
-    PCI.SST[3,1] <- format(quantile(abSST,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,2] <- format(quantile(abSST,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,3] <- format(quantile(abSST,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,4] <- format(estSST, digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,5] <- format(quantile(abSST,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,6] <- format(quantile(abSST,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,7] <- format(quantile(abSST,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCI.SST[3,1] <- format(round(quantile(abSST,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,2] <- format(round(quantile(abSST,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,3] <- format(round(quantile(abSST,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,4] <- format(round(estSST, digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,5] <- format(round(quantile(abSST,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,6] <- format(round(quantile(abSST,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,7] <- format(round(quantile(abSST,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile p-value #
     if (quantile(abSST,probs=0.5)>0) {
-      PCI.SST[3,8] <- format(2*(sum(abSST<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI.SST[3,8] <- format(round(2*(sum(abSST<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      PCI.SST[3,8] <- format(2*(sum(abSST>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI.SST[3,8] <- format(round(2*(sum(abSST>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Bias-Corrected Confidence Intervals ##
     BCCI.SST[1,] <- BCCI[2,]
     BCCI.SST[2,] <- BCCI[4,]
-    BCCI.SST[3,1] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,2] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,3] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,4] <- format(estSST, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,5] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,6] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,7] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,1] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,2] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,3] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,4] <- format(round(estSST, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,5] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,6] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,7] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected p-value
     if ((estSST>0 & min(abSST)>0) | (estSST<0 & max(abSST)<0)) {
       BCCI.SST[3,8] = 0
     } else if (qnorm(sum(abSST>0)/b.no)+2*zSST<0) {
-      BCCI.SST[3,8] = format(2*pnorm((qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI.SST[3,8] = format(round(2*pnorm((qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCI.SST[3,8] = format(2*pnorm(-1*(qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI.SST[3,8] = format(round(2*pnorm(-1*(qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4), nsmall = 4, scientific = FALSE)
     }
     
     cat(rep("\n", 2))
@@ -1292,37 +1292,37 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
       ## Percentile Confidence Intervals ##
-      PCI[X,1] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,2] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,3] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,5] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,6] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-      PCI[X,7] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI[X,1] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,2] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,3] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,5] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,6] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+      PCI[X,7] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
       # Percentile p-value #
       if (quantile(abX,probs=0.5)>0) {
-        PCI[X,8] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+        PCI[X,8] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
       } else {
-        PCI[X,8] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+        PCI[X,8] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
       }
 
       ## Bias-Corrected Confidence Intervals ##
-      BCCI[X,1] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,2] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,3] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,5] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,6] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-      BCCI[X,7] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI[X,1] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,2] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,3] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,5] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,6] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+      BCCI[X,7] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
       # Bias-Corrected p-value
       if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
         BCCI[X,8] = 0
       } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-        BCCI[X,8] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+        BCCI[X,8] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
       } else {
-        BCCI[X,8] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+        BCCI[X,8] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
       }
     }
 
@@ -1354,39 +1354,39 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     ## Percentile Confidence Intervals ##
     PCI.SST[1,] <- PCI[2,]
     PCI.SST[2,] <- PCI[4,]
-    PCI.SST[3,1] <- format(quantile(abSST,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,2] <- format(quantile(abSST,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,3] <- format(quantile(abSST,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,4] <- format(estSST, digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,5] <- format(quantile(abSST,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,6] <- format(quantile(abSST,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCI.SST[3,7] <- format(quantile(abSST,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCI.SST[3,1] <- format(round(quantile(abSST,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,2] <- format(round(quantile(abSST,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,3] <- format(round(quantile(abSST,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,4] <- format(round(estSST, digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,5] <- format(round(quantile(abSST,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,6] <- format(round(quantile(abSST,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCI.SST[3,7] <- format(round(quantile(abSST,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile p-value #
     if (quantile(abSST,probs=0.5)>0) {
-      PCI.SST[3,8] <- format(2*(sum(abSST<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI.SST[3,8] <- format(round(2*(sum(abSST<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      PCI.SST[3,8] <- format(2*(sum(abSST>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCI.SST[3,8] <- format(round(2*(sum(abSST>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Bias-Corrected Confidence Intervals ##
     BCCI.SST[1,] <- BCCI[2,]
     BCCI.SST[2,] <- BCCI[4,]
-    BCCI.SST[3,1] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,2] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,3] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,4] <- format(estSST, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,5] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,6] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCI.SST[3,7] <- format(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,1] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,2] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,3] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,4] <- format(round(estSST, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,5] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,6] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCI.SST[3,7] <- format(round(quantile(abSST,probs=pnorm(2*zSST+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected p-value
     if ((estSST>0 & min(abSST)>0) | (estSST<0 & max(abSST)<0)) {
       BCCI.SST[3,8] = 0
     } else if (qnorm(sum(abSST>0)/b.no)+2*zSST<0) {
-      BCCI.SST[3,8] = format(2*pnorm((qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI.SST[3,8] = format(round(2*pnorm((qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCI.SST[3,8] = format(2*pnorm(-1*(qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCI.SST[3,8] = format(round(2*pnorm(-1*(qnorm(sum(abSST>0)/b.no)+2*zSST)), digits = 4), nsmall = 4, scientific = FALSE)
     }
     
     cat(rep("\n", 2))
@@ -1500,36 +1500,36 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
         zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
         ## Percentile Confidence Intervals ##
-        PCI[Z,1,W] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-        PCI[Z,2,W] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-        PCI[Z,3,W] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-        PCI[Z,4,W] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-        PCI[Z,5,W] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-        PCI[Z,6,W] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-        PCI[Z,7,W] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+        PCI[Z,1,W] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+        PCI[Z,2,W] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+        PCI[Z,3,W] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+        PCI[Z,4,W] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+        PCI[Z,5,W] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+        PCI[Z,6,W] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+        PCI[Z,7,W] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
         # Percentile p-value #
         if (quantile(abX,probs=0.5)>0) {
-          PCI[Z,8,W] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+          PCI[Z,8,W] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
         } else {
-          PCI[Z,8,W] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+          PCI[Z,8,W] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
         }
 
         ## Bias-Corrected Confidence Intervals ##
-        BCCI[Z,1,W] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-        BCCI[Z,2,W] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-        BCCI[Z,3,W] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-        BCCI[Z,4,W] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-        BCCI[Z,5,W] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-        BCCI[Z,6,W] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-        BCCI[Z,7,W] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+        BCCI[Z,1,W] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+        BCCI[Z,2,W] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+        BCCI[Z,3,W] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+        BCCI[Z,4,W] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+        BCCI[Z,5,W] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+        BCCI[Z,6,W] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+        BCCI[Z,7,W] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
         # Bias-Corrected Probability
         if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
           BCCI[Z,8,W] = 0
         } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-          BCCI[Z,8,W] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+          BCCI[Z,8,W] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
         } else {
-          BCCI[Z,8,W] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+          BCCI[Z,8,W] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
         }
       }
     }
@@ -1568,37 +1568,37 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
-    PCISDT[1,1] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[1,2] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[1,3] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[1,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[1,5] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[1,6] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[1,7] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCISDT[1,1] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[1,2] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[1,3] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[1,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[1,5] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[1,6] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[1,7] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile p-value #
     if (quantile(abX,probs=0.5)>0) {
-      PCISDT[1,8] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[1,8] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      PCISDT[1,8] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[1,8] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Bias-Corrected Confidence Intervals ##
-    BCCISDT[1,1] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[1,2] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[1,3] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[1,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[1,5] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[1,6] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[1,7] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCISDT[1,1] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[1,2] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[1,3] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[1,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[1,5] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[1,6] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[1,7] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected Probability
     if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
       BCCISDT[1,8] = 0
     } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-      BCCISDT[1,8] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[1,8] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCISDT[1,8] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[1,8] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Slope Difference Test 2 "HiZ/HiW - LoZ/HiW" ##
@@ -1613,37 +1613,37 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
-    PCISDT[2,1] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[2,2] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[2,3] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[2,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[2,5] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[2,6] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[2,7] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCISDT[2,1] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[2,2] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[2,3] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[2,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[2,5] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[2,6] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[2,7] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile p-value #
     if (quantile(abX,probs=0.5)>0) {
-      PCISDT[2,8] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[2,8] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      PCISDT[2,8] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[2,8] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Bias-Corrected Confidence Intervals ##
-    BCCISDT[2,1] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[2,2] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[2,3] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[2,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[2,5] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[2,6] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[2,7] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCISDT[2,1] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[2,2] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[2,3] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[2,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[2,5] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[2,6] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[2,7] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected Probability
     if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
       BCCISDT[2,8] = 0
     } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-      BCCISDT[2,8] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[2,8] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCISDT[2,8] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[2,8] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Slope Difference Test 3 "HiZ/LoW - LoZ/LoW" ##
@@ -1658,37 +1658,37 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     zX = qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
-    PCISDT[3,1] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[3,2] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[3,3] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[3,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[3,5] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[3,6] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[3,7] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCISDT[3,1] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[3,2] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[3,3] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[3,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[3,5] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[3,6] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[3,7] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile p-value #
     if (quantile(abX,probs=0.5)>0) {
-      PCISDT[3,8] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[3,8] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      PCISDT[3,8] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[3,8] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Bias-Corrected Confidence Intervals ##
-    BCCISDT[3,1] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[3,2] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[3,3] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[3,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[3,5] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[3,6] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[3,7] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCISDT[3,1] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[3,2] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[3,3] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[3,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[3,5] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[3,6] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[3,7] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected Probability
     if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
       BCCISDT[3,8] = 0
     } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-      BCCISDT[3,8] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[3,8] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCISDT[3,8] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[3,8] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Slope Difference Test 4 "LoZ/HiW - LoZ/LoW" ##
@@ -1703,37 +1703,37 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     zX <- qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
-    PCISDT[4,1] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[4,2] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[4,3] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[4,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[4,5] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[4,6] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[4,7] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCISDT[4,1] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[4,2] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[4,3] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[4,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[4,5] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[4,6] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[4,7] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile p-value #
     if (quantile(abX,probs=0.5)>0) {
-      PCISDT[4,8] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[4,8] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      PCISDT[4,8] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[4,8] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Bias-Corrected Confidence Intervals ##
-    BCCISDT[4,1] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[4,2] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[4,3] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[4,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[4,5] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[4,6] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[4,7] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCISDT[4,1] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[4,2] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[4,3] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[4,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[4,5] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[4,6] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[4,7] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected Probability
     if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
       BCCISDT[4,8] = 0
     } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-    BCCISDT[4,8] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCISDT[4,8] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCISDT[4,8] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[4,8] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
 
@@ -1749,37 +1749,37 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
     zX <- qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
-    PCISDT[5,1] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[5,2] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[5,3] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[5,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[5,5] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[5,6] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[5,7] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCISDT[5,1] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[5,2] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[5,3] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[5,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[5,5] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[5,6] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[5,7] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile p-value #
     if (quantile(abX,probs=0.5)>0) {
-      PCISDT[5,8] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[5,8] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      PCISDT[5,8] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[5,8] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Bias-Corrected Confidence Intervals ##
-    BCCISDT[5,1] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[5,2] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[5,3] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[5,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[5,5] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[5,6] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[5,7] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCISDT[5,1] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[5,2] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[5,3] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[5,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[5,5] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[5,6] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[5,7] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected Probability
     if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
       BCCISDT[5,8] = 0
     } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-      BCCISDT[5,8] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[5,8] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCISDT[5,8] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[5,8] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
 
@@ -1795,37 +1795,37 @@ mccimm <- function(estcoeff, stdyx.estcoeff, Tech3,
       zX <- qnorm(sum(abX<estX)/b.no)  # Bias-Corrected Factor
 
     ## Percentile Confidence Intervals ##
-    PCISDT[6,1] <- format(quantile(abX,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[6,2] <- format(quantile(abX,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[6,3] <- format(quantile(abX,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[6,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[6,5] <- format(quantile(abX,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[6,6] <- format(quantile(abX,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-    PCISDT[6,7] <- format(quantile(abX,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
+    PCISDT[6,1] <- format(round(quantile(abX,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[6,2] <- format(round(quantile(abX,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[6,3] <- format(round(quantile(abX,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[6,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[6,5] <- format(round(quantile(abX,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[6,6] <- format(round(quantile(abX,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+    PCISDT[6,7] <- format(round(quantile(abX,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Percentile p-value #
     if (quantile(abX,probs=0.5)>0) {
-      PCISDT[6,8] <- format(2*(sum(abX<0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[6,8] <- format(round(2*(sum(abX<0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      PCISDT[6,8] <- format(2*(sum(abX>0)/b.no), digits = 4, nsmall = 4, scientific = FALSE)
+      PCISDT[6,8] <- format(round(2*(sum(abX>0)/b.no), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     ## Bias-Corrected Confidence Intervals ##
-    BCCISDT[6,1] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[6,2] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[6,3] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[6,4] <- format(estX, digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[6,5] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[6,6] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-    BCCISDT[6,7] <- format(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
+    BCCISDT[6,1] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[6,2] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[6,3] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[6,4] <- format(round(estX, digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[6,5] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[6,6] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+    BCCISDT[6,7] <- format(round(quantile(abX,probs=pnorm(2*zX+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
 
     # Bias-Corrected Probability
     if ((estX>0 & min(abX)>0) | (estX<0 & max(abX)<0)) {
       BCCISDT[6,8] = 0
     } else if (qnorm(sum(abX>0)/b.no)+2*zX<0) {
-      BCCISDT[6,8] = format(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[6,8] = format(round(2*pnorm((qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     } else {
-      BCCISDT[6,8] = format(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4, nsmall = 4, scientific = FALSE)
+      BCCISDT[6,8] = format(round(2*pnorm(-1*(qnorm(sum(abX>0)/b.no)+2*zX)), digits = 4), nsmall = 4, scientific = FALSE)
     }
 
     cat("\n")
@@ -2028,14 +2028,14 @@ mccimm_modsem_fun <- function(object, Sfunction="NULL", R=5) {
   PCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
                                              c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
 
-  PCI[1,1] <- format(quantile(abM,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,2] <- format(quantile(abM,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,3] <- format(quantile(abM,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,4] <- format(estM, digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,5] <- format(quantile(abM,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,6] <- format(quantile(abM,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,7] <- format(quantile(abM,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,8] <- format(pM, digits = 4, nsmall = 4, scientific = FALSE)
+  PCI[1,1] <- format(round(quantile(abM,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,2] <- format(round(quantile(abM,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,3] <- format(round(quantile(abM,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,5] <- format(round(quantile(abM,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,6] <- format(round(quantile(abM,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,7] <- format(round(quantile(abM,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,8] <- format(round(pM, digits = 4), nsmall = 4, scientific = FALSE)
 
   # Bias-Corrected Factor
   zM = qnorm(sum(abM<estM)/b.no)
@@ -2055,14 +2055,14 @@ mccimm_modsem_fun <- function(object, Sfunction="NULL", R=5) {
   BCCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
                                               c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
 
-  BCCI[1,1] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,2] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,3] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,4] <- format(estM, digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,5] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,6] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,7] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,8] <- format(pbM, digits = 4, nsmall = 4, scientific = FALSE)
+  BCCI[1,1] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,2] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,3] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,5] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,6] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,7] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,8] <- format(round(pbM, digits = 4), nsmall = 4, scientific = FALSE)
 
   cat("\n")
   cat("Percentile Confidence Intervals for Sfunction", rep("\n", 2))
@@ -2156,14 +2156,14 @@ mccimm_lavaan_fun <- function(object, Sfunction="NULL", R=5) {
   PCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
                                              c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
 
-  PCI[1,1] <- format(quantile(abM,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,2] <- format(quantile(abM,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,3] <- format(quantile(abM,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,4] <- format(estM, digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,5] <- format(quantile(abM,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,6] <- format(quantile(abM,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,7] <- format(quantile(abM,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,8] <- format(pM, digits = 4, nsmall = 4, scientific = FALSE)
+  PCI[1,1] <- format(round(quantile(abM,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,2] <- format(round(quantile(abM,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,3] <- format(round(quantile(abM,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,5] <- format(round(quantile(abM,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,6] <- format(round(quantile(abM,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,7] <- format(round(quantile(abM,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,8] <- format(round(pM, digits = 4), nsmall = 4, scientific = FALSE)
 
   # Bias-Corrected Factor
   zM = qnorm(sum(abM<estM)/b.no)
@@ -2183,14 +2183,14 @@ mccimm_lavaan_fun <- function(object, Sfunction="NULL", R=5) {
   BCCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
                                               c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
 
-  BCCI[1,1] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,2] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,3] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,4] <- format(estM, digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,5] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,6] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,7] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,8] <- format(pbM, digits = 4, nsmall = 4, scientific = FALSE)
+  BCCI[1,1] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,2] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,3] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,5] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,6] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,7] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,8] <- format(round(pbM, digits = 4), nsmall = 4, scientific = FALSE)
 
   cat("\n")
   cat("Percentile Confidence Intervals for Sfunction", rep("\n", 2))
@@ -2340,14 +2340,14 @@ mccimm_mplus_fun <- function(mplus_output_file = "mplus_output.out",
   PCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
                                              c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
 
-  PCI[1,1] <- format(quantile(abM,c(0.005)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,2] <- format(quantile(abM,c(0.025)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,3] <- format(quantile(abM,c(0.05)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,4] <- format(estM, digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,5] <- format(quantile(abM,c(0.95)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,6] <- format(quantile(abM,c(0.975)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,7] <- format(quantile(abM,c(0.995)), digits = 4, nsmall = 4, scientific = FALSE)
-  PCI[1,8] <- format(pM, digits = 4, nsmall = 4, scientific = FALSE)
+  PCI[1,1] <- format(round(quantile(abM,c(0.005)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,2] <- format(round(quantile(abM,c(0.025)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,3] <- format(round(quantile(abM,c(0.05)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,5] <- format(round(quantile(abM,c(0.95)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,6] <- format(round(quantile(abM,c(0.975)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,7] <- format(round(quantile(abM,c(0.995)), digits = 4), nsmall = 4, scientific = FALSE)
+  PCI[1,8] <- format(round(pM, digits = 4), nsmall = 4, scientific = FALSE)
 
   # Bias-Corrected Factor
   zM = qnorm(sum(abM<estM)/b.no)
@@ -2367,14 +2367,14 @@ mccimm_mplus_fun <- function(mplus_output_file = "mplus_output.out",
   BCCI <- matrix(1:8, nrow = 1, dimnames = list(c("        "),
                                               c("     0.5%","     2.5%","       5%"," Estimate","      95%","    97.5%","    99.5%", "  p-value")))
 
-  BCCI[1,1] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.005))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,2] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.025))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,3] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.050))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,4] <- format(estM, digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,5] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.950))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,6] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.975))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,7] <- format(quantile(abM,probs=pnorm(2*zM+qnorm(0.995))), digits = 4, nsmall = 4, scientific = FALSE)
-  BCCI[1,8] <- format(pbM, digits = 4, nsmall = 4, scientific = FALSE)
+  BCCI[1,1] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.005))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,2] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.025))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,3] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.050))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,4] <- format(round(estM, digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,5] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.950))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,6] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.975))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,7] <- format(round(quantile(abM,probs=pnorm(2*zM+qnorm(0.995))), digits = 4), nsmall = 4, scientific = FALSE)
+  BCCI[1,8] <- format(round(pbM, digits = 4), nsmall = 4, scientific = FALSE)
 
   cat("\n")
   cat("Percentile Confidence Intervals for Sfunction", rep("\n", 2))
