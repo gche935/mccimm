@@ -257,7 +257,6 @@
 #' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (mplus)
 #'
 #' Generate confidence intervals of moderated-mediating effects from modsem results using Monte Carlo simulation.
-#' Location of estimated parameters can be found in mccimm::TECH1().
 #'
 #' \if{html}{
 #' \figure{Figure.png}{options: width="75\%" alt="Description of my figure"}
@@ -267,27 +266,24 @@
 #' }
 #'
 #' @param mplus_output_file Mplus output (.out) file (output from Mplus).
-#' @param results_file Mplus a text file (.txt) that saves the Mplus results (RESULTS IS "filename.txt" in Mplus SAVEDATA:).
 #' @param Z name of moderate Z.
 #' @param W name of moderator W.
-#' @param varZ location of parameter varZ in Mplus Tech1 outputs.
-#' @param varW location of parameter varW in Mplus Tech1 outputs.
-#' @param a1 location of parameter a1 in Mplus Tech1 outputs.
-#' @param a2 location of parameter a2 in Mplus Tech1 outputs.
-#' @param a3 location of parameter a3 in Mplus Tech1 outputs.
-#' @param a4 location of parameter a4 in Mplus Tech1 outputs.
-#' @param z1 location of parameter z1 in Mplus Tech1 outputs.
-#' @param z2 location of parameter z2 in Mplus Tech1 outputs.
-#' @param z3 location of parameter z3 in Mplus Tech1 outputs.
-#' @param z4 location of parameter z4 in Mplus Tech1 outputs.
-#' @param w1 location of parameter w1 in Mplus Tech1 outputs.
-#' @param w2 location of parameter w2 in Mplus Tech1 outputs.
-#' @param w3 location of parameter w3 in Mplus Tech1 outputs.
-#' @param w4 location of parameter w4 in Mplus Tech1 outputs.
-#' @param zw1 location of parameter zw1 in Mplus Tech1 outputs.
-#' @param zw2 location of parameter zw2 in Mplus Tech1 outputs.
-#' @param zw3 location of parameter zw3 in Mplus Tech1 outputs.
-#' @param zw4 location of parameter zw4 in Mplus Tech1 outputs.
+#' @param a1 parameter name of a1 path (main effect).
+#' @param a2 parameter name of a2 path (main effect).
+#' @param a3 parameter name of a3 path (main effect).
+#' @param a4 parameter name of a4 path (main effect).
+#' @param z1 parameter name of z1 path (interaction effect).
+#' @param z2 parameter name of z2 path (interaction effect).
+#' @param z3 parameter name of z3 path (interaction effect).
+#' @param z4 parameter name of z4 path (interaction effect).
+#' @param w1 parameter name of w1 path (interaction effect).
+#' @param w2 parameter name of w2 path (interaction effect).
+#' @param w3 parameter name of w3 path (interaction effect).
+#' @param w4 parameter name of w4 path (interaction effect).
+#' @param zw1 parameter name of zw1 path (3-way interaction effect).
+#' @param zw2 parameter name of zw2 path (3-way interaction effect).
+#' @param zw3 parameter name of zw3 path (3-way interaction effect).
+#' @param zw4 parameter name of zw4 path (3-way interaction effect).
 #' @param R number of Monte Carlo simulation samples (in millions). For example, R=5 (default) generates 5,000,000 simulated samples.
 #'
 #' @return mccimm output for plotting Johnson-Neyman Figure.
@@ -296,11 +292,11 @@
 #'
 #' ## -- Example -- ##
 #'
-#' # mplus_output_file is "model cc4.out", results_file is "Model_CC4.txt" & moderator Z is "AUTO"
+#' # mplus_output_file is "mplusresults.out" & moderator Z is "AUTNMY"
 #' # output mccimm object is mcObject
 #'
-#' mcObject <- mccimm_mplus("model cc4.out", "Model_CC4.txt", Z = "AUTO", varZ = "72",
-#'             a1 = "60", a2 = "65", z1 = "62")
+#' mcObject <- mccimm_mplus("mplusresults.out", Z = "AUTNMY", 
+#'             a1 = "a1", a2 = "a2", z1 = "z1")
 #'
 #'
 #' # Change 2-Way Figure Title and/or Axis Labels Afterwards
@@ -317,67 +313,68 @@
 #' ggplot2::ggsave("New Standardized Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
 #'
 
-mccimm_mplus <- function(mplus_output_file = "mplus_output.out",
-                   results_file = "results.txt",
+mccimm_mplus <- function(mplus_output_file = "mplusresults.out",
                    Z="NA", W="NA",
-                   varZ="NA", varW="NA",
                    a1="NA", a2="NA", a3="NA", a4="NA",
                    z1="NA", z2="NA", z3="NA", z4="NA",
                    w1="NA", w2="NA", w3="NA", w4="NA",
                    zw1="NA", zw2="NA", zw3="NA", zw4="NA",
                    R=5) {
 
-  mplus_output <- readModels(mplus_output_file)
-  results <- mplus_output$parameters$unstandardized
-  temp <- scan(results_file, sep="")
-  stdyx.temp <- mplus_output$parameters$stdyx.standardized
-  no.parameters <- mplus_output$summaries$Parameters
-  # stdyx.temp <- temp[-(1:(2*no.parameters))]
+  ## ------------------------------- ##
 
-  Temp3 <- mplus_output$tech3$paramCov
-  Temp3[upper.tri(Temp3, diag = FALSE)] <- 0
-
-  Tech3 <- Temp3 + t(Temp3)
-  Tech3 <- Tech3 - diag(diag(Temp3))
+  ## -- Convert arguments to upper case -- ##
+  Z <- toupper(Z)
+  W <- toupper(W)
+  a1 <- toupper(a1)
+  a2 <- toupper(a2)
+  a3 <- toupper(a3)
+  a4 <- toupper(a4)
+  z1 <- toupper(z1)
+  z2 <- toupper(z2)
+  z3 <- toupper(z3)
+  z4 <- toupper(z4)
+  w1 <- toupper(w1)
+  w2 <- toupper(w2)
+  w3 <- toupper(w3)
+  w4 <- toupper(w4)
+  zw1 <- toupper(zw1)
+  zw2 <- toupper(zw2)
+  zw3 <- toupper(zw3)
+  zw4 <- toupper(zw4)
 
   ## -- Extract defined parameters and vcov -- ##
-  dp <- c(varZ, varW, a1, a2, a3, a4, z1, z2, z3, z4, w1, w2, w3, w4, zw1, zw2, zw3, zw4)
-
-  dp_no <- suppressWarnings(as.numeric(dp))
-  dp_list <- c("varZ", "varW", "a1", "a2", "a3", "a4", "z1", "z2", "z3", "z4", "w1", "w2", "w3", "w4", "zw1", "zw2", "zw3", "zw4")
-  non_na_list <- dp_list[which(!is.na(dp_no))]
+  varZ <- "NA"
+  varW <- "NA"
+  Z <- toupper(Z)
+  W <- toupper(W)
+  if (Z != "NA") varZ <- paste0("Variances_", Z)
+  if (W != "NA") varW <- paste0("Variances_", W)
+  dp <- c(a1, a2, a3, a4, z1, z2, z3, z4, w1, w2, w3, w4, zw1, zw2, zw3, zw4, varZ, varW)
+  dp[1:(length(dp) - 2)] <- toupper(dp[1:(length(dp) - 2)])
   dp <- dp[dp != "NA"]
-  dp <- as.numeric(dp)
 
-  estcoeff <- temp[dp]
-  names(estcoeff) <- non_na_list
-  stdyx.estcoeff <- stdyx.temp[dp]
-  if (is.null(stdyx.estcoeff) != TRUE) {
-    names(stdyx.estcoeff) <- non_na_list
-  } # end (if stdyx.estcoeff is NULL)
+  my_model <- readModels(mplus_output_file)
+
+  temp <- my_model$parameters$unstandardized
+  temp2 <- my_model$parameters$stdyx.standardized
+  temp2 <- temp2[which(temp$pval != 999), ]
+  temp <- temp[temp$pval != 999,]
+  temp$param <- ifelse(temp$paramHeader != "New.Additional.Parameters", paste(temp$paramHeader, temp$param, sep = "_"), temp$param)
+
+  estcoeff <- temp[which(temp$pval != 999), "est"]
+  names(estcoeff) <- temp$param
+  estcoeff <- estcoeff[dp]
+
+  Tech3 <- my_model$tech3$paramCov
+  Tech3[upper.tri(Tech3)] <- t(Tech3)[upper.tri(Tech3)]
+  colnames(Tech3) <- temp$param
+  rownames(Tech3) <- temp$param
   Tech3 <- Tech3[dp, dp]
-  rownames(Tech3) <- non_na_list
-  colnames(Tech3) <- non_na_list
 
-  # -- Reassigning variable names -- #
-  if (varZ != "NA") varZ <- "varZ"
-  if (varW != "NA") varW <- "varW"
-  if (a1 != "NA") a1 <- "a1"
-  if (a2 != "NA") a2 <- "a2"
-  if (a3 != "NA") a3 <- "a3"
-  if (a4 != "NA") a4 <- "a4"
-  if (z1 != "NA") z1 <- "z1"
-  if (z2 != "NA") z2 <- "z2"
-  if (z3 != "NA") z3 <- "z3"
-  if (z4 != "NA") z4 <- "z4"
-  if (w1 != "NA") w1 <- "w1"
-  if (w2 != "NA") w2 <- "w2"
-  if (w3 != "NA") w3 <- "w3"
-  if (w4 != "NA") w4 <- "w4"
-  if (zw1 != "NA") zw1 <- "zw1"
-  if (zw2 != "NA") zw2 <- "zw2"
-  if (zw3 != "NA") zw3 <- "zw3"
-  if (zw4 != "NA") zw4 <- "zw4"
+  stdyx.estcoeff <- temp2[, "est"]
+  names(stdyx.estcoeff) <- temp$param
+  stdyx.estcoeff <- stdyx.estcoeff[dp]
 
   return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
                         Z, W,
@@ -390,10 +387,9 @@ mccimm_mplus <- function(mplus_output_file = "mplus_output.out",
 
   return(return_mccimm)
 
-
-  ## ------------------------------- ##
-
 }  ## end (Function "mccimm_mplus") ##
+
+
 
 
 
