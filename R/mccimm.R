@@ -15,11 +15,10 @@
 #library(MplusAutomation)
 
 
-## ====== Function "mccimm_modsem_da" Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem_da) ====== ##
-#' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem_da)
+## ====== Function "mccimm_modsem" Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem) ====== ##
+#' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (modsem)
 #'
-#' Generate confidence intervals of moderated-mediating effects from modsem data analytic approaches (lms or qml) results using Monte Carlo simulation.
-#' For results from modsem product indicator approaches results, first convert modsem object into lavaan using extract_lavaan(object) function, then use mccimm_lavaan for the Monte Carlo simulation. For example, lave_est <- extract_lavaan(object)
+#' Generate confidence intervals of moderated-mediating effects from modsem results using Monte Carlo simulation.
 #'
 #' \if{html}{
 #' \figure{Figure.png}{options: width="75\%" alt="Description of my figure"}
@@ -57,7 +56,7 @@
 #'
 #' # modsem object is "est_lms" & output mccimm object is mcObject
 #'
-#' mcObject <- mccimm_modsem_da(est_lms, a1="a1", a2="a2", a3="a3a", a1="z1", Z="Autonomy")
+#' mcObject <- mccimm_modsem(est_lms, a1="a1", a2="a2", a3="a3a", a1="z1", Z="Autonomy")
 #'
 #'
 #' # Change 2-Way Figure Title and/or Axis Labels Afterwards
@@ -74,7 +73,7 @@
 #' ggplot2::ggsave("New Standardized Interaction Figure.png", width = 22.86, height = 16.51, units = "cm")
 #'
 
-  mccimm_modsem_da <- function(object, Z="NA", W="NA",
+  mccimm_modsem <- function(object, Z="NA", W="NA",
                    a1="NA", z1="NA", w1="NA", zw1="NA",
                    a2="NA", z2="NA", w2="NA", zw2="NA",
                    a3="NA", z3="NA", w3="NA", zw3="NA",
@@ -115,7 +114,9 @@
   dp <- c(a1, a2, a3, a4, z1, z2, z3, z4, w1, w2, w3, w4, zw1, zw2, zw3, zw4, varZ, varW)
   dp <- dp[dp != "NA"]
 
-  XISETAS <- c(object$model$models[[1]]$info$xis, object$model$models[[1]]$info$etas)
+  XISETAS <- paste(unlist(object$elementsInProdNames), collapse = " ")
+  split_elements <- unlist(strsplit(XISETAS, split = " "))
+  XISETAS <- unique(split_elements)
   varIV <- paste0(XISETAS, "~~", XISETAS)
 
   dd <- modsem::parameter_estimates(object)
@@ -127,15 +128,11 @@
   Temp3 <- modsem::modsem_vcov(object)
   Tech3 <- Temp3[PAR, PAR]
 
-  if (Z != "NA" & W != "NA") {
-    dd <- modsem::standardized_estimates(object, correction=TRUE)
-    stdyx.temp <- dd[, "est"]
-    names(stdyx.temp) <- names(temp)
-    stdyx.estcoeff <- stdyx.temp[PAR]
-  } else {
-    stdyx.temp <- modsem_coef(object, standardized=TRUE)
-    stdyx.estcoeff <- stdyx.temp[PAR]
-  } # end (if Z! & W!)
+  dd <- modsem::standardized_estimates(object, correction=TRUE)
+  stdyx.temp <- dd[, "est"]
+  names(stdyx.temp) <- names(temp)
+  stdyx.estcoeff <- stdyx.temp[PAR]
+
 
   return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
                         Z, W,
@@ -148,7 +145,7 @@
 
   return(return_mccimm)
 
-}  ## end (Function "mccimm_modsem_da") ##
+}  ## end (Function "mccimm_modsem") ##
 
 
 
@@ -2005,7 +2002,9 @@ mccimm_modsem_fun <- function(object, Sfunction="NULL", R=5) {
 
   ## Extract defined parameters and vcov ##
 
-  XISETAS <- c(object$model$models[[1]]$info$xis, object$model$models[[1]]$info$etas)
+  XISETAS <- paste(unlist(object$elementsInProdNames), collapse = " ")
+  split_elements <- unlist(strsplit(XISETAS, split = " "))
+  XISETAS <- unique(split_elements)
   varIV <- paste0(XISETAS, "~~", XISETAS)
 
   dd <- modsem::parameter_estimates(object)
@@ -2016,6 +2015,7 @@ mccimm_modsem_fun <- function(object, Sfunction="NULL", R=5) {
   estcoeff <- temp[PAR]
   Temp3 <- modsem::modsem_vcov(object)
   Tech3 <- Temp3[PAR, PAR]
+
 
   ## -- Monte Carlo Simulation of R*1e6 samples, default: R = 5 -- ##
   mcmc <- MASS::mvrnorm(n=R*1e6, mu=estcoeff, Sigma=Tech3, tol = 1e-6)
