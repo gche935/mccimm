@@ -132,11 +132,16 @@
   Temp3 <- modsem::modsem_vcov(object)
   Tech3 <- Temp3[PAR, PAR]
 
-  dd <- modsem::standardized_estimates(object, correction=TRUE)
-  stdyx.temp <- dd[, "est"]
-  names(stdyx.temp) <- names(temp)
+  if (is(object) == "modsem_da") {
+    sfit <- standardize_model(object)
+    stdyx.temp <- modsem::modsem_coef(sfit)
+  } else {
+    dd <- modsem::standardized_estimates(object, correction=TRUE)
+    dd$names <- ifelse(dd$label == "", paste0(dd$lhs, dd$op, dd$rhs), dd$label)
+    stdyx.temp <- dd[, "est"]
+    names(stdyx.temp) <- dd$names
+  }
   stdyx.estcoeff <- stdyx.temp[PAR]
-
 
   return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
                         Z, W,
