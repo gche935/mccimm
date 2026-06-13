@@ -114,20 +114,26 @@
   dp <- c(a1, a2, a3, a4, z1, z2, z3, z4, w1, w2, w3, w4, zw1, zw2, zw3, zw4, varZ, varW)
   dp <- dp[dp != "NA"]
 
+  XISETAS <- c(object$model$models[[1]]$info$xis, object$model$models[[1]]$info$etas)
+  varIV <- paste0(XISETAS, "~~", XISETAS)
 
-  temp <- modsem_coef(object)
-  estcoeff <- temp[dp]
-  Temp3 <- modsem_vcov(object)
-  Tech3 <- Temp3[dp, dp]
+  dd <- modsem::parameter_estimates(object)
+  PAR <- dd[which(dd[,"label"] != ""),"label"]
+  PAR <- c(PAR, varIV)
+
+  temp <- modsem::modsem_coef(object)
+  estcoeff <- temp[PAR]
+  Temp3 <- modsem::modsem_vcov(object)
+  Tech3 <- Temp3[PAR, PAR]
 
   if (Z != "NA" & W != "NA") {
     dd <- modsem::standardized_estimates(object, correction=TRUE)
     stdyx.temp <- dd[, "est"]
     names(stdyx.temp) <- names(temp)
-    stdyx.estcoeff <- stdyx.temp[dp]
+    stdyx.estcoeff <- stdyx.temp[PAR]
   } else {
     stdyx.temp <- modsem_coef(object, standardized=TRUE)
-    stdyx.estcoeff <- stdyx.temp[dp]
+    stdyx.estcoeff <- stdyx.temp[PAR]
   } # end (if Z! & W!)
 
   return_mccimm <- mccimm(estcoeff, stdyx.estcoeff, Tech3,
@@ -258,9 +264,9 @@
 
 
 ## ====== Function "mccimm_mplus" Monte Carlo Confidence Intervals for Moderated Mediation (mplus) ====== ##
-#' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (mplus)
+#' Monte Carlo Simulation for Confidence Intervals of Moderated Mediation (Mplus)
 #'
-#' Generate confidence intervals of moderated-mediating effects from modsem results using Monte Carlo simulation.
+#' Generate confidence intervals of moderated-mediating effects from Mplus results using Monte Carlo simulation.
 #' Location of estimated parameters can be found in mccimm::TECH1().
 #'
 #' \if{html}{
@@ -1998,15 +2004,23 @@ mccimm_modsem_fun <- function(object, Sfunction="NULL", R=5) {
 
   ## Extract defined parameters and vcov ##
 
+  XISETAS <- c(object$model$models[[1]]$info$xis, object$model$models[[1]]$info$etas)
+  varIV <- paste0(XISETAS, "~~", XISETAS)
 
-  temp <- modsem_coef(object)
-  estcoeff <- temp[dp]
-  Temp3 <- modsem_vcov(object)
-  Tech3 <- Temp3[dp, dp]
+  dd <- modsem::parameter_estimates(object)
+  PAR <- dd[which(dd[,"label"] != ""),"label"]
+  PAR <- c(PAR, varIV)
 
+  temp <- modsem::modsem_coef(object)
+  estcoeff <- temp[PAR]
+  Temp3 <- modsem::modsem_vcov(object)
+  Tech3 <- Temp3[PAR, PAR]
 
   ## -- Monte Carlo Simulation of R*1e6 samples, default: R = 5 -- ##
   mcmc <- MASS::mvrnorm(n=R*1e6, mu=estcoeff, Sigma=Tech3, tol = 1e-6)
+
+  estcoeff <- estcoeff[dp]
+  mcmc <- mcmc[, dp]
 
   b.no <- nrow(mcmc)
   R.no <- format(R*1e6, scientific = FALSE)
