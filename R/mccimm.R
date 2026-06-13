@@ -216,7 +216,6 @@
 #  R <- 1 # Number of simulated samples = R*1e6 (default: R = 5)
   ## ------------------------------- ##
 
-
   ## -- Extract defined parameters and vcov -- ##
   varZ <- "NA"
   varW <- "NA"
@@ -228,6 +227,7 @@
   IVvar <- lavNames(object, "eqs.x")
   varIV <- paste0(IVvar, "~~", IVvar)
 
+  dd <- lavaan::parameterEstimates(object, standardized=TRUE, remove.nonfree=TRUE, remove.def=TRUE)
   PAR <- dd[which(dd[,"label"] != ""),"label"]
   PAR <- c(PAR, varIV)
 
@@ -236,7 +236,6 @@
   Temp3 <- lavaan::vcov(object)
   Tech3 <- Temp3[PAR, PAR]
 
-  dd <- lavaan::parameterEstimates(object, standardized=TRUE, remove.nonfree=TRUE, remove.def=TRUE)
   stdyx.temp <- dd[, "std.all"]
   names(stdyx.temp) <- names(temp)
   stdyx.estcoeff <- stdyx.temp[PAR]
@@ -2132,6 +2131,7 @@ mccimm_lavaan_fun <- function(object, Sfunction="NULL", R=5) {
   IVvar <- lavNames(object, "eqs.x")
   varIV <- paste0(IVvar, "~~", IVvar)
 
+  dd <- lavaan::parameterEstimates(object, standardized=TRUE, remove.nonfree=TRUE, remove.def=TRUE)
   PAR <- dd[which(dd[,"label"] != ""),"label"]
   PAR <- c(PAR, varIV)
 
